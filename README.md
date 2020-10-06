@@ -2,7 +2,7 @@
 
 This is a sample application for the [Phalcon Framework](https://github.com/phalcon/cphalcon).
 
-It trie to provide a lightweight architecture for a multi-site stack, with sharing and overriding functionalities.
+It tries to provide a lightweight architecture for a multi-site stack, with sharing and overriding functionalities.
 
 It also includes some features like ACL, authentication and more.
 
@@ -17,13 +17,13 @@ It also includes some features like ACL, authentication and more.
 
 ### Composer
 
- Phalcon Multisite use composer's autoload to load handlers
+ _Phalcon Multisite_ use composer's autoload to load handlers
 
     composer update
     
 ### Directories
 
-This following directories need to have write permissions : 
+This following directories need to have writes permissions : 
 
 * cache/
 * public/temp/
