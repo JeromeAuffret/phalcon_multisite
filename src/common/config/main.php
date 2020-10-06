@@ -22,7 +22,9 @@ return [
         'host'     => '127.0.0.1',
         'username' => 'postgres',
         'password' => '',
-        'dbname'   => ''
+        'dbname'   => '',
+        'port' => '5432',
+        'charset' => 'utf8'
     ],
 
     'database' => [
@@ -30,7 +32,9 @@ return [
         'host'     => '127.0.0.1',
         'username' => 'postgres',
         'password' => '',
-        'dbname'   => ''
+        'dbname'   => '',
+        'port' => '5432',
+        'charset' => 'utf8'
     ],
 
     'host' => [
