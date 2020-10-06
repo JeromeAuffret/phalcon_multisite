@@ -17,9 +17,9 @@ It also includes some features like ACL, authentication and more.
 
 ### Composer
 
- _Phalcon Multisite_ use composer's autoload to load handlers
-
-    composer update
+```
+composer update
+```
     
 ### Directories
 
