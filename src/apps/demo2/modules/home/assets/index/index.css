@@ -1,0 +1,28 @@
+section {
+    height: 400px;
+}
+section:nth-child(odd) {
+    background: rgba(0,0,0,0.04);
+}
+section header {
+    text-align: center;
+}
+section.title {
+    text-align: center;
+}
+section h1 {
+    line-height: 150px;
+}
+section h3 {
+    line-height: 75px;
+}
+section .content {
+    padding: 1rem 2.5rem;
+}
+section .col-4 {
+    text-align: center;
+    padding: 2rem;
+}
+section .col-4:not(:first-of-type) {
+    border-left: 1px solid rgba(0,0,0,0.05);
+}
