@@ -16,7 +16,25 @@
                                     <li class="nav flex-column <?php if ($this->dispatcher->getControllerName() === 'index') echo 'active'; ?>"
                                         aria-orientation="vertical">
                                         <a href="<?php echo $this->url->get('admin'); ?>">
-                                            Tableau de bord
+                                            Dashboard
+                                        </a>
+                                    </li>
+                                <?php } ?>
+
+                                <?php if ($this->acl->userAllowed('admin', 'profile')) { ?>
+                                    <li class="nav flex-column <?php if ($this->dispatcher->getControllerName() === 'profile') echo 'active'; ?>"
+                                        aria-orientation="vertical">
+                                        <a href="<?php echo $this->url->get('admin/profile'); ?>">
+                                            Profile
+                                        </a>
+                                    </li>
+                                <?php } ?>
+
+                                <?php if ($this->acl->userAllowed('admin', 'user')) { ?>
+                                    <li class="nav flex-column <?php if ($this->dispatcher->getControllerName() === 'user') echo 'active'; ?>"
+                                        aria-orientation="vertical">
+                                        <a href="<?php echo $this->url->get('admin/user'); ?>">
+                                            Users
                                         </a>
                                     </li>
                                 <?php } ?>

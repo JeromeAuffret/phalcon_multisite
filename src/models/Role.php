@@ -2,8 +2,10 @@
 
 namespace Models;
 
+use Phalcon\Di;
 use Phalcon\Mvc\Model\ResultInterface;
 use Phalcon\Mvc\Model\ResultSetInterface;
+use Phalcon\Mvc\ModelInterface;
 
 
 class Role extends BaseModel
@@ -164,6 +166,32 @@ class Role extends BaseModel
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+
+    /**********************************************************
+     *
+     *                         FUNCTIONS
+     *
+     **********************************************************/
+
+    /**
+     * @return bool|ModelInterface
+     */
+    public static function getUserRole()
+    {
+        $session = Di::getDefault()->get('session');
+
+        return (new self)->modelsManager->createBuilder()
+            ->addFrom(self::class, 'Role')
+            ->innerJoin(UserRole::class, 'Role.id = UserRole.id_role', 'UserRole')
+            ->where('UserRole.id_user = ?1 AND Role.id_application = ?2', [
+                1 => $session->getUser('id'),
+                2 => $session->getApplication('id')
+            ])
+            ->getQuery()
+            ->execute()
+            ->getFirst();
     }
 
 }

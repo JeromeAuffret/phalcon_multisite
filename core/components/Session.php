@@ -3,9 +3,9 @@
 namespace Component;
 
 use Acl\AclUserRole;
+use Models\Role;
 use Models\User;
 use Models\Application;
-use Models\UserRole;
 use Phalcon\Collection;
 use Phalcon\Helper\Str;
 use Phalcon\Session\Manager as SessionManager;
@@ -56,16 +56,16 @@ final class Session extends SessionManager
     }
 
     /**
-     *  Setup acl's useRole
+     *  Setup ACL useRole
      *  Guest profile per default
      */
     public function setupUserRole()
     {
-        $userRole = UserRole::getUserRole();
+        $role = Role::getUserRole();
 
         $this->setAclRole(
             new AclUserRole (
-                $userRole ? $userRole->getSlug() : 'guest',
+                $role ? $role->getSlug() : 'guest',
                 $this->getUser('id'),
                 $this->getUser('login'),
                 $this->getApplication('id')

@@ -138,30 +138,4 @@ class UserRole extends BaseModel
         return parent::findFirst($parameters);
     }
 
-
-    /**********************************************************
-     *
-     *                         FUNCTIONS
-     *
-     **********************************************************/
-
-    /**
-     * @return bool|ModelInterface
-     */
-    public static function getUserRole()
-    {
-        $session = Di::getDefault()->get('session');
-
-        return (new self)->modelsManager->createBuilder()
-            ->addFrom(self::class, 'UserRole')
-            ->innerJoin(Role::class, 'Role.id = UserRole.id_role', 'Role')
-            ->where('UserRole.id_user = ?1 AND Role.id_application = ?2', [
-                1 => $session->getUser('id'),
-                2 => $session->getApplication('id')
-            ])
-            ->getQuery()
-            ->execute()
-            ->getFirst();
-    }
-
 }

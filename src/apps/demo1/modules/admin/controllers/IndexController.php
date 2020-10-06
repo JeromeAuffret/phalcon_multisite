@@ -13,8 +13,8 @@ class IndexController extends CommonIndexController
      */
     public function indexAction()
     {
-        $this->view->count_user = 15;
-        $this->view->count_user_actif = 20;
+        $this->view->count_users = 15;
+        $this->view->count_active_users = 20;
     }
 
 }
