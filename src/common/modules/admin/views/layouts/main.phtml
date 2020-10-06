@@ -1,0 +1,102 @@
+<div class="content-wrap">
+    <main id="content" class="content" role="main">
+        <div class="row">
+            <div class="col-12 container-fluid">
+                <button id="btn-navigation-back" class="btn btn-secondary"><< Retour</button>
+            </div>
+
+            <div class="col-12 container-fluid">
+                <section class="widget">
+                    <header>
+                        <div class="widget-header-text">Administration</div>
+                    </header>
+                    <div class="widget-body">
+                        <div class="row">
+                            <div class="col-3 admin-menu-container">
+
+                                <ul id="admin_menu">
+
+                                    <?php if ($this->acl->userAllowed('admin', 'index')) { ?>
+                                        <li class="nav flex-column <?php if ($this->dispatcher->getControllerName() === 'index') echo 'active'; ?>"
+                                            aria-orientation="vertical">
+                                            <a href="<?php echo $this->url->get('admin'); ?>">
+                                                Tableau de bord
+                                            </a>
+                                        </li>
+                                    <?php } ?>
+
+                                </ul>
+                            </div>
+
+                            <div class="col-9">
+                                <div id="admin_menu_content" class="tab-content container">
+                                    <?php echo $this->getContent(); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+</div>
+
+<style>
+    #admin_menu_content section.widget {
+        padding: 5px;
+    }
+    #admin_menu_content section.widget .widget-body {
+        border: none;
+    }
+    #admin_menu_content section.widget header {
+        color : darkred;
+        border: none;
+    }
+    #admin_menu_content section.widget header .widget-header-text {
+        font-size: 1.6rem;
+    }
+    #admin_menu_content section.widget header .widget-header-actions {
+        padding: 0.8rem;
+    }
+
+    .admin-menu-container {
+        padding-right: 0;
+        max-width: 350px;
+    }
+
+    #admin_menu {
+        font-size: 1.2rem;
+        padding: .75rem .25rem;
+    }
+    #admin_menu > li {
+        padding: .65rem 1rem;
+        line-height: 2.25rem;
+        font-weight: 500;
+    }
+    #admin_menu > li a {
+        text-decoration: none;
+        color: #000;
+    }
+    #admin_menu > li a > .icon {
+        width: 20%;
+    }
+    #admin_menu > li a > .row-title {
+        width: 80%;
+        padding-left: 15px;
+    }
+    #admin_menu > li.active {
+        background-color: darkred;
+        border-radius: 5px;
+    }
+    #admin_menu > li.active a {
+        color: wheat;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+    #admin_reference li:hover span {
+        text-decoration: underline;
+    }
+    .dataTables_wrapper  .dataTables_scrollBody {
+        max-height: 100% !important;
+    }
+</style>

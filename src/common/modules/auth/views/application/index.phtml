@@ -1,0 +1,13 @@
+<div class="">
+    <?php if($this->view->application_list->count()) { ?>
+        <?php foreach ($this->view->application_list as $application) { ?>
+            <div class="application-item">
+                <a href="<?php echo $this->url->get('auth/application/switchApplication/'.$application->getId()) ?>">
+                    <?php echo $application->getName(); ?>
+                </a>
+            </div>
+        <?php } ?>
+    <?php } else { ?>
+        <h3>Applications not found</h3>
+    <?php } ?>
+</div>

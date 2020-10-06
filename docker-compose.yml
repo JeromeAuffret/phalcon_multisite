@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  app:
+    image: phalconphp/ubuntu-16.04:php-7.2
+    restart: always
+    ports:
+      - 8081:80
+    networks:
+      - overlay
+    volumes:
+      - ./:/app
+      - ./docker/nginx.conf:/etc/nginx/sites-enabled/default:ro
+
+  db:
+    image: postgres
+    restart: always
+    networks:
+      - overlay
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123456
+
+networks:
+  overlay:

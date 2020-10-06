@@ -1,0 +1,42 @@
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+    <div class="sidebar-sticky pt-3">
+        <ul class="nav flex-column">
+
+            <?php if ($this->acl->userAllowed('dashboard')) { ?>
+                <li class="nav-item">
+                    <a class="nav-link active" href="<?php echo $this->url->get('dashboard')?>">
+                        <span data-feather="home"></span>
+                        Dashboard
+                    </a>
+                </li>
+            <?php } ?>
+
+            <?php if ($this->acl->userAllowed('order')) { ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo $this->url->get('order')?>">
+                        <span data-feather="file"></span>
+                        Orders
+                    </a>
+                </li>
+            <?php } ?>
+
+            <?php if ($this->acl->userAllowed('product')) { ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo $this->url->get('product')?>">
+                        <span data-feather="shopping-cart"></span>
+                        Products
+                    </a>
+                </li>
+            <?php } ?>
+
+            <?php if ($this->acl->userAllowed('admin')) { ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo $this->url->get('admin')?>">
+                        <span data-feather="shopping-cart"></span>
+                        Administration
+                    </a>
+                </li>
+            <?php } ?>
+        </ul>
+    </div>
+</nav>

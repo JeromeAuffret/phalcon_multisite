@@ -1,0 +1,11 @@
+.idea/
+
+cache/
+public/temp/
+
+composer.lock
+vendor/
+
+**/config.php
+
+!**/.gitkeep

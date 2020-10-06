@@ -1,0 +1,23 @@
+<section class="widget">
+    <div class="row">
+        <div class="col-12">
+            <header>
+                <div class="widget-header-text">Tableau de bord</div>
+            </header>
+            
+            <div class="widget-body">
+
+                <div class="detail-block detail-block-success">
+                    <div class="detail-block-text">Nb. Utlisateurs</div>
+                    <div class="detail-block-info"><?php echo $this->view->count_user ?></div>
+                </div>
+
+                <div class="detail-block detail-block-warning">
+                    <div class="detail-block-text">Nb. Utlisateurs actif</div>
+                    <div class="detail-block-info"><?php echo $this->view->count_user_actif ?></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>

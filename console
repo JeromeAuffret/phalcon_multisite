@@ -1,0 +1,24 @@
+#!/usr/bin/env php
+<?php
+
+use Handler\ConsoleHandler as Console;
+
+error_reporting(E_ALL);
+
+define('BASE_PATH', dirname(__DIR__));
+define('PUBLIC_PATH', BASE_PATH . "/public");
+define('SRC_PATH', BASE_PATH . "/src");
+define('CLI_PATH', BASE_PATH . "/cli");
+define('COMMON_PATH', SRC_PATH . "/common");
+define('APPS_PATH', SRC_PATH . "/apps");
+
+try {
+    // Include composer's autoloader
+    require_once BASE_PATH . '/vendor/autoload.php';
+    // Handle console's application
+    (new Console())->handle();
+} 
+catch (\Exception $e) {
+    echo $e->getMessage() . '<br>';
+    echo '<pre>' . $e->getTraceAsString() . '</pre>';
+}

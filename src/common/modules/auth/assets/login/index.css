@@ -1,0 +1,7 @@
+.header {
+	margin: 15px 0;
+}
+.btn-container {
+	display: flex;
+	justify-content: space-evenly;
+}

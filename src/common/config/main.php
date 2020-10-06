@@ -1,0 +1,45 @@
+<?php
+
+$serverName = $_SERVER['SERVER_NAME'];
+$baseUri = preg_replace('/public([\/\\\\])index.php$/', '', $_SERVER["PHP_SELF"]);
+$serverUri = $serverName.$baseUri;
+
+return [
+    'version' => '0.1',
+
+    'serverName' => $serverName,
+    'baseUri'    => $baseUri,
+    'serverUri'  => $serverUri,
+
+    'defaultModule'     => 'admin',
+    'defaultController' => 'index',
+    'defaultAction'     => 'index',
+
+    'maintenance' => false,
+
+    'main_database' => [
+        'adapter'  => 'Postgresql',
+        'host'     => '127.0.0.1',
+        'username' => 'postgres',
+        'password' => '',
+        'dbname'   => ''
+    ],
+
+    'database' => [
+        'adapter'  => 'Postgresql',
+        'host'     => '127.0.0.1',
+        'username' => 'postgres',
+        'password' => '',
+        'dbname'   => ''
+    ],
+
+    'host' => [
+        'demo1.localhost' => 'demo1',
+        'demo2.localhost' => 'demo2',
+    ],
+
+    // publicComponents define an AclComponent's list witch ACL and connections verification is disabled
+    'publicComponents' => [
+        'auth_login'
+    ]
+];
