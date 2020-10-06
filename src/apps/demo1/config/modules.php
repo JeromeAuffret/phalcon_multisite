@@ -11,8 +11,8 @@ return [
         'className' => 'Demo1\Modules\Order\Module',
         'path' => $application_path . '/modules/order/Module.php'
     ],
-    'home' => [
+    'product' => [
         'className' => 'Demo1\Modules\Product\Module',
-        'path' => $application_path . '/modules/home/Module.php'
+        'path' => $application_path . '/modules/product/Module.php'
     ]
 ];
