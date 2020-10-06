@@ -5,7 +5,7 @@ namespace Libraries;
 use DateTime;
 
 
-final class Helpers
+final class DateHelper
 {
     /**
      * @param string $date
@@ -26,69 +26,69 @@ final class Helpers
     }
 
     /**
-     * @param        $date
+     * @param string $date
      * @param string $input_format
      * @param string $output_format
      *
      * @return string
      */
-    public static function date2sql($date, $output_format = 'Y-m-d', $input_format = 'd/m/Y') {
+    public static function date2sql(string $date, $output_format = 'Y-m-d', $input_format = 'd/m/Y') {
         return self::formatDate($date, $output_format, $input_format);
     }
 
     /**
-     * @param        $date
+     * @param string $date
      * @param string $input_format
      * @param string $output_format
      *
      * @return string
      */
-    public static function date2txt($date, $output_format = 'd/m/Y', $input_format = 'Y-m-d') {
-        return self::formatDate($date, $output_format, $input_format) ?: '';
+    public static function date2txt(string $date, $output_format = 'd/m/Y', $input_format = 'Y-m-d') {
+        return self::formatDate($date, $output_format, $input_format);
     }
 
     /**
-     * @param        $datetime
+     * @param string $datetime
      * @param string $output_format
      * @param string $input_format
      *
      * @return string
      */
-    public static function datetime2sql($datetime, $output_format = 'Y-m-d H:i:s', $input_format = 'd/m/Y H:i:s') {
+    public static function datetime2sql(string $datetime, $output_format = 'Y-m-d H:i:s', $input_format = 'd/m/Y H:i:s') {
         return self::formatDate($datetime, $output_format, $input_format);
     }
 
     /**
-     * @param        $datetime
+     * @param string $datetime
      * @param string $output_format
      * @param string $input_format
      *
      * @return string
      */
-    public static function datetime2txt($datetime, $output_format = "d/m/Y H:i", $input_format = "Y-m-d H:i:s") {
-        return self::formatDate($datetime, $output_format, $input_format) ?: '';
+    public static function datetime2txt(string $datetime, $output_format = "d/m/Y H:i", $input_format = "Y-m-d H:i:s") {
+        return self::formatDate($datetime, $output_format, $input_format);
     }
 
     /**
-     * @param        $datetime
+     * @param string $datetime
      * @param string $output_format
      * @param string $input_format
      *
      * @return string
      */
-    public static function datetime2txtdate($datetime, $output_format = "d/m/Y", $input_format = "Y-m-d H:i:s") {
-        return self::formatDate($datetime, $output_format, $input_format) ?: '';
+    public static function datetime2date(string $datetime, $output_format = "d/m/Y", $input_format = "Y-m-d H:i:s") {
+        return self::formatDate($datetime, $output_format, $input_format);
     }
 
     /**
-     * @param        $datetime
+     * @param string $datetime
      * @param string $output_format
      * @param string $input_format
      *
      * @return string
      */
-    public static function datetime2txttime($datetime, $output_format = "H:i:s", $input_format = "Y-m-d H:i:s") {
-        return self::formatDate($datetime, $output_format, $input_format) ?: '';
+    public static function datetime2time(string $datetime, $output_format = "H:i:s", $input_format = "Y-m-d H:i:s") {
+        return self::formatDate($datetime, $output_format, $input_format);
     }
 
 }
