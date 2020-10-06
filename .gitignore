@@ -1,11 +1,16 @@
+# IDE
 .idea/
 
-cache/
-public/temp/
+# Dynamic generated files
+cache/*
+public/temp/*
 
+# Composer
 composer.lock
 vendor/
 
+# Sensitive configuration files
 **/config.php
 
-!**/.gitkeep
+# Gitkeep empty folders
+!**/.keep
