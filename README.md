@@ -34,7 +34,7 @@ This following directories need to have writes permissions :
 ### Configuration
 
 The main database need to be configure in `src/common/config/main.php`. \
-Also, you can add a `config.php` which will be merged in `main.php` and is gitignore by default.
+Additionally, you can add a `config.php` which will be merged in `main.php` and is gitignore by default.
 
 ```
 'main_database' => [
@@ -47,4 +47,7 @@ Also, you can add a `config.php` which will be merged in `main.php` and is gitig
     'charset' => 'utf8'
 ]
 ```
- 
+
+### Migrations
+
+Coming soon
