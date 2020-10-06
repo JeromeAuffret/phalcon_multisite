@@ -2,14 +2,14 @@
 
 $serverName = $_SERVER['SERVER_NAME'];
 $baseUri = preg_replace('/public([\/\\\\])index.php$/', '', $_SERVER["PHP_SELF"]);
-$serverUri = $serverName.$baseUri;
+$requestUri = '/'.str_replace($baseUri, '', $_SERVER['REQUEST_URI']);
 
 return [
     'version' => '0.1',
 
     'serverName' => $serverName,
     'baseUri'    => $baseUri,
-    'serverUri'  => $serverUri,
+    'requestUri' => $requestUri,
 
     'defaultModule'     => 'admin',
     'defaultController' => 'index',

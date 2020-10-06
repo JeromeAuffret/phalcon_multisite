@@ -42,6 +42,14 @@ class ApplicationHandler
      */
     public function handle(): string
     {
+
+//        var_dump($_GET['_url'] ?? '/');
+//        var_dump($_SERVER['REQUEST_URI']);
+//
+//        var_dump($this->container->get('config')->get('baseUri'));
+//        var_dump($this->container->get('config')->get('requestUri'));
+//        die();
+
         return (string) $this->container->get('application')->handle(
             $_GET['_url'] ?? '/'
         )
