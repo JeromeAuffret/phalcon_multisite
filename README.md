@@ -1,8 +1,12 @@
 # Phalcon Multisite
 
-This is a sample application for the [Phalcon Framework](https://github.com/phalcon/cphalcon). \
-This try to provide a lightweight architecture for a multisite stack. 
-   
+This is a sample application for the [Phalcon Framework](https://github.com/phalcon/cphalcon).
+
+It trie to provide a lightweight architecture for a multi-site stack, with sharing and overriding functionalities.
+
+It also includes some features like ACL, authentication and more.
+
+
 ## Get Started
 
 ### Requirements
@@ -24,12 +28,13 @@ This following directories need to have write permissions :
 * cache/
 * public/temp/
 
+
 ## Demos
 
 ### Configuration
 
 The main database need to be configure in `src/common/config/main.php`. \
-Also, you can add a `config.php` witch override `main.php` and is gitignore by default.
+Also, you can add a `config.php` which will be merged in `main.php` and is gitignore by default.
 
 ```
 'main_database' => [
