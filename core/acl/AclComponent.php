@@ -59,7 +59,13 @@ class AclComponent implements ComponentAware
      */
     private function initialize(string $moduleName, string $controllerName, string $actionName, array $params)
     {
-        $this->componentName = $controllerName === 'error' ? '_error' : $moduleName.'_'.$controllerName;
+        $container = Di::getDefault();
+
+        if ($container->get('config')->get('applicationType') === 'modules') {
+            $this->componentName = $controllerName === 'error' ? '_error' : $moduleName.'_'.$controllerName;
+        } elseif ($container->get('config')->get('applicationType') === 'simple') {
+            $this->componentName = $controllerName === 'error' ? '_error' : $controllerName;
+        }
 
         $this->moduleName = $moduleName;
 
@@ -69,11 +75,11 @@ class AclComponent implements ComponentAware
 
         $this->params = $params;
 
-        $this->request_method = Di::getDefault()->get('request')->getMethod();
+        $this->request_method = $container->get('request')->getMethod();
 
-        $this->request_query = Di::getDefault()->get('request')->getQuery();
+        $this->request_query = $container->get('request')->getQuery();
 
-        $this->request_post = Di::getDefault()->get('request')->getPost();
+        $this->request_post = $container->get('request')->getPost();
     }
 
 

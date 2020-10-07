@@ -135,6 +135,8 @@ final class Loader extends Injectable
      */
     public function dispatchController(Dispatcher $dispatcher)
     {
+        $config = Di::getDefault()->get('config');
+
         $module_name = $dispatcher->getModuleName();
         $module = Str::camelize($module_name);
 
@@ -146,11 +148,17 @@ final class Loader extends Injectable
         if (end($controller_class) === 'ErrorController') {
             $dispatcher->setNamespaceName('Controllers\\');
         }
-        else if($this->application && file_exists($app_controller_module_path.'/'.$controller_file)) {
-            $namespace = $this->application.'\Modules\\'.$module.'\Controllers';
+        elseif ($config->get('applicationType') === 'simple') {
+            $dispatcher->setNamespaceName($this->application.'\Controllers');
+        }
+        elseif ($config->get('applicationType') === 'modules')
+        {
+            if($this->application && file_exists($app_controller_module_path.'/'.$controller_file)) {
+                $namespace = $this->application.'\Modules\\'.$module.'\Controllers';
 
-            (new \Phalcon\Loader())->registerNamespaces([$namespace => $app_controller_module_path])->register();
-            $dispatcher->setNamespaceName($namespace);
+                (new \Phalcon\Loader())->registerNamespaces([$namespace => $app_controller_module_path])->register();
+                $dispatcher->setNamespaceName($namespace);
+            }
         }
     }
 
@@ -285,7 +293,7 @@ final class Loader extends Injectable
         foreach ($asset_path as $path) {
             if ($type === 'css') {
                 $collection->addCss($path);
-            } elseif($type === 'js') {
+            } elseif ($type === 'js') {
                 $collection->addJs($path);
             }
         }
@@ -311,8 +319,14 @@ final class Loader extends Injectable
         $action = $dispatcher->getActionName();
 
         // Common and application assets roots paths
-        $app_module_path = $this->getApplicationPath().'/modules/'.$module.'/assets/';
-        $common_module_path = COMMON_PATH.'/modules/'.$module.'/assets/';
+        if (Di::getDefault()->get('config')->get('applicationType') === 'simple') {
+            $app_module_path = $this->getApplicationPath().'/assets/';
+            $common_module_path = COMMON_PATH.'/assets/';
+        }
+        elseif (Di::getDefault()->get('config')->get('applicationType') === 'simple') {
+            $app_module_path = $this->getApplicationPath().'/modules/'.$module.'/assets/';
+            $common_module_path = COMMON_PATH.'/modules/'.$module.'/assets/';
+        }
 
         // Assets path
         $asset_file_path = $controller.'/'.$action.'.'.$type;
@@ -330,7 +344,7 @@ final class Loader extends Injectable
         foreach ($asset_path as $path) {
             if ($type === 'css') {
                 $collection->addCss($path);
-            } elseif($type === 'js') {
+            } elseif ($type === 'js') {
                 $collection->addJs($path);
             }
         }

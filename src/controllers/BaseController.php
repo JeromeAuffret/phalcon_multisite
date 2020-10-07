@@ -71,7 +71,11 @@ class BaseController extends Controller implements ComponentAware
      */
     public function setComponentName()
     {
-        $this->component_name = $this->dispatcher->getModuleName().'_'.$this->dispatcher->getControllerName().'_'.$this->dispatcher->getActionName();
+        if ($this->config->get('applicationType') === 'modules') {
+            $this->component_name = $this->dispatcher->getModuleName().'_'.$this->dispatcher->getControllerName().'_'.$this->dispatcher->getActionName();
+        } elseif ($this->config->get('applicationType') === 'simple') {
+            $this->component_name = $this->dispatcher->getControllerName().'_'.$this->dispatcher->getActionName();
+        }
     }
 
     /**

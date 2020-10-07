@@ -23,7 +23,7 @@ final class Router extends \Phalcon\Mvc\Router
 
         $defaultModule = $config->get('defaultModule');
 
-        if ($modules->has($defaultModule))
+        if ($config->get('applicationType') === 'modules')
         {
             $module = $modules->get($defaultModule);
             $namespace = preg_replace('/Module$/', 'Controllers', $module->get('className'));

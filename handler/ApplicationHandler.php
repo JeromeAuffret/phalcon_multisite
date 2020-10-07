@@ -2,7 +2,7 @@
 
 namespace Handler;
 
-use Component\Provider as ProviderComponent;
+use Component\ServiceProvider as ServiceProviderComponent;
 use Exception;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Mvc\Application as MvcApplication;
@@ -18,10 +18,6 @@ class ApplicationHandler
      * @var FactoryDefault
      */
     protected $container;
-    /**
-     * @var ProviderComponent
-     */
-    protected $provider;
 
     /**
      * @throws Exception
@@ -42,16 +38,8 @@ class ApplicationHandler
      */
     public function handle(): string
     {
-
-//        var_dump($_GET['_url'] ?? '/');
-//        var_dump($_SERVER['REQUEST_URI']);
-//
-//        var_dump($this->container->get('config')->get('baseUri'));
-//        var_dump($this->container->get('config')->get('requestUri'));
-//        die();
-
         return (string) $this->container->get('application')->handle(
-            $_GET['_url'] ?? '/'
+            $this->container->get('config')->get('requestUri')
         )
             ->getContent();
     }
@@ -86,7 +74,8 @@ class ApplicationHandler
      */
     public function registerProviders()
     {
-        $this->provider = new ProviderComponent($this->container);
+        $serviceProvider = new ServiceProviderComponent($this->container);
+        $serviceProvider->registerServices();
     }
 
     /**
@@ -96,9 +85,12 @@ class ApplicationHandler
     {
         $this->container->setShared('application', new MvcApplication($this->container));
 
-        $this->container->get('application')->registerModules(
-            $this->container->get('config')->get('modules')->toArray()
-        );
+        if ($this->container->get('config')->get('applicationType') === 'modules')
+        {
+            $this->container->get('application')->registerModules(
+                $this->container->get('config')->get('modules')->toArray()
+            );
+        }
     }
 
 

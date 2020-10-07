@@ -16,9 +16,9 @@
     "require": {
         "php": ">=7.2",
         "ext-openssl": "*",
-        "ext-phalcon": "~4.0.0",
-	    "vlucas/phpdotenv": "^3.6",
-        "ext-pdo": "*"
+        "ext-phalcon": "~4.0.5",
+        "ext-pdo": "*",
+        "vlucas/phpdotenv": "^3.6"
     },
     "require-dev": {
 	    "codeception/codeception": "^3.1",
