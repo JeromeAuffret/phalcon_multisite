@@ -17,11 +17,11 @@ use Service\Url as UrlService;
 use Service\View as ViewService;
 
 /**
- * Class Provider
+ * Class ServiceProvider
  *
  * @package Component
  */
-final class Provider extends Injectable
+final class ServiceProvider extends Injectable
 {
 
     /**
@@ -29,6 +29,16 @@ final class Provider extends Injectable
      */
     public function __construct(FactoryDefault $container)
     {
+        $this->setDI($container);
+    }
+
+    /**
+     *
+     */
+    public function registerServices()
+    {
+        $container = $this->getDI();
+
         (new SessionService)->register($container);
 
         (new ConfigService)->register($container);

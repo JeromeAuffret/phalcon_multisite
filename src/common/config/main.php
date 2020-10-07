@@ -7,6 +7,9 @@ $requestUri = '/'.str_replace($baseUri, '', $_SERVER['REQUEST_URI']);
 return [
     'version' => '0.1',
 
+    'useModules' => true,
+    'maintenance' => false,
+
     'serverName' => $serverName,
     'baseUri'    => $baseUri,
     'requestUri' => $requestUri,
@@ -14,8 +17,6 @@ return [
     'defaultModule'     => 'admin',
     'defaultController' => 'index',
     'defaultAction'     => 'index',
-
-    'maintenance' => false,
 
     'main_database' => [
         'adapter'  => 'Postgresql',
