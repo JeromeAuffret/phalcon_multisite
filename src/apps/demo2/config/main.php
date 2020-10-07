@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'defaultModule'  => 'home',
+    'applicationType' => 'simple',
 
     'publicComponents' => [
-        'home_index'
+        'index'
     ]
 ];

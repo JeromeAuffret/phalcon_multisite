@@ -39,7 +39,7 @@ class ApplicationHandler
     public function handle(): string
     {
         return (string) $this->container->get('application')->handle(
-            $this->container->get('config')->get('serverUri')
+            $this->container->get('config')->get('requestUri')
         )
             ->getContent();
     }
@@ -85,9 +85,12 @@ class ApplicationHandler
     {
         $this->container->setShared('application', new MvcApplication($this->container));
 
-        $this->container->get('application')->registerModules(
-            $this->container->get('config')->get('modules')->toArray()
-        );
+        if ($this->container->get('config')->get('applicationType') === 'modules')
+        {
+            $this->container->get('application')->registerModules(
+                $this->container->get('config')->get('modules')->toArray()
+            );
+        }
     }
 
 

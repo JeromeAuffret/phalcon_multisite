@@ -7,7 +7,8 @@ $requestUri = '/'.str_replace($baseUri, '', $_SERVER['REQUEST_URI']);
 return [
     'version' => '0.1',
 
-    'useModules' => true,
+    'applicationType' => 'modules', // simple, modules
+
     'maintenance' => false,
 
     'serverName' => $serverName,
