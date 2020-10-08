@@ -56,7 +56,7 @@ final class Application extends Injectable
     /**
      * @return string
      */
-    public function getApplicationNamespace(): string
+    public function getApplicationNamespace(): ?string
     {
         return $this->application_namespace;
     }
@@ -64,7 +64,7 @@ final class Application extends Injectable
     /**
      * @return string
      */
-    public function getApplicationPath(): string
+    public function getApplicationPath(): ?string
     {
         return $this->application_path;
     }
