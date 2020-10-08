@@ -10,13 +10,13 @@ use Phalcon\Acl\RoleInterface;
 use Phalcon\Acl\Adapter\AbstractAdapter;
 use Phalcon\Acl\Adapter\AdapterInterface;
 use Phalcon\Di\Injectable;
-use Phalcon\Mvc\Dispatcher;
 
 /**
  * Class Acl
  *
- * @property Session session
- * @property Config  config
+ * @property Application application
+ * @property Session     session
+ * @property Config      config
  * @package Component
  */
 final class Acl extends Injectable implements AdapterInterface
@@ -35,7 +35,7 @@ final class Acl extends Injectable implements AdapterInterface
      */
     public function __construct()
     {
-        $this->application_path = $this->session->getApplicationPath();
+        $this->application_path = $this->application->getApplicationPath();
         $this->modules = $this->config->get('modules');
     }
 

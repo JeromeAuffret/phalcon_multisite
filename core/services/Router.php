@@ -25,9 +25,9 @@ class Router implements ServiceProviderInterface
             return new ComponentRouter();
         });
 
-        $container->get('router')->registerRouter($container);
-        $container->get('router')->registerMainRoutesFile($container);
-        $container->get('router')->registerModulesRoutesFile($container);
+        $container->get('router')->registerRouter();
+        $container->get('router')->registerMainRoutesFile();
+        $container->get('router')->registerModulesRoutesFile();
     }
 
 }

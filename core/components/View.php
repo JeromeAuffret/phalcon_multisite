@@ -20,7 +20,7 @@ final class View extends \Phalcon\Mvc\View
     {
         $di = $this->getDi();
         $module = $di['router']->getModuleName();
-        $app_path = $di->get('session')->getApplicationPath();
+        $app_path = $di->get('application')->getApplicationPath();
 
         $view_app_path = $app_path.'/views';
         $app_module_path = $app_path.'/modules/'.$module.'/views';
@@ -83,7 +83,7 @@ final class View extends \Phalcon\Mvc\View
      */
     public function getModuleMenu($module)
     {
-        $app_path = $this->getDi()->get('session')->getApplicationPath();
+        $app_path = $this->getDi()->get('application')->getApplicationPath();
 
         if (file_exists($app_path.'/modules/'.$module.'/views/menu.phtml')) {
             $this->setPartialsDir($app_path.'/modules/'.$module.'/views/');
@@ -103,7 +103,7 @@ final class View extends \Phalcon\Mvc\View
      */
     public function getAdminReferenceMenu()
     {
-        $app_path = $this->getDi()->get('session')->getApplicationPath();
+        $app_path = $this->getDi()->get('application')->getApplicationPath();
 
         if (file_exists($app_path.'/modules/admin/partials/reference.phtml')) {
             $this->setPartialsDir($app_path.'/modules/admin/partials/');

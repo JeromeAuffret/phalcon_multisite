@@ -45,7 +45,7 @@ final class Router extends \Phalcon\Mvc\Router
     public function registerMainRoutesFile(): void
     {
         $container = Di::getDefault();
-        $app_path = $container->get('session')->getApplicationPath();
+        $app_path = $container->get('application')->getApplicationPath();
 
         $app_config_path = $app_path.'/config/routes.php';
         $app_common_path = COMMON_PATH.'/config/routes.php';
@@ -65,7 +65,7 @@ final class Router extends \Phalcon\Mvc\Router
     {
         $container = Di::getDefault();
         $modules = $container->get('config')->get('modules');
-        $app_path = $container->get('session')->getApplicationPath();
+        $app_path = $container->get('application')->getApplicationPath();
 
         foreach ($modules as $key => $module)
         {
