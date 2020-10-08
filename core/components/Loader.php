@@ -114,8 +114,6 @@ final class Loader extends Injectable
     {
         $module_name = $dispatcher->getModuleName();
         $application_namespace = $this->application->getApplicationNamespace();
-        $app_controller_module_path = $this->application->getApplicationModulePath($module_name).'/controllers';
-        $namespace = $this->application->getApplicationModuleNamespace($module_name).'\\Controllers';
 
         $controller_class = explode('\\', $dispatcher->getControllerClass());
         $controller_file = end($controller_class).'.php';
@@ -126,11 +124,13 @@ final class Loader extends Injectable
         elseif ($this->config->get('applicationType') === 'simple') {
             $dispatcher->setNamespaceName($application_namespace.'\Controllers');
         }
-        elseif ($this->config->get('applicationType') === 'modules')
-        {
-            if($application_namespace && file_exists($app_controller_module_path.'/'.$controller_file)) {
-                (new \Phalcon\Loader())->registerNamespaces([$namespace => $app_controller_module_path])->register();
-                $dispatcher->setNamespaceName($namespace);
+        elseif ($this->config->get('applicationType') === 'modules') {
+            $app_controller_module_path = $this->application->getApplicationModulePath($module_name).'/controllers';
+            $module_namespace = $this->application->getApplicationModuleNamespace($module_name).'\\Controllers';
+
+            if(file_exists($app_controller_module_path.'/'.$controller_file)) {
+                (new \Phalcon\Loader())->registerNamespaces([$module_namespace => $app_controller_module_path])->register();
+                $dispatcher->setNamespaceName($module_namespace);
             }
         }
     }
