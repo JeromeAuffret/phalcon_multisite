@@ -6,6 +6,7 @@ use Phalcon\Di\FactoryDefault;
 use Phalcon\Di\Injectable;
 
 use Service\Acl as AclService;
+use Service\Application as ApplicationService;
 use Service\Config as ConfigService;
 use Service\Database as DbService;
 use Service\Dispatcher as DispatcherService;
@@ -38,6 +39,8 @@ final class ServiceProvider extends Injectable
     public function registerServices()
     {
         $container = $this->getDI();
+
+        (new ApplicationService)->register($container);
 
         (new SessionService)->register($container);
 

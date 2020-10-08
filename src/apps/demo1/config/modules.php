@@ -1,6 +1,6 @@
 <?php
 
-$application_path = \Phalcon\Di::getDefault()->get('session')->getApplicationPath();
+$application_path = \Phalcon\Di::getDefault()->get('application')->getApplicationPath();
 
 return [
     'dashboard' => [

@@ -26,16 +26,15 @@ final class Config extends \Phalcon\Config
     /**
      * Merge and register configuration for a registered or given application
      *
-     * @param string|null $application_slug
      * @return void
      */
-    public function registerApplicationConfig(string $application_slug = null)
+    public function registerApplicationConfig()
     {
-        $application_path = Di::getDefault()->get('session')->getApplicationPath($application_slug);
+        $applicationPath = Di::getDefault()->get('application')->getApplicationPath();
 
-        $this->mergeConfigFile($application_path.'/config/main.php');
-        $this->mergeConfigFile($application_path.'/config/config.php');
-        $this->mergeConfigFile($application_path.'/config/modules.php', 'modules');
+        $this->mergeConfigFile($applicationPath.'/config/main.php');
+        $this->mergeConfigFile($applicationPath.'/config/config.php');
+        $this->mergeConfigFile($applicationPath.'/config/modules.php', 'modules');
     }
 
     /**

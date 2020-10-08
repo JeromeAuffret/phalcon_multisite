@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Component\Acl;
+use Component\Application;
 use Component\Config;
 use Component\Loader;
 use Component\Session;
@@ -17,8 +18,9 @@ use Phalcon\Mvc\Dispatcher;
 /**
  * Class BaseController
  *
- * @property Loader loader
  * @property Acl acl
+ * @property Application application
+ * @property Loader loader
  * @property Session session
  * @property Config config
  * @property View view
@@ -98,7 +100,7 @@ class BaseController extends Controller implements ComponentAware
      */
     public function dispatchViews()
     {
-        $application_path = $this->session->getApplicationPath();
+        $application_path = $this->application->getApplicationPath();
         $module = $this->dispatcher->getModuleName();
 
         $app_path = $application_path.'/views';

@@ -20,10 +20,19 @@ class Config implements ServiceProviderInterface
     public function register(DiInterface $container): void
     {
         $container->setShared('config', function () {
-            return new ConfigComponent();
+            $config = new ConfigComponent();
+            $config->registerMainConfig();
+
+            return $config;
         });
 
-        $container->get('config')->registerMainConfig();
+        // Register applications config
+        if ($container->get('application')->hasApplication())
+        {
+            $container->get('config')->registerApplicationConfig(
+                $container->get('application')->getApplicationSlug()
+            );
+        }
     }
 
 }

@@ -18,7 +18,7 @@ class ApplicationController extends ControllerBase
     {
         // Destroy application session on application page
         if ($this->session->hasApplication()) {
-            $this->session->destroyApplication();
+            $this->session->destroyApplicationSession();
             $this->response->redirect('auth/application');
         }
         else {

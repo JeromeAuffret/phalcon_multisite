@@ -7,7 +7,6 @@ use Models\Role;
 use Models\User;
 use Models\Application;
 use Phalcon\Collection;
-use Phalcon\Helper\Str;
 use Phalcon\Session\Manager as SessionManager;
 
 
@@ -21,9 +20,17 @@ final class Session extends SessionManager
 
     /*******************************************************
      *
-     *                       SESSION
+     *                          USER
      *
      *******************************************************/
+
+    /**
+     * @return boolean
+     */
+    public function hasUser(): bool
+    {
+        return $this->has('user');
+    }
 
     /**
      * Setup session related to application
@@ -37,27 +44,8 @@ final class Session extends SessionManager
     }
 
     /**
-     * Setup session related to application
-     *
-     * @param Application $application
-     */
-    public function setupApplicationSession(Application $application)
-    {
-        $this->set('application', new Collection($application->toArray()));
-        $this->setupUserRole();
-    }
-
-    /**
-     * Destroy session related to application
-     */
-    public function destroyApplication()
-    {
-        $this->remove('application');
-    }
-
-    /**
      *  Setup ACL useRole
-     *  Guest profile per default
+     *  Set 'guest' by default
      */
     public function setupUserRole()
     {
@@ -73,23 +61,8 @@ final class Session extends SessionManager
         );
     }
 
-
-    /*******************************************************
-     *
-     *                         USERS
-     *
-     *******************************************************/
-
     /**
-     * @return boolean
-     */
-    public function hasUser(): bool
-    {
-        return $this->has('user');
-    }
-
-    /**
-     * Return user values or given key
+     * Return user collection or given key value
      *
      * @param mixed|null $key
      * @return Collection|mixed|null
@@ -108,7 +81,7 @@ final class Session extends SessionManager
     }
 
     /**
-     * Set user value
+     * Set user key value
      *
      * @param $key
      * @param $value
@@ -139,7 +112,27 @@ final class Session extends SessionManager
     }
 
     /**
-     * Return application values or given key
+     * Destroy session related to application
+     */
+    public function destroyApplicationSession()
+    {
+        $this->remove('application');
+        $this->remove('acl_role');
+    }
+
+    /**
+     * Setup session related to application
+     *
+     * @param Application $application
+     */
+    public function setupApplicationSession(Application $application)
+    {
+        $this->set('application', new Collection($application->toArray()));
+        $this->setupUserRole();
+    }
+
+    /**
+     * Return application collection o given key value
      *
      * @param mixed|null $key
      * @return Collection|mixed|null
@@ -158,7 +151,7 @@ final class Session extends SessionManager
     }
 
     /**
-     * Set application value
+     * Set application key value
      *
      * @param $key
      * @param $value
@@ -168,43 +161,6 @@ final class Session extends SessionManager
         if ($this->hasApplication()) {
             $application = $this->get('application')->set($key, $value);
             $this->set('application', $application);
-        }
-    }
-
-    /**
-     * @param string|null $application_slug
-     * @return null|string
-     */
-    public function getApplicationPath(string $application_slug = null): ?string
-    {
-        if ($application_slug) {
-            return APPS_PATH.'/'.$application_slug;
-        }
-        elseif ($this->hasApplication()) {
-            return APPS_PATH.'/'.$this->getApplication('slug');
-        }
-        else {
-            return null;
-        }
-    }
-
-    /**
-     * Camelize application_slug
-     *
-     * @param null $application_slug
-     * @param string $delimiter
-     * @return string|null
-     */
-    public function getApplicationNamespace($application_slug = null, $delimiter = '_')
-    {
-        if ($application_slug) {
-            return Str::camelize($application_slug, $delimiter);
-        }
-        else if ($this->hasApplication()) {
-            return Str::camelize($this->getApplication('slug'), $delimiter);
-        }
-        else {
-            return null;
         }
     }
 

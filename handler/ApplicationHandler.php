@@ -38,7 +38,7 @@ class ApplicationHandler
      */
     public function handle(): string
     {
-        return (string) $this->container->get('application')->handle(
+        return (string) $this->application->handle(
             $this->container->get('config')->get('requestUri')
         )
             ->getContent();
@@ -83,63 +83,14 @@ class ApplicationHandler
      */
     public function registerMvcApplication()
     {
-        $this->container->setShared('application', new MvcApplication($this->container));
+        $this->application = new MvcApplication($this->container);
 
         if ($this->container->get('config')->get('applicationType') === 'modules')
         {
-            $this->container->get('application')->registerModules(
+            $this->application->registerModules(
                 $this->container->get('config')->get('modules')->toArray()
             );
         }
-    }
-
-
-    /************************************************************
-     *
-     *                   MVC APPLICATION ACCESSOR
-     *
-     ************************************************************/
-
-    /**
-     * Returns the default module name
-     *
-     * @return string
-     */
-    public function getDefaultModule(): string
-    {
-        return $this->application->getDefaultModule();
-    }
-
-    /**
-     * Return the modules registered in the application
-     *
-     * @return array
-     */
-    public function getModules(): array
-    {
-        return $this->application->getModules();
-    }
-
-    /**
-     * Gets the module definition registered in the application via module name
-     *
-     * @param string $name
-     * @return array|object
-     */
-    public function getModule(string $name): array
-    {
-        return $this->application->getModule($name);
-    }
-
-    /**
-     * Check if a module is registered in the application
-     *
-     * @param string $name
-     * @return bool
-     */
-    public function hasModule(string $name): bool
-    {
-        return array_key_exists($name, $this->application->getModules());
     }
 
 }
