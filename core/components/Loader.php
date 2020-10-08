@@ -323,7 +323,7 @@ final class Loader extends Injectable
             $app_module_path = $this->getApplicationPath().'/assets/';
             $common_module_path = COMMON_PATH.'/assets/';
         }
-        elseif (Di::getDefault()->get('config')->get('applicationType') === 'simple') {
+        elseif (Di::getDefault()->get('config')->get('applicationType') === 'modules') {
             $app_module_path = $this->getApplicationPath().'/modules/'.$module.'/assets/';
             $common_module_path = COMMON_PATH.'/modules/'.$module.'/assets/';
         }
