@@ -33,7 +33,7 @@ class ApplicationHandler
     /**
      * Handle application's response
      *
-     * @return string
+     * @return string`
      * @throws Exception
      */
     public function handle(): string

@@ -2,6 +2,7 @@
 
 namespace Middleware;
 
+use Component\Application as ApplicationComponent;
 use Component\Config;
 use Component\Loader;
 use Component\Session;
@@ -14,7 +15,8 @@ use Phalcon\Di\Injectable;
 /**
  * Class Dispatch
  *
- * @property Config  config
+ * @property ApplicationComponent application
+ * @property Config config
  * @property Session session
  * @property Loader  loader
  * @package Middleware
@@ -66,7 +68,9 @@ class Dispatch extends Injectable
         $server_name = $this->config->get('serverName');
         if ($this->config->has('host') && in_array($server_name, $this->config->get('host')->getKeys()))
         {
-            if ($application = Application::getBySlug($this->config->get('host')->get($server_name))) {
+            if ($application = Application::getBySlug($this->config->get('host')->get($server_name)))
+            {
+                $this->application->setupApplication($application->getSlug());
                 $this->session->setupApplicationSession($application);
                 $this->loader->registerApplicationServices($application->getSlug());
             }
