@@ -22,11 +22,11 @@ class Loader implements ServiceProviderInterface
     public function register(DiInterface $container): void
     {
         $container->setShared('loader', function () {
-            $loader = new LoaderComponent();
-            $loader->registerMainNamespaces();
-
-            return $loader;
+            return new LoaderComponent();
         });
+
+        // Register Main namespaces
+        $container->get('loader')->registerMainNamespaces();
 
         // Register application namespaces
         if ($container->get('application')->hasApplication())

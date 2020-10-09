@@ -69,7 +69,7 @@ class BaseController extends Controller implements ComponentAware
      ************************************************************/
 
     /**
-     *  Set component name with pattern {module}_{controller}_{action}
+     * Set component name with pattern {module}_{controller}_{action}
      */
     public function setComponentName()
     {
@@ -96,11 +96,11 @@ class BaseController extends Controller implements ComponentAware
      ************************************************************/
 
     /**
-     *  Dispatch views between common/application folders
+     * Dispatch views between common/application folders
      */
     public function dispatchViews()
     {
-        $application_path = $this->application->getApplicationPath();
+        $application_path = $this->application ? $this->application->getApplicationPath() : null;
         $module = $this->dispatcher->getModuleName();
 
         $app_path = $application_path.'/views';
@@ -115,7 +115,7 @@ class BaseController extends Controller implements ComponentAware
     }
 
     /**
-     *  Set default view main
+     * Set default view main
      *
      * @param $common_path
      * @param $common_module_path
@@ -126,7 +126,7 @@ class BaseController extends Controller implements ComponentAware
     {
         if (file_exists($app_module_path.'/'.$this->view->getMainView().'.phtml')) {
             $this->view->setMainView($app_module_path.'/'.$this->view->getMainView());
-        } 
+        }
         elseif (file_exists($app_path.'/'.$this->view->getMainView().'.phtml')) {
             $this->view->setMainView($app_path.'/'.$this->view->getMainView());
         }
@@ -139,7 +139,7 @@ class BaseController extends Controller implements ComponentAware
     }
 
     /**
-     *  Set default layouts directory
+     * Set default layouts directory
      *
      * @param $common_path
      * @param $common_module_path
@@ -154,20 +154,20 @@ class BaseController extends Controller implements ComponentAware
 
         if (file_exists($app_module_path.'/layouts/'.$this->view->getLayout().'.phtml')) {
             $this->view->setLayoutsDir($app_module_path.'/layouts/');
-        } 
+        }
         elseif (file_exists($app_path.'/layouts/'.$this->view->getLayout().'.phtml')) {
             $this->view->setLayoutsDir($app_path.'/layouts/');
-        } 
+        }
         elseif (file_exists($common_module_path.'/layouts/'.$this->view->getLayout().'.phtml')) {
             $this->view->setLayoutsDir($common_module_path.'/layouts/');
-        } 
+        }
         elseif (file_exists($common_path.'/layouts/'.$this->view->getLayout().'.phtml')) {
             $this->view->setLayoutsDir($common_path.'/layouts/');
         }
     }
 
     /**
-     *  Set default views directory
+     * Set default views directory
      *
      * @param $common_path
      * @param $common_module_path
@@ -181,13 +181,13 @@ class BaseController extends Controller implements ComponentAware
 
         if (file_exists($app_module_path.'/'.$controller_name.'/'.$action_name.'.phtml')) {
             $this->view->setViewsDir($app_module_path);
-        } 
+        }
         elseif (file_exists($app_path.'/'.$controller_name.'/'.$action_name.'.phtml')) {
             $this->view->setViewsDir($app_path);
-        } 
+        }
         elseif (file_exists($common_module_path.'/'.$controller_name.'/'.$action_name.'.phtml')) {
             $this->view->setViewsDir($common_module_path);
-        } 
+        }
         elseif (file_exists($common_path.'/'.$controller_name.'/'.$action_name.'.phtml')) {
             $this->view->setViewsDir($common_path);
         }
@@ -196,13 +196,13 @@ class BaseController extends Controller implements ComponentAware
 
     /************************************************************
      *
-     *                      ASSETS COLLECTION
+     *                     ASSETS COLLECTION
      *
      ************************************************************/
 
     /**
-     *  Setup Assets collection
-     *  Add mains libraries / application assets / specific view collection
+     * Setup Assets collection
+     * Add mains libraries / application assets / specific view collection
      */
     public function setupAssetsCollection()
     {
@@ -213,7 +213,7 @@ class BaseController extends Controller implements ComponentAware
     }
 
     /**
-     *  Initialize assets collection and upload main scripts
+     * Initialize assets collection and upload main scripts
      */
     public function setMainCollection()
     {
@@ -226,7 +226,7 @@ class BaseController extends Controller implements ComponentAware
     }
 
     /**
-     *  Initialize application libraries
+     * Initialize application libraries
      */
     public function setFrameworkCollection()
     {
@@ -249,7 +249,7 @@ class BaseController extends Controller implements ComponentAware
     }
 
     /**
-     *  Initialize application general assets defined in application asset's folder
+     * Initialize application general assets defined in application asset's folder
      */
     public function setApplicationCollection()
     {
@@ -273,15 +273,15 @@ class BaseController extends Controller implements ComponentAware
             ->addFilter(new Jsmin());
 
         /**
-         *     Load specific view assets base on routing process
+         * Load specific view assets base on routing process
          */
         $this->loader->registerApplicationAssetsCollection($app_style, 'css');
         $this->loader->registerApplicationAssetsCollection($app_script, 'js');
     }
 
     /**
-     *  Initialize dynamic assets loading
-     *  Merge given files to assets loading and minify
+     * Initialize dynamic assets loading
+     * Merge given files to assets loading and minify
      */
     public function setViewCollection()
     {
@@ -305,7 +305,7 @@ class BaseController extends Controller implements ComponentAware
             ->addFilter(new Jsmin());
 
         /**
-         *     Load specific view assets base on routing process
+         * Load specific view assets base on routing process
          */
         $this->loader->registerViewAssetsCollection($view_style, 'css');
         $this->loader->registerViewAssetsCollection($view_script, 'js');
@@ -314,7 +314,7 @@ class BaseController extends Controller implements ComponentAware
 
     /************************************************************
      *
-     *                          HELPERS
+     *                         HELPERS
      *
      ************************************************************/
 

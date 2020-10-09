@@ -33,8 +33,8 @@ class Error extends Injectable
     public function beforeException(Event $event, Dispatcher $dispatcher, $exception)
     {
         /* @var Exception $exception */
-        error_log($exception->getMessage());
-        error_log($exception->getTraceAsString());
+//        error_log($exception->getMessage());
+//        error_log($exception->getTraceAsString());
 
         // Add default error status code
         $this->response->setStatusCode(500, 'Internal Server Error');
