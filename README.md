@@ -31,7 +31,7 @@ This following directories need to have writes permissions :
 ### Configuration
 
 The main database need to be configure in `src/common/config/main.php`. \
-Additionally, you can add a `config.php` to store sensitive configuration.
+Additionally, you can add a `config.php`, which is ignored from git, to store sensitive configuration.
 
 ```
 'main_database' => [
@@ -47,4 +47,10 @@ Additionally, you can add a `config.php` to store sensitive configuration.
 
 ### Migrations
 
-Coming soon
+[Phalcon Migrations](https://docs.phalcon.io/4.0/en/db-migrations) is imported with composer by default, and can be access running 
+
+    php vendor/bin/phalcon-migrations
+    
+To deploy the default main database, run :
+
+    php vendor/bin/phalcon-migrations migration 

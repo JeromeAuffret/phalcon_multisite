@@ -1,7 +1,8 @@
 # IDE
 .idea/
 
-# Dynamic generated files
+# Generated files
+.phalcon/*
 cache/*
 public/temp/*
 
@@ -9,7 +10,7 @@ public/temp/*
 composer.lock
 vendor/
 
-# Sensitive configuration files
+# Sensitive configuration
 **/config.php
 
 # Gitkeep empty folders
