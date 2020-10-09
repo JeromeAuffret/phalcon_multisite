@@ -53,4 +53,4 @@ Additionally, you can add a `config.php`, which is ignored from git, to store se
     
 To deploy the default main database, run :
 
-    php vendor/bin/phalcon-migrations migration 
+    php vendor/bin/phalcon-migrations migration run --config=src/common/config/main.php
