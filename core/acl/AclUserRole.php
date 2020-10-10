@@ -10,13 +10,13 @@ class AclUserRole implements RoleAware
 {
     private $super_admin = ['admin'];
 
-    protected $id_user;
+    protected $userId;
 
     protected $roleName;
 
-    protected $id_application;
+    protected $applicationId;
 
-    protected $user_login;
+    protected $userLogin;
 
     protected $parameters;
 
@@ -24,19 +24,19 @@ class AclUserRole implements RoleAware
      * AclUserRole constructor.
      *
      * @param string      $role_name
-     * @param int|null    $id_user
-     * @param string|null $user_login
-     * @param int|null    $id_application
+     * @param int|null    $userId
+     * @param string|null $userLogin
+     * @param int|null    $applicationId
      * @param bool        $noAdmin
      * @param array       $parameters
      */
-    public function __construct($role_name = 'guest', $id_user = null, $user_login = null, $id_application = null, $noAdmin = false, array $parameters = [])
+    public function __construct($role_name = 'guest', $userId = null, $userLogin = null, $applicationId = null, $noAdmin = false, array $parameters = [])
     {
-        $this->roleName       = $role_name;
-        $this->id_user        = $id_user;
-        $this->user_login     = $user_login;
-        $this->id_application = $id_application;
-        $this->parameters     = new Collection($parameters);
+        $this->roleName      = $role_name;
+        $this->userId        = $userId;
+        $this->userLogin     = $userLogin;
+        $this->applicationId = $applicationId;
+        $this->parameters    = new Collection($parameters);
 
         if (!$noAdmin && $this->loginIsSuperAdmin()) {
             $this->setParameters('superAdmin', true);
@@ -64,7 +64,7 @@ class AclUserRole implements RoleAware
      */
     public function getIdUser(): ?int
     {
-        return $this->id_user;
+        return $this->userId;
     }
 
     /**
@@ -72,7 +72,7 @@ class AclUserRole implements RoleAware
      */
     public function getUserLogin(): ?string
     {
-        return $this->user_login;
+        return $this->userLogin;
     }
 
     /**
@@ -88,7 +88,7 @@ class AclUserRole implements RoleAware
      */
     public function getIdApplication(): ?int
     {
-        return $this->id_application;
+        return $this->applicationId;
     }
 
     /**

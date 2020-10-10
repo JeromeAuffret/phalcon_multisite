@@ -18,11 +18,11 @@ class AclComponent implements ComponentAware
 
     protected $params;
 
-    protected $request_method;
+    protected $requestMethod;
 
-    protected $request_query;
+    protected $requestQuery;
 
-    protected $request_post;
+    protected $requestPost;
 
     /**
      * AclComponent constructor.
@@ -75,11 +75,11 @@ class AclComponent implements ComponentAware
 
         $this->params = $params;
 
-        $this->request_method = $container->get('request')->getMethod();
+        $this->requestMethod = $container->get('request')->getMethod();
 
-        $this->request_query = $container->get('request')->getQuery();
+        $this->requestQuery = $container->get('request')->getQuery();
 
-        $this->request_post = $container->get('request')->getPost();
+        $this->requestPost = $container->get('request')->getPost();
     }
 
 
@@ -134,7 +134,7 @@ class AclComponent implements ComponentAware
      */
     public function getMethod(): string
     {
-        return $this->request_method;
+        return $this->requestMethod;
     }
 
 }
