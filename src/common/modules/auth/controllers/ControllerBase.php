@@ -6,15 +6,4 @@ use Controllers\BaseController;
 use Phalcon\Mvc\View;
 
 
-class ControllerBase extends BaseController
-{
-	/**
-	 *
-	 */
-	public function initialize()
-	{
-		$this->view->disableLevel(
-    		View::LEVEL_LAYOUT
-		);
-	}
-}
+class ControllerBase extends BaseController {}

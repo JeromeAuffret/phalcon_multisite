@@ -4,6 +4,7 @@ namespace Service;
 
 use Component\Acl as AclComponent;
 use Phalcon\Acl\Adapter\Memory as AclAdapter;
+use Phalcon\Acl\Enum;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
 
@@ -26,7 +27,8 @@ class Acl implements ServiceProviderInterface
         {
             $acl = new AclComponent();
             $acl->setAdapter(new AclAdapter());
-            $acl->setDefaultAction(0);
+            $acl->setDefaultAction(Enum::DENY);
+
             return $acl;
         });
 

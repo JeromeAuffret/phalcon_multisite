@@ -74,6 +74,8 @@ class BaseController extends Controller implements ComponentAware
     {
         $this->session->destroy();
         $this->response->redirect('auth/login');
+
+        return $this->response;
     }
 
 

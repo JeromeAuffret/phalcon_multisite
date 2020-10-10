@@ -9,7 +9,6 @@ $this->allow('*', 'auth_login', 'index');
 // Only accept connected user
 $this->allow('*', 'auth_application', ['index', 'switchApplication'],
     function (AclUserRole $AclUserRole, AclComponent $AclResource) {
-    return true;
-//        return $AclUserRole->getIdUser();
+        return $AclUserRole->getIdUser();
     }
 );

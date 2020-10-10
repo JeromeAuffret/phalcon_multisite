@@ -183,8 +183,8 @@ final class Acl extends Injectable implements AdapterInterface
                 && $this->isAllowed(
                     $this->getUserRole(),
                     $AclComponent,
-                    $AclComponent->getActionName()
-//                    $AclComponent->getParams() TODO why ?
+                    $AclComponent->getActionName(),
+                    $AclComponent->getParams() ?? null
                 );
         }
     }

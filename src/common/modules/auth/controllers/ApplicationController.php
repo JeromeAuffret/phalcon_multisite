@@ -11,21 +11,19 @@ use Phalcon\Http\ResponseInterface;
 
 class ApplicationController extends ControllerBase
 {
+
     /**
      * @return void|Response|ResponseInterface
      */
     public function indexAction()
     {
-        // Destroy application session on application page
-        if ($this->session->hasApplication()) {
+        if ($this->request->isGet() && $this->session->hasApplication()) {
             $this->session->destroyApplicationSession();
-            $this->response->redirect('auth/application');
         }
-        else {
-            $this->view->setVar('application_list',
-                $this->acl->isSuperAdmin() ? Application::find() : Application::getUserApplicationList()
-            );
-        }
+
+        $this->view->setVar('application_list',
+            $this->acl->isSuperAdmin() ? Application::find() : Application::getUserApplicationList()
+        );
     }
 
     /**
