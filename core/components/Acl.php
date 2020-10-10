@@ -24,21 +24,6 @@ final class Acl extends Injectable implements AdapterInterface
     /* @var AbstractAdapter $adapter */
     private $adapter;
 
-    /* @var string $application_path */
-    private $application_path;
-
-    /* @var Config $modules */
-    private $modules;
-
-    /**
-     *
-     */
-    public function __construct()
-    {
-        $this->application_path = $this->application->getApplicationPath();
-        $this->modules = $this->config->get('modules');
-    }
-
     /**
      * @param $adapter
      * @return Acl
@@ -50,22 +35,26 @@ final class Acl extends Injectable implements AdapterInterface
     }
 
     /**
-     * Load modules acl resources and rules
+     * Register Main ACL files 
      */
-    public function definedAclModule()
+    public function registerMainAcl()
     {
+        $common_path = $this->application->getCommonPath();
+        $modules = $this->config->get('modules');
+
         /**
-         * Load common's resources definition
-         * Resources can be defined in generic resources files from configuration folder
+         * Load common's components definition
+         * Components can be defined in generic components files from configuration folder
          * or directly in modules
          */
-        if (file_exists(COMMON_PATH.'/config/components.php')) {
-            include COMMON_PATH.'/config/components.php';
+        if (file_exists($common_path.'/acl/components.php')) {
+            include $common_path.'/acl/components.php';
         }
 
-        foreach ($this->modules as $module_name => $module) {
-            if (file_exists(COMMON_PATH.'/modules/'.$module_name.'/acl/components.php')) {
-                include COMMON_PATH.'/modules/'.$module_name.'/acl/components.php';
+        foreach ($modules as $module_name => $module) {
+            $module_path = $this->application->getCommonModulePath($module_name);
+            if (file_exists($module_path.'/acl/components.php')) {
+                include $module_path.'/acl/components.php';
             }
         }
 
@@ -74,28 +63,39 @@ final class Acl extends Injectable implements AdapterInterface
          * Rules can be defined in generic acl files from configuration folder
          * or directly in modules
          */
-        if (file_exists(COMMON_PATH.'/config/acl.php')) {
-            include COMMON_PATH . '/config/acl.php';
+        if (file_exists($common_path.'/acl/acl.php')) {
+            include $common_path.'/acl/acl.php';
         }
 
-        foreach ($this->modules as $module_name => $module) {
-            if (file_exists(COMMON_PATH.'/modules/'.$module_name.'/acl/acl.php')) {
-                include COMMON_PATH.'/modules/'.$module_name.'/acl/acl.php';
+        foreach ($modules as $module_name => $module) {
+            $module_path = $this->application->getCommonModulePath($module_name);
+            if (file_exists($module_path.'/acl/acl.php')) {
+                include $module_path.'/acl/acl.php';
             }
         }
+    }
+
+    /**
+     * Load modules acl components and rules
+     */
+    public function registerApplicationAcl()
+    {
+        $application_path = $this->application->getApplicationPath();
+        $modules = $this->config->get('modules');
 
         /**
-         * Load application's resources overrides
-         * Resources can be defined in generic resources files from configuration folder
+         * Load application's components overrides
+         * Components can be defined in generic components files from configuration folder
          * or directly in modules
          */
-        if ($this->application_path && file_exists($this->application_path.'/config/components.php')) {
-            include $this->application_path.'/config/components.php';
+        if (file_exists($application_path.'/acl/components.php')) {
+            include $application_path.'/acl/components.php';
         }
 
-        foreach ($this->modules as $module_name => $module) {
-            if ($this->application_path && file_exists($this->application_path.'/modules/'.$module_name.'/acl/components.php')) {
-                include $this->application_path.'/modules/'.$module_name.'/acl/components.php';
+        foreach ($modules as $module_name => $module) {
+            $module_path = $this->application->getApplicationModulePath($module_name);
+            if (file_exists($module_path.'/acl/components.php')) {
+                include $module_path.'/acl/components.php';
             }
         }
 
@@ -104,13 +104,14 @@ final class Acl extends Injectable implements AdapterInterface
          * Rules can be defined in generic acl files from configuration folder
          * or directly in modules
          */
-        if ($this->application_path && file_exists($this->application_path.'/config/acl.php')) {
-            include $this->application_path.'/config/acl.php';
+        if (file_exists($application_path.'/acl/acl.php')) {
+            include $application_path.'/acl/acl.php';
         }
 
-        foreach ($this->modules as $module_name => $module) {
-            if ($this->application_path && file_exists($this->application_path.'/modules/'.$module_name.'/acl/acl.php')) {
-                include $this->application_path.'/modules/'.$module_name.'/acl/acl.php';
+        foreach ($modules as $module_name => $module) {
+            $module_path = $this->application->getApplicationModulePath($module_name);
+            if (file_exists($module_path.'/acl/acl.php')) {
+                include $module_path.'/acl/acl.php';
             }
         }
     }
@@ -183,7 +184,7 @@ final class Acl extends Injectable implements AdapterInterface
                     $this->getUserRole(),
                     $AclComponent,
                     $AclComponent->getActionName(),
-                    $AclComponent->getParams()
+                    $AclComponent->getParams() ?? null
                 );
         }
     }

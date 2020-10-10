@@ -4,6 +4,7 @@ namespace Middleware;
 
 use Component\Acl;
 use Component\Config;
+use Component\Session;
 use Error\AclException;
 use Error\AuthException;
 use Exception;
@@ -17,6 +18,7 @@ use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
  *
  * @property Acl    acl
  * @property Config config
+ * @property Session session
  * @package Middleware
  */
 class Error extends Injectable
@@ -32,12 +34,36 @@ class Error extends Injectable
      */
     public function beforeException(Event $event, Dispatcher $dispatcher, $exception)
     {
-        /* @var Exception $exception */
-//        error_log($exception->getMessage());
-//        error_log($exception->getTraceAsString());
-
         // Add default error status code
         $this->response->setStatusCode(500, 'Internal Server Error');
+
+        // Catch dispatch exception and render error page
+        if ($exception instanceof DispatchException)
+        {
+            switch ($exception->getCode())
+            {
+                case DispatchException::EXCEPTION_HANDLER_NOT_FOUND:
+                case DispatchException::EXCEPTION_ACTION_NOT_FOUND:
+                    $this->response->setStatusCode(404, 'Not Found');
+                    $dispatcher->forward([
+                        'namespace'  => 'Controllers',
+                        'controller' => 'error',
+                        'action'     => 'NotFound',
+                    ]);
+                    return false;
+
+                case DispatchException::EXCEPTION_INVALID_HANDLER:
+                case DispatchException::EXCEPTION_INVALID_PARAMS:
+                    $dispatcher->forward([
+                        'namespace'  => 'Controllers',
+                        'controller' => 'error',
+                        'action'     => 'InternalError',
+                    ]);
+                    return false;
+            }
+
+            $this->sendResponse();
+        }
 
         // Redirect to the login page in case of Auth Exception
         if ($exception instanceof AuthException)
@@ -66,34 +92,6 @@ class Error extends Injectable
                 } else {
                     $this->response->redirect('auth/login');
                 }
-            }
-
-            $this->sendResponse();
-        }
-
-        // Catch dispatch exception and render error page
-        if ($exception instanceof DispatchException)
-        {
-            switch ($exception->getCode())
-            {
-                case DispatchException::EXCEPTION_HANDLER_NOT_FOUND:
-                case DispatchException::EXCEPTION_ACTION_NOT_FOUND:
-                    $this->response->setStatusCode(404, 'Not Found');
-                    $dispatcher->forward([
-                        'namespace'  => 'Controllers',
-                        'controller' => 'error',
-                        'action'     => 'NotFound',
-                    ]);
-                    return false;
-
-                case DispatchException::EXCEPTION_INVALID_HANDLER:
-                case DispatchException::EXCEPTION_INVALID_PARAMS:
-                    $dispatcher->forward([
-                        'namespace'  => 'Controllers',
-                        'controller' => 'error',
-                        'action'     => 'InternalError',
-                    ]);
-                    return false;
             }
 
             $this->sendResponse();

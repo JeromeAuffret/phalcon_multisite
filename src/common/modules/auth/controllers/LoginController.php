@@ -7,10 +7,21 @@ use Error\AuthException;
 use Exception;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
+use Phalcon\Mvc\View;
 
 
 class LoginController extends ControllerBase
 {
+
+    /**
+     *  Disable layout level
+     */
+    public function initialize()
+    {
+        $this->view->disableLevel(
+            View::LEVEL_LAYOUT
+        );
+    }
 
     /**
      *  Login page
@@ -21,14 +32,12 @@ class LoginController extends ControllerBase
      */
     public function indexAction()
     {
-        // Destroy session on login page
         if ($this->request->isGet() && $this->session->hasUser()) {
             $this->session->destroy();
-            $this->response->redirect('auth/login');
         }
 
         // Register User
-        else if ($this->request->isPost()) //  && $this->security->checkToken()
+        if ($this->request->isPost()) //  && $this->security->checkToken()
         {
             $login = $this->request->getPost('login');
             $password = $this->request->getPost('password');

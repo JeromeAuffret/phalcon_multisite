@@ -3,8 +3,8 @@
 namespace Service;
 
 use Component\Acl as AclComponent;
-use Phalcon\Acl\Enum;
 use Phalcon\Acl\Adapter\Memory as AclAdapter;
+use Phalcon\Acl\Enum;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
 
@@ -28,10 +28,17 @@ class Acl implements ServiceProviderInterface
             $acl = new AclComponent();
             $acl->setAdapter(new AclAdapter());
             $acl->setDefaultAction(Enum::DENY);
-            $acl->definedAclModule();
 
             return $acl;
         });
+
+        // Register common acl
+        $container->get('acl')->registerMainAcl();
+
+        // Register application acl
+        if ($container->get('application')->hasApplication()) {
+            $container->get('acl')->registerApplicationAcl();
+        }
     }
 
 }

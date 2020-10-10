@@ -11,8 +11,6 @@ $this->addComponent(
 $this->addComponent(
     'api_form',
     [
-        'index', 'get', 'getEmptyRelationTableRow', 'getSelectData', 'getAutocompleteData',
-        'create', 'update', 'updateTable', 'updateForm',
-        'delete'
+        'index', 'get', 'create', 'update', 'delete'
     ]
 );

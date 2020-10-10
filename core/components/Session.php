@@ -89,8 +89,10 @@ final class Session extends SessionManager
     public function setUser($key, $value)
     {
         if ($this->hasUser()) {
-            $application = $this->get('user')->set($key, $value);
-            $this->set('user', $application);
+            $user = $this->get('user');
+            $user->set($key, $value);
+
+            $this->set('user', $user);
         }
     }
 
@@ -117,7 +119,6 @@ final class Session extends SessionManager
     public function destroyApplicationSession()
     {
         $this->remove('application');
-        $this->remove('acl_role');
     }
 
     /**
@@ -159,7 +160,9 @@ final class Session extends SessionManager
     public function setApplication($key, $value)
     {
         if ($this->hasApplication()) {
-            $application = $this->get('application')->set($key, $value);
+            $application = $this->get('application');
+            $application->set($key, $value);
+
             $this->set('application', $application);
         }
     }
@@ -182,9 +185,16 @@ final class Session extends SessionManager
     /**
      * @return AclUserRole
      */
-    public function getAclRole(): AclUserRole
+    public function getAclRole(): ?AclUserRole
     {
-        return $this->get('acl_role') ?: new AclUserRole('guest');
+        return $this->hasAclRole()
+            ? $this->get('acl_role')
+            : new AclUserRole(
+                'guest',
+                $this->getUser('id'),
+                $this->getUser('login'),
+                $this->getApplication('id')
+            );
     }
 
     /**
