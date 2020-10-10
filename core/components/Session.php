@@ -69,15 +69,12 @@ final class Session extends SessionManager
      */
     public function getUser($key = null)
     {
-        if (!$key) {
+        if (!$key)
             return $this->get('user');
-        }
-        else if ($this->hasUser() && $this->get('user')->has($key)) {
+        else if ($this->hasUser() && $this->get('user')->has($key))
             return $this->get('user')->get($key);
-        }
-        else {
+        else
             return null;
-        }
     }
 
     /**
@@ -140,15 +137,12 @@ final class Session extends SessionManager
      */
     public function getApplication($key = null)
     {
-        if (!$key) {
+        if (!$key)
             return $this->get('application');
-        }
-        else if ($this->hasApplication() && $this->get('application')->has($key)) {
+        else if ($this->hasApplication() && $this->get('application')->has($key))
             return $this->get('application')->get($key);
-        }
-        else {
+        else
             return null;
-        }
     }
 
     /**
@@ -198,11 +192,11 @@ final class Session extends SessionManager
     }
 
     /**
-     * @param AclUserRole $acl_role
+     * @param AclUserRole $aclRole
      */
-    public function setAclRole(AclUserRole $acl_role)
+    public function setAclRole(AclUserRole $aclRole)
     {
-        $this->set('acl_role', $acl_role);
+        $this->set('acl_role', $aclRole);
     }
 
 }

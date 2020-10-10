@@ -18,28 +18,28 @@ use Phalcon\Helper\Str;
 final class Application extends Injectable
 {
     /**
-     * @var string $common_namespace
+     * @var string $commonNamespace
      */
-    private $common_namespace = 'Common';
+    private $commonNamespace = 'Common';
     /**
-     * @var string $common_namespace
+     * @var string $commonPath
      */
-    private $common_path = COMMON_PATH;
+    private $commonPath = COMMON_PATH;
 
     /**
      * @var string $application
      */
-    private $application_slug;
+    private $applicationSlug;
 
     /**
-     * @var string $application_namespace
+     * @var string $applicationNamespace
      */
-    private $application_namespace;
+    private $applicationNamespace;
 
     /**
-     * @var string $application_path
+     * @var string $applicationPath
      */
-    private $application_path;
+    private $applicationPath;
 
 
     /**********************************************************
@@ -49,24 +49,24 @@ final class Application extends Injectable
      **********************************************************/
 
     /**
-     * @param string $application_slug
+     * @param string $applicationSlug
      */
-    public function setupApplication(string $application_slug): void
+    public function setupApplication(string $applicationSlug): void
     {
-        $this->application_slug = $application_slug;
-        $this->application_namespace = Str::camelize($this->application_slug);
-        $this->application_path = APPS_PATH . '/' . $this->application_slug;
+        $this->applicationSlug = $applicationSlug;
+        $this->applicationNamespace = Str::camelize($this->applicationSlug);
+        $this->applicationPath = APPS_PATH . '/' . $this->applicationSlug;
     }
 
     /**
      * Register specific application's services for a given application
      *
-     * @param string|null $application_slug
+     * @param string|null $applicationSlug
      */
-    public function registerApplicationServices(string $application_slug)
+    public function registerApplicationServices(string $applicationSlug)
     {
         // Register Application Config
-        $this->setupApplication($application_slug);
+        $this->setupApplication($applicationSlug);
 
         // Register Application Config
         $this->config->registerApplicationConfig();
@@ -93,7 +93,7 @@ final class Application extends Injectable
      */
     public function hasApplication(): bool
     {
-        return !!$this->application_slug;
+        return !!$this->applicationSlug;
     }
 
     /**
@@ -101,7 +101,7 @@ final class Application extends Injectable
      */
     public function getApplicationSlug(): string
     {
-        return $this->application_slug;
+        return $this->applicationSlug;
     }
 
     /**
@@ -109,7 +109,7 @@ final class Application extends Injectable
      */
     public function getApplicationNamespace(): ?string
     {
-        return $this->application_namespace;
+        return $this->applicationNamespace;
     }
 
     /**
@@ -117,7 +117,7 @@ final class Application extends Injectable
      */
     public function getApplicationPath(): ?string
     {
-        return $this->application_path;
+        return $this->applicationPath;
     }
 
     /**
@@ -144,7 +144,7 @@ final class Application extends Injectable
      */
     public function getCommonNamespace(): string
     {
-        return $this->common_namespace;
+        return $this->commonNamespace;
     }
 
     /**
@@ -152,7 +152,7 @@ final class Application extends Injectable
      */
     public function getCommonPath(): string
     {
-        return $this->common_path;
+        return $this->commonPath;
     }
 
     /**

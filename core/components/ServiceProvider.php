@@ -2,9 +2,7 @@
 
 namespace Component;
 
-use Phalcon\Di\FactoryDefault;
 use Phalcon\Di\Injectable;
-
 use Service\Acl as AclService;
 use Service\Application as ApplicationService;
 use Service\Config as ConfigService;
