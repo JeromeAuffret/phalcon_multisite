@@ -26,14 +26,6 @@ final class ServiceProvider extends Injectable
 {
 
     /**
-     * @param FactoryDefault $container
-     */
-    public function __construct(FactoryDefault $container)
-    {
-        $this->setDI($container);
-    }
-
-    /**
      *
      */
     public function registerServices()

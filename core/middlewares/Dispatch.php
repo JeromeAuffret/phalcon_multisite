@@ -69,7 +69,7 @@ class Dispatch extends Injectable
         if ($this->config->has('host') && $this->config->get('host')->has($server_name))
         {
             if ($application = Application::getBySlug($this->config->get('host')->get($server_name))) {
-                $this->loader->registerApplicationServices($application->getSlug());
+                $this->application->registerApplicationServices($application->getSlug());
             }
         }
     }
@@ -82,7 +82,7 @@ class Dispatch extends Injectable
     private function dispatchApplicationByHash()
     {
         if ($this->request->has('_app') && $application = Application::getBySlug($this->request->get('_app'))) {
-            $this->loader->registerApplicationServices($application->getSlug());
+            $this->application->registerApplicationServices($application->getSlug());
         }
     }
 

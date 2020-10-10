@@ -8,10 +8,24 @@ use Phalcon\Helper\Str;
 /**
  * Class Application
  *
+ * @property Acl acl
+ * @property Config config
+ * @property Database database
+ * @property Loader loader
+ *
  * @package Component
  */
 final class Application extends Injectable
 {
+    /**
+     * @var string $common_namespace
+     */
+    private $common_namespace = 'Common';
+    /**
+     * @var string $common_namespace
+     */
+    private $common_path = COMMON_PATH;
+
     /**
      * @var string $application
      */
@@ -27,6 +41,13 @@ final class Application extends Injectable
      */
     private $application_path;
 
+
+    /**********************************************************
+     *
+     *                        APPLICATION
+     *
+     **********************************************************/
+
     /**
      * @param string $application_slug
      */
@@ -36,6 +57,36 @@ final class Application extends Injectable
         $this->application_namespace = Str::camelize($this->application_slug);
         $this->application_path = APPS_PATH . '/' . $this->application_slug;
     }
+
+    /**
+     * Register specific application's services for a given application
+     *
+     * @param string|null $application_slug
+     */
+    public function registerApplicationServices(string $application_slug)
+    {
+        // Register Application Config
+        $this->setupApplication($application_slug);
+
+        // Register Application Config
+        $this->config->registerApplicationConfig();
+
+        // Register Application Namespaces
+        $this->loader->registerApplicationNamespaces();
+
+        // Register Application Database
+        $this->database->registerApplicationDatabase();
+
+        // Register Application Database
+        $this->acl->registerApplicationAcl();
+    }
+
+
+    /**********************************************************
+     *
+     *                     GETTERS / SETTERS
+     *
+     **********************************************************/
 
     /**
      *
@@ -93,7 +144,7 @@ final class Application extends Injectable
      */
     public function getCommonNamespace(): string
     {
-        return 'Common';
+        return $this->common_namespace;
     }
 
     /**
@@ -101,7 +152,7 @@ final class Application extends Injectable
      */
     public function getCommonPath(): string
     {
-        return COMMON_PATH;
+        return $this->common_path;
     }
 
     /**
