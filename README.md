@@ -1,8 +1,11 @@
 # Phalcon Multisite
 
-This is a sample application for the [Phalcon Framework](https://github.com/phalcon/cphalcon). \
-It tries to provide a lightweight multi-site architecture, with sharing and overriding functionalities. \
-It also includes some features like ACL, Authentication and more.
+This is a sample application for the [Phalcon Framework](https://github.com/phalcon/cphalcon).
+
+The main goal of the project is to provide a multisite architecture, with shared folders, modules and basic functionalities 
+which can be extending and overriding, for the specific uses.
+
+It also includes some features like Authentication, ACL and more.
 
 
 ## Get Started

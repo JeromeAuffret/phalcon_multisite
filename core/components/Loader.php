@@ -2,7 +2,6 @@
 
 namespace Component;
 
-use Phalcon\Di;
 use Phalcon\Di\Injectable;
 use Phalcon\Helper\Str;
 use Phalcon\Assets\Collection;
@@ -12,6 +11,7 @@ use Phalcon\Mvc\Router;
 /**
  * Class Loader
  *
+ * @property Acl acl
  * @property Application application
  * @property Session session
  * @property Config config
@@ -48,33 +48,6 @@ final class Loader extends Injectable
             ->register();
     }
 
-
-    /**********************************************************
-     *
-     *                        APPLICATION
-     *
-     **********************************************************/
-
-    /**
-     * Register services for registered or given application
-     *
-     * @param string|null $application_slug
-     */
-    public function registerApplicationServices(string $application_slug)
-    {
-        // Register Application Config
-        $this->application->setupApplication($application_slug);
-
-        // Register Application Config
-        $this->config->registerApplicationConfig();
-
-        // Register Application Namespaces
-        $this->loader->registerApplicationNamespaces();
-
-        // Register Application Database
-        $this->database->registerApplicationDatabase();
-    }
-
     /**
      * Loader Application loader and load namespaces in di
      *
@@ -96,6 +69,36 @@ final class Loader extends Injectable
                 "$application_namespace\\Console"     => $application_path.'/console',
             ])
             ->register();
+    }
+
+
+    /**********************************************************
+     *
+     *                        APPLICATION
+     *
+     **********************************************************/
+
+    /**
+     * Register specific application's services for a given application
+     *
+     * @param string|null $application_slug
+     */
+    public function registerApplicationServices(string $application_slug)
+    {
+        // Register Application Config
+        $this->application->setupApplication($application_slug);
+
+        // Register Application Config
+        $this->config->registerApplicationConfig();
+
+        // Register Application Namespaces
+        $this->loader->registerApplicationNamespaces();
+
+        // Register Application Database
+        $this->database->registerApplicationDatabase();
+
+        // Register Application Database
+        $this->acl->registerApplicationAcl();
     }
 
 
