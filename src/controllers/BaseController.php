@@ -32,7 +32,6 @@ class BaseController extends Controller implements ComponentAware
     // ResourceAware implementation
     protected $component_name;
 
-
     /************************************************************
      *
      *                   CONTROLLER MIDDLEWARES
@@ -59,6 +58,22 @@ class BaseController extends Controller implements ComponentAware
         if (!$this->view->isDisabled()) {
             $this->setupAssetsCollection();
         }
+    }
+
+
+    /************************************************************
+     *
+     *                   CONTROLLER MIDDLEWARES
+     *
+     ************************************************************/
+
+    /**
+     *
+     */
+    public function _logoutAction()
+    {
+        $this->session->destroy();
+        $this->response->redirect('auth/login');
     }
 
 
