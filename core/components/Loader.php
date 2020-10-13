@@ -74,36 +74,6 @@ final class Loader extends Injectable
 
     /**********************************************************
      *
-     *                        APPLICATION
-     *
-     **********************************************************/
-
-    /**
-     * Register specific application's services for a given application
-     *
-     * @param string|null $application_slug
-     */
-    public function registerApplicationServices(string $application_slug)
-    {
-        // Register Application Config
-        $this->application->setupApplication($application_slug);
-
-        // Register Application Config
-        $this->config->registerApplicationConfig();
-
-        // Register Application Namespaces
-        $this->loader->registerApplicationNamespaces();
-
-        // Register Application Database
-        $this->database->registerApplicationDatabase();
-
-        // Register Application Database
-        $this->acl->registerApplicationAcl();
-    }
-
-
-    /**********************************************************
-     *
      *                     BEFORE DISPATCH
      *
      **********************************************************/

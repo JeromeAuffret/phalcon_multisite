@@ -63,24 +63,6 @@ class BaseController extends Controller implements ComponentAware
 
     /************************************************************
      *
-     *                   CONTROLLER MIDDLEWARES
-     *
-     ************************************************************/
-
-    /**
-     *
-     */
-    public function _logoutAction()
-    {
-        $this->session->destroy();
-        $this->response->redirect('auth/login');
-
-        return $this->response;
-    }
-
-
-    /************************************************************
-     *
      *                      COMPONENT AWARE
      *
      ************************************************************/

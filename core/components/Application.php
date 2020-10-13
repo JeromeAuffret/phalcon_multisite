@@ -8,41 +8,92 @@ use Phalcon\Helper\Str;
 /**
  * Class Application
  *
+ * @property Acl acl
+ * @property Config config
+ * @property Database database
+ * @property Loader loader
+ *
  * @package Component
  */
 final class Application extends Injectable
 {
     /**
+     * @var string $commonNamespace
+     */
+    private $commonNamespace = 'Common';
+    /**
+     * @var string $commonPath
+     */
+    private $commonPath = COMMON_PATH;
+
+    /**
      * @var string $application
      */
-    private $application_slug;
+    private $applicationSlug;
 
     /**
-     * @var string $application_namespace
+     * @var string $applicationNamespace
      */
-    private $application_namespace;
+    private $applicationNamespace;
 
     /**
-     * @var string $application_path
+     * @var string $applicationPath
      */
-    private $application_path;
+    private $applicationPath;
+
+
+    /**********************************************************
+     *
+     *                        APPLICATION
+     *
+     **********************************************************/
 
     /**
-     * @param string $application_slug
+     * @param string $applicationSlug
      */
-    public function setupApplication(string $application_slug): void
+    public function setupApplication(string $applicationSlug): void
     {
-        $this->application_slug = $application_slug;
-        $this->application_namespace = Str::camelize($this->application_slug);
-        $this->application_path = APPS_PATH . '/' . $this->application_slug;
+        $this->applicationSlug = $applicationSlug;
+        $this->applicationNamespace = Str::camelize($this->applicationSlug);
+        $this->applicationPath = APPS_PATH . '/' . $this->applicationSlug;
     }
+
+    /**
+     * Register specific application's services for a given application
+     *
+     * @param string|null $applicationSlug
+     */
+    public function registerApplicationServices(string $applicationSlug)
+    {
+        // Register Application Config
+        $this->setupApplication($applicationSlug);
+
+        // Register Application Config
+        $this->config->registerApplicationConfig();
+
+        // Register Application Namespaces
+        $this->loader->registerApplicationNamespaces();
+
+        // Register Application Database
+        $this->database->registerApplicationDatabase();
+
+        // Register Application Database
+        $this->acl->registerApplicationAcl();
+    }
+
+
+    /**********************************************************
+     *
+     *                     GETTERS / SETTERS
+     *
+     **********************************************************/
 
     /**
      *
      */
     public function hasApplication(): bool
     {
-        return !!$this->application_slug;
+        return !!$this->applicationSlug;
     }
 
     /**
@@ -50,7 +101,7 @@ final class Application extends Injectable
      */
     public function getApplicationSlug(): string
     {
-        return $this->application_slug;
+        return $this->applicationSlug;
     }
 
     /**
@@ -58,7 +109,7 @@ final class Application extends Injectable
      */
     public function getApplicationNamespace(): ?string
     {
-        return $this->application_namespace;
+        return $this->applicationNamespace;
     }
 
     /**
@@ -66,7 +117,7 @@ final class Application extends Injectable
      */
     public function getApplicationPath(): ?string
     {
-        return $this->application_path;
+        return $this->applicationPath;
     }
 
     /**
@@ -93,7 +144,7 @@ final class Application extends Injectable
      */
     public function getCommonNamespace(): string
     {
-        return 'Common';
+        return $this->commonNamespace;
     }
 
     /**
@@ -101,7 +152,7 @@ final class Application extends Injectable
      */
     public function getCommonPath(): string
     {
-        return COMMON_PATH;
+        return $this->commonPath;
     }
 
     /**

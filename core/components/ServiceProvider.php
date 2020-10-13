@@ -2,9 +2,7 @@
 
 namespace Component;
 
-use Phalcon\Di\FactoryDefault;
 use Phalcon\Di\Injectable;
-
 use Service\Acl as AclService;
 use Service\Application as ApplicationService;
 use Service\Config as ConfigService;
@@ -24,14 +22,6 @@ use Service\View as ViewService;
  */
 final class ServiceProvider extends Injectable
 {
-
-    /**
-     * @param FactoryDefault $container
-     */
-    public function __construct(FactoryDefault $container)
-    {
-        $this->setDI($container);
-    }
 
     /**
      *
