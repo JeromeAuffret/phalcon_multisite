@@ -12,17 +12,6 @@ use Phalcon\Mvc\View;
 
 class LoginController extends ControllerBase
 {
-
-    /**
-     *  Disable layout level
-     */
-    public function initialize()
-    {
-        $this->view->disableLevel(
-            View::LEVEL_LAYOUT
-        );
-    }
-
     /**
      *  Login page
      *  Destroy session if exist
@@ -32,12 +21,19 @@ class LoginController extends ControllerBase
      */
     public function indexAction()
     {
-        if ($this->request->isGet() && $this->session->hasUser()) {
+        if ($this->request->isGet() && $this->session->hasUser())
+        {
+            // We destroy session on login page.
             $this->session->destroy();
+
+            // The login page does not use layout level
+            $this->view->disableLevel(
+                View::LEVEL_LAYOUT
+            );
         }
 
         // Register User
-        if ($this->request->isPost()) //  && $this->security->checkToken()
+        else if ($this->request->isPost()) //  && $this->security->checkToken()
         {
             $login = $this->request->getPost('login');
             $password = $this->request->getPost('password');

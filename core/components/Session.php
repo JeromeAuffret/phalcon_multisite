@@ -45,7 +45,7 @@ final class Session extends SessionManager
 
     /**
      *  Setup ACL useRole
-     *  Set 'guest' by default
+     *  Default role is 'guest'
      */
     public function setupUserRole()
     {

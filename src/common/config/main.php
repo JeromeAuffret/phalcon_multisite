@@ -25,8 +25,8 @@ return [
         'username' => 'postgres',
         'password' => '',
         'dbname'   => '',
-        'port' => '5432',
-        'charset' => 'utf8'
+        'port'     => '5432',
+        'charset'  => 'utf8'
     ],
 
     'database' => [
@@ -35,8 +35,8 @@ return [
         'username' => 'postgres',
         'password' => '',
         'dbname'   => '',
-        'port' => '5432',
-        'charset' => 'utf8'
+        'port'     => '5432',
+        'charset'  => 'utf8'
     ],
 
     'host' => [
@@ -44,7 +44,7 @@ return [
         'demo2.localhost' => 'demo2',
     ],
 
-    // publicComponents define an AclComponent's list witch ACL and connections verification is disabled
+    // publicComponents define an AclComponent's list where ACL and Auth middleware are disabled
     'publicComponents' => [
         'auth_login'
     ]

@@ -22,7 +22,10 @@ class Url implements ServiceProviderInterface
         $container->setShared('url', function ()
         {
             $url = new UrlResolver();
-            $url->setBaseUri($this->get('config')->get('baseUri'));
+            $url->setBaseUri(
+                $this->get('config')->get('baseUri')
+            );
+
             return $url;
         });
     }
