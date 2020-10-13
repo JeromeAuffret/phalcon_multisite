@@ -2,10 +2,9 @@
 
 This is a sample application for the [Phalcon Framework](https://github.com/phalcon/cphalcon).
 
-The main goal of the project is to provide a multisite architecture, with shared folders, modules and basic functionalities 
-which can be extending and overriding, for the specific uses.
+The main goal of this project is to provide a multisite architecture, that allow sharing code between multiple applications.
 
-It also includes some features like Authentication, ACL and more.
+It also includes some fully customizable features like Authentication, ACL and more.
 
 
 ## Get Started
@@ -28,10 +27,33 @@ This following directories need to have writes permissions :
 * cache/
 * public/temp/
 
+## Devtools
+
+[Phalcon Devtools](https://docs.phalcon.io/4.0/en/devtools) and
+[Phalcon Migrations](https://docs.phalcon.io/4.0/en/db-migrations) are imported with composer 
+
+    php vendor/bin/phalcon
+    php vendor/bin/phalcon-migrations
 
 ## Demos
 
-### Configuration
+At this point, only the common application can be access. \
+To render a specific application, you need to identify it. \
+Applications can be identified using session and/or hosts.
+
+### Host
+
+If are on local, you can edit the `/etc/hosts` and add something like following,
+
+    127.0.0.1       demo2.localhost 
+    
+Now, visit you new host `http://demo2.localhost`.
+
+Host configuration can be found in `src/common/config/main.php`.
+
+### Session
+
+#### Configuration
 
 The main database need to be configure in `src/common/config/main.php`. \
 Additionally, you can add a `config.php`, which is ignored from git, to store sensitive configuration.
@@ -43,16 +65,12 @@ Additionally, you can add a `config.php`, which is ignored from git, to store se
     'username' => 'postgres',
     'password' => '',
     'dbname'   => '',
-    'port' => '5432',
-    'charset' => 'utf8'
+    'port'     => '5432',
+    'charset'  => 'utf8'
 ]
 ```
 
-### Migrations
-
-[Phalcon Migrations](https://docs.phalcon.io/4.0/en/db-migrations) is imported with composer by default, and can be access running 
-
-    php vendor/bin/phalcon-migrations
+#### Migrations
     
 To deploy the default main database, run :
 
