@@ -2,16 +2,16 @@
 
 namespace Handler;
 
+use Component\Application as ApplicationComponent;
 use Component\ServiceProvider as ServiceProviderComponent;
 use Exception;
 use Phalcon\Di\FactoryDefault;
-use Phalcon\Mvc\Application as MvcApplication;
 
 
 class ApplicationHandler
 {
     /**
-     * @var MvcApplication
+     * @var ApplicationComponent
      */
     protected $application;
     /**
@@ -83,9 +83,7 @@ class ApplicationHandler
      */
     public function registerMvcApplication()
     {
-        $this->application = new MvcApplication($this->container);
-
-        $this->container->setShared('mvc', $this->application);
+        $this->application = $this->container->get('application');
 
         if ($this->container->get('config')->get('applicationType') === 'modules')
         {

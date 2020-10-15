@@ -2,7 +2,8 @@
 
 namespace Component;
 
-use Phalcon\Di\Injectable;
+use Phalcon\Application\AbstractApplication;
+use Phalcon\Di\DiInterface;
 use Phalcon\Helper\Str;
 
 /**
@@ -15,7 +16,7 @@ use Phalcon\Helper\Str;
  *
  * @package Component
  */
-final class Application extends Injectable
+final class Application extends \Phalcon\Mvc\Application
 {
     /**
      * @var string $commonNamespace
@@ -48,10 +49,16 @@ final class Application extends Injectable
 
 
     /**
+     * @override
      *
+     * Application constructor.
+     *
+     * @param DiInterface|null $container
      */
-    public function __construct()
+    public function __construct(DiInterface $container = null)
     {
+        parent::__construct($container);
+
         $this->registerCommonNamespace();
     }
 
@@ -77,7 +84,7 @@ final class Application extends Injectable
     }
 
     /**
-     *  PSR-4 compliant autoloader for common folder
+     *  PSR-4 compliant autoloader for application folder
      */
     private function registerApplicationNamespace()
     {
@@ -220,6 +227,78 @@ final class Application extends Injectable
     {
         $module_namespace = Str::camelize($module_name);
         return $this->getCommonNamespace().'\\Modules\\' . $module_namespace;
+    }
+
+
+    /**********************************************************
+     *
+     *                        MODULES
+     *
+     **********************************************************/
+
+    /**
+     * @param array $modules
+     * @param bool $merge
+     *
+     * @return AbstractApplication|void
+     */
+    public function registerModules(array $modules, $merge = false): AbstractApplication
+    {
+        parent::registerModules($modules, $merge);
+
+        foreach ($this->container->get('config')->get('modules') as $moduleName => $module)
+        {
+            $namespace = preg_replace('/\\\Module$/', '', $module['className']);
+            $path = preg_replace('/\/Module.php$/', '', $module['path']);
+
+            (new \Phalcon\Loader())
+                ->registerNamespaces([$namespace => $path])
+                ->register();
+
+            $moduleClass = new $module['className'];
+            $moduleClass->registerAutoloaders($this->container);
+            $moduleClass->registerServices($this->container);
+
+            $this->registerRoutes($moduleName, $module);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $moduleName
+     * @param $module
+     */
+    public function registerRoutes($moduleName, $module)
+    {
+        $router = $this->container->get('router');
+        $config = $this->container->get('config');
+
+        $namespace = preg_replace('/\\\Module$/', '', $module['className']);
+
+        $router->add('/'.$moduleName.'/:params', [
+            'namespace' => $namespace,
+            'module' => $moduleName,
+            'controller' => $module->get('defaultController') ?? $config->get('defaultController'),
+            'action' => $module->get('defaultAction') ?? $config->get('defaultAction'),
+            'params' => 1
+        ]);
+
+        $router->add('/'.$moduleName.'/:controller/:params', [
+            'namespace' => $namespace,
+            'module' => $moduleName,
+            'controller' => 1,
+            'action' => $module->get('defaultAction') ?? $config->get('defaultAction'),
+            'params' => 2
+        ]);
+
+        $router->add('/'.$moduleName.'/:controller/:action/:params', [
+            'namespace' => $namespace,
+            'module' => $moduleName,
+            'controller' => 1,
+            'action' => 2,
+            'params' => 3
+        ]);
     }
 
 }

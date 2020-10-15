@@ -17,7 +17,7 @@ class Module implements ModuleDefinitionInterface
     {
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Common\Modules\Auth\Controllers' => __DIR__ . '/controllers/'
+                'Common\Modules\Auth\Controllers' => $container->get('application')->getCommonModulePath('auth') . '/controllers/'
             ])
             ->register();
     }

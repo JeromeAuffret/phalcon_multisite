@@ -52,7 +52,8 @@ class Application implements ModuleDefinitionInterface
         $container->get('router')->registerMainRoutesFile();
         $container->get('router')->registerModulesRoutesFile();
 
-        $container->get('mvc')->registerModules(
+
+        $container->get('application')->registerModules(
             $container->get('config')->get('modules')->toArray()
         );
     }
