@@ -13,5 +13,9 @@ return [
     'api' => [
         'className' => 'Common\Modules\Api\Module',
         'path' => COMMON_PATH . '/modules/api/Module.php'
-    ]
+    ],
+    'order' => [
+        'className' => 'Demo1\Modules\Order\Module',
+        'path' => BASE_PATH . '/src/apps/demo1/modules/order/Module.php'
+    ],
 ];

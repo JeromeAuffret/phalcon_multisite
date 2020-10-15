@@ -7,6 +7,14 @@ $config = Di::getDefault()->get('config');
 
 if ($config->get('applicationType') === 'modules')
 {
+    $router->add('/order/:params', [
+        'namespace' => 'Demo1\Modules\Order',
+        'module' => 'order',
+        'controller' => 'index',
+        'action' => 'index',
+        'params' => 1
+    ]);
+
     foreach ($config->get('modules') as $key => $module)
     {
         $namespace = preg_replace('/Module$/', 'Controllers', $module->get("className"));
@@ -17,8 +25,7 @@ if ($config->get('applicationType') === 'modules')
             'controller' => $module->get('defaultController') ?? $config->get('defaultController'),
             'action' => $module->get('defaultAction') ?? $config->get('defaultAction'),
             'params' => 1
-        ])
-            ->setName($key);
+        ]);
 
         $router->add('/'.$key.'/:controller/:params', [
             'namespace' => $namespace,

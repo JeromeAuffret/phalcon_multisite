@@ -46,7 +46,7 @@ class Dispatch extends Injectable
         $this->isViewDisabled();
 
         // Set default module based on default configuration
-//        $this->setDefaultModuleName($dispatcher);
+        $this->setDefaultModuleName($dispatcher);
     }
 
     /**

@@ -48,8 +48,13 @@ class Application implements ModuleDefinitionInterface
         $container->get('acl')->registerApplicationAcl();
 
         // Register Application routes
+        $container->get('router')->registerRouter();
         $container->get('router')->registerMainRoutesFile();
         $container->get('router')->registerModulesRoutesFile();
+
+        $container->get('mvc')->registerModules(
+            $container->get('config')->get('modules')->toArray()
+        );
     }
 
 }

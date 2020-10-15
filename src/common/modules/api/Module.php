@@ -61,19 +61,19 @@ class Module implements ModuleDefinitionInterface
      */
     private function registerApiRouter(DiInterface $container)
     {
-        $namespace = preg_replace('/Module$/', 'Controllers', self::class);
-
-        $router = $container->get('router');
-        $router
-            ->add('/api/{reference}/:controller/:action/:params', [
-                'namespace' => $namespace,
-                'module' => 'api',
-                'controller' => 2,
-                'action' => 3,
-                'params' => 4
-            ]);
-
-        $container->setShared('router', $router);
+//        $namespace = preg_replace('/Module$/', 'Controllers', self::class);
+//
+//        $router = $container->get('router');
+//        $router
+//            ->add('/api/{reference}/:controller/:action/:params', [
+//                'namespace' => $namespace,
+//                'module' => 'api',
+//                'controller' => 2,
+//                'action' => 3,
+//                'params' => 4
+//            ]);
+//
+//        $container->setShared('router', $router);
     }
 
 }

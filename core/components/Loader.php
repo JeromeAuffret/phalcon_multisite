@@ -41,6 +41,8 @@ final class Loader extends Injectable
         $controller_class = explode('\\', $dispatcher->getControllerClass());
         $controller_file = end($controller_class).'.php';
 
+        error_log($dispatcher->getControllerClass());
+
         if (end($controller_class) === 'ErrorController') {
             $dispatcher->setNamespaceName('Controllers');
         }

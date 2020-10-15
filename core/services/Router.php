@@ -25,10 +25,6 @@ class Router implements ServiceProviderInterface
         $container->setShared('router', function () {
             return new ComponentRouter();
         });
-
-        $container->get('router')->registerRouter();
-        $container->get('router')->registerMainRoutesFile();
-        $container->get('router')->registerModulesRoutesFile();
     }
 
 }

@@ -74,7 +74,7 @@ class ApplicationHandler
      */
     public function registerProviders()
     {
-        $serviceProvider = new ServiceProviderComponent($this->container);
+        $serviceProvider = new ServiceProviderComponent();
         $serviceProvider->registerServices();
     }
 
@@ -84,6 +84,8 @@ class ApplicationHandler
     public function registerMvcApplication()
     {
         $this->application = new MvcApplication($this->container);
+
+        $this->container->setShared('mvc', $this->application);
 
         if ($this->container->get('config')->get('applicationType') === 'modules')
         {

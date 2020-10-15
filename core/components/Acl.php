@@ -167,11 +167,6 @@ final class Acl extends Injectable implements AdapterInterface
         // Defined resource
         $AclComponent = $this->getAclComponent($moduleName, $controllerName, $actionName, $params);
 
-        if (!$this->isComponent($AclComponent->getComponentName())) {
-            error_log($AclComponent->getComponentName());
-            error_log($this->isComponent($AclComponent->getComponentName()));
-        }
-
         // Prevent verification for public components
         if ($this->isPublicComponent($moduleName, $controllerName, $actionName, $params)) {
             return true;
