@@ -35,8 +35,8 @@ class Dispatcher implements ServiceProviderInterface
 
         $eventsManager->attach('dispatch:beforeDispatch', new DispatchMiddleware());
         $eventsManager->attach('dispatch:beforeDispatch', new AuthMiddleware());
-        $eventsManager->attach("dispatch:beforeDispatch", new AclMiddleware());
         $eventsManager->attach('dispatch:beforeDispatch', new ControllerMiddleware());
+        $eventsManager->attach("dispatch:beforeExecuteRoute", new AclMiddleware());
         $eventsManager->attach("dispatch:beforeException", new ErrorMiddleware());
 
         $dispatcher->setEventsManager($eventsManager);

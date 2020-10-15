@@ -26,7 +26,7 @@ class Acl extends Injectable
      * @return void
      * @throws AclException
      */
-    public function beforeDispatch(Event $event, Dispatcher $dispatcher)
+    public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
         try {
             if (!$this->acl->userAllowed()) {

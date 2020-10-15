@@ -31,4 +31,5 @@ class Module implements ModuleDefinitionInterface
      * @param DiInterface $container
      */
     public function registerServices(DiInterface $container) {}
+
 }

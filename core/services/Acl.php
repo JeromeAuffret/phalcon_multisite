@@ -34,11 +34,6 @@ class Acl implements ServiceProviderInterface
 
         // Register common acl
         $container->get('acl')->registerMainAcl();
-
-        // Register application acl
-        if ($container->get('application')->hasApplication()) {
-            $container->get('acl')->registerApplicationAcl();
-        }
     }
 
 }

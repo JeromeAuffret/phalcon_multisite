@@ -25,11 +25,6 @@ class Config implements ServiceProviderInterface
 
         // Register main configuration
         $container->get('config')->registerMainConfig();
-
-        // Register application config
-        if ($container->get('application')->hasApplication()) {
-            $container->get('config')->registerApplicationConfig();
-        }
     }
 
 }

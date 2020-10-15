@@ -30,14 +30,6 @@ class Session implements ServiceProviderInterface
 
             return $manager;
         });
-
-        // Register application service if it is store in session
-        if ($container->get('session')->hasApplication())
-        {
-            $container->get('application')->setupApplication(
-                $container->get('session')->getApplication('slug')
-            );
-        }
     }
 
 }

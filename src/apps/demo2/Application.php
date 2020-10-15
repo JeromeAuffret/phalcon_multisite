@@ -1,29 +1,33 @@
 <?php
 
-namespace Common\Modules\Auth;
+namespace Demo2;
 
 use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 
 
-class Module implements ModuleDefinitionInterface
+class Application implements ModuleDefinitionInterface
 {
+
     /**
-     *  Registers an autoloader related to the module
+     *  Registers an autoloader related to the application
      *
      * @param DiInterface|null $container
      */
     public function registerAutoloaders(DiInterface $container = null)
     {
+        $applicationPath = $container->get('application')->getApplicationPath();
+
+        // Register application's namespaces
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Common\Modules\Auth\Controllers' => __DIR__ . '/controllers/'
+                "Demo2\\Controllers" => $applicationPath.'/controllers'
             ])
             ->register();
     }
 
     /**
-     *  Registers services related to the module
+     *  Registers services related to the application
      *
      * @param DiInterface $container
      */

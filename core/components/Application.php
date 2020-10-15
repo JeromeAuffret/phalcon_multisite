@@ -41,22 +41,61 @@ final class Application extends Injectable
      */
     private $applicationPath;
 
+    /**
+     * @var string $applicationClass
+     */
+    private $applicationClass = 'Application';
+
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->registerCommonNamespace();
+    }
+
+
+    /**********************************************************
+     *
+     *                        AUTOLOADER
+     *
+     **********************************************************/
+
+    /**
+     *  PSR-4 compliant autoloader for common folder
+     */
+    private function registerCommonNamespace()
+    {
+        $commonPath = $this->getCommonPath();
+        $commonNamespace = $this->getCommonNamespace();
+
+        // Register application's namespaces
+        (new \Phalcon\Loader())
+            ->registerNamespaces([$commonNamespace => $commonPath])
+            ->register();
+    }
+
+    /**
+     *  PSR-4 compliant autoloader for common folder
+     */
+    private function registerApplicationNamespace()
+    {
+        $applicationPath = $this->getApplicationPath();
+        $applicationNamespace = $this->getApplicationNamespace();
+
+        // Register application's namespaces
+        (new \Phalcon\Loader())
+            ->registerNamespaces([$applicationNamespace => $applicationPath])
+            ->register();
+    }
+
 
     /**********************************************************
      *
      *                        APPLICATION
      *
      **********************************************************/
-
-    /**
-     * @param string $applicationSlug
-     */
-    public function setupApplication(string $applicationSlug): void
-    {
-        $this->applicationSlug = $applicationSlug;
-        $this->applicationNamespace = Str::camelize($this->applicationSlug);
-        $this->applicationPath = APPS_PATH . '/' . $this->applicationSlug;
-    }
 
     /**
      * Register specific application's services for a given application
@@ -68,17 +107,18 @@ final class Application extends Injectable
         // Register Application Config
         $this->setupApplication($applicationSlug);
 
-        // Register Application Config
-        $this->config->registerApplicationConfig();
+        // Register Application Autoloader
+        $this->registerApplicationNamespace();
+    }
 
-        // Register Application Namespaces
-        $this->loader->registerApplicationNamespaces();
-
-        // Register Application Database
-        $this->database->registerApplicationDatabase();
-
-        // Register Application Database
-        $this->acl->registerApplicationAcl();
+    /**
+     * @param string $applicationSlug
+     */
+    public function setupApplication(string $applicationSlug): void
+    {
+        $this->applicationSlug = $applicationSlug;
+        $this->applicationNamespace = Str::camelize($this->applicationSlug);
+        $this->applicationPath = APPS_PATH . '/' . $this->applicationSlug;
     }
 
 
@@ -94,6 +134,14 @@ final class Application extends Injectable
     public function hasApplication(): bool
     {
         return !!$this->applicationSlug;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getApplicationClass(): string
+    {
+        return $this->applicationClass;
     }
 
     /**
