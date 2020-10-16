@@ -142,7 +142,7 @@ final class Application extends \Phalcon\Mvc\Application
     {
         return !!$this->applicationSlug;
     }
-    
+
     /**
      * @return string
      */
@@ -271,34 +271,37 @@ final class Application extends \Phalcon\Mvc\Application
      */
     public function registerRoutes($moduleName, $module)
     {
-        $router = $this->container->get('router');
-        $config = $this->container->get('config');
+        if ($this->container->get('config')->get('applicationType') === 'modules')
+        {
+            $router = $this->container->get('router');
+            $config = $this->container->get('config');
 
-        $namespace = preg_replace('/\\\Module$/', '', $module['className']);
+            $namespace = preg_replace('/Module$/', 'Controllers', $module->get("className"));
 
-        $router->add('/'.$moduleName.'/:params', [
-            'namespace' => $namespace,
-            'module' => $moduleName,
-            'controller' => $module->get('defaultController') ?? $config->get('defaultController'),
-            'action' => $module->get('defaultAction') ?? $config->get('defaultAction'),
-            'params' => 1
-        ]);
+            $router->add('/'.$moduleName.'/:params', [
+                'namespace' => $namespace,
+                'module' => $moduleName,
+                'controller' => $module->get('defaultController') ?? $config->get('defaultController'),
+                'action' => $module->get('defaultAction') ?? $config->get('defaultAction'),
+                'params' => 1
+            ]);
 
-        $router->add('/'.$moduleName.'/:controller/:params', [
-            'namespace' => $namespace,
-            'module' => $moduleName,
-            'controller' => 1,
-            'action' => $module->get('defaultAction') ?? $config->get('defaultAction'),
-            'params' => 2
-        ]);
+            $router->add('/'.$moduleName.'/:controller/:params', [
+                'namespace' => $namespace,
+                'module' => $moduleName,
+                'controller' => 1,
+                'action' => $module->get('defaultAction') ?? $config->get('defaultAction'),
+                'params' => 2
+            ]);
 
-        $router->add('/'.$moduleName.'/:controller/:action/:params', [
-            'namespace' => $namespace,
-            'module' => $moduleName,
-            'controller' => 1,
-            'action' => 2,
-            'params' => 3
-        ]);
+            $router->add('/'.$moduleName.'/:controller/:action/:params', [
+                'namespace' => $namespace,
+                'module' => $moduleName,
+                'controller' => 1,
+                'action' => 2,
+                'params' => 3
+            ]);
+        }
     }
 
 }

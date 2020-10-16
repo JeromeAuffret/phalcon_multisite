@@ -24,14 +24,14 @@ use Phalcon\Di\Injectable;
 class Dispatch extends Injectable
 {
     /**
-     * Dispatch application before setup
+     * Dispatch application on first application hanf
      *
      * @param Event $event
-     * @param Dispatcher $dispatcher
+     * @param ApplicationComponent $application
      * @return void
      * @throws Exception
      */
-    public function beforeDispatch(Event $event, Dispatcher $dispatcher)
+    public function boot(Event $event, ApplicationComponent $application)
     {
         // Defined application service
         $this->dispatchApplicationBySession();
@@ -46,7 +46,7 @@ class Dispatch extends Injectable
         $this->isViewDisabled();
 
         // Set default module based on default configuration
-        $this->setDefaultModuleName($dispatcher);
+        $this->setDefaultModuleName($this->dispatcher);
     }
 
     /**

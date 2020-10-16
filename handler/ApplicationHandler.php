@@ -6,6 +6,8 @@ use Component\Application as ApplicationComponent;
 use Component\ServiceProvider as ServiceProviderComponent;
 use Exception;
 use Phalcon\Di\FactoryDefault;
+use Phalcon\Events\Manager;
+use Middleware\Dispatch as DispatchMiddleware;
 
 
 class ApplicationHandler
@@ -27,6 +29,7 @@ class ApplicationHandler
         $this->registerDiContainer();
         $this->registerCoreNamespaces();
         $this->registerProviders();
+        $this->registerBeforeHandle();
         $this->registerMvcApplication();
     }
 
@@ -91,6 +94,20 @@ class ApplicationHandler
                 $this->container->get('config')->get('modules')->toArray()
             );
         }
+    }
+
+    /**
+     * @return void
+     */
+    public function registerBeforeHandle()
+    {
+        $manager = new Manager();
+
+        $this->container->get('application')->setEventsManager($manager);
+
+        $manager->attach(
+            'application:boot', new DispatchMiddleware()
+        );
     }
 
 }

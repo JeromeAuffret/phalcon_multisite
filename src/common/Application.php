@@ -10,7 +10,7 @@ class Application implements ModuleDefinitionInterface
 {
 
     /**
-     *  Registers an autoloader related to the application
+     * Registers an autoloader related to the application
      *
      * @param DiInterface|null $container
      */
@@ -32,7 +32,7 @@ class Application implements ModuleDefinitionInterface
     }
 
     /**
-     *  Registers services related to the application
+     * Registers services related to the application
      *
      * @param DiInterface $container
      */
@@ -49,10 +49,8 @@ class Application implements ModuleDefinitionInterface
 
         // Register Application routes
         $container->get('router')->registerRouter();
-        $container->get('router')->registerMainRoutesFile();
-        $container->get('router')->registerModulesRoutesFile();
 
-
+        // Register application specific modules
         $container->get('application')->registerModules(
             $container->get('config')->get('modules')->toArray()
         );
