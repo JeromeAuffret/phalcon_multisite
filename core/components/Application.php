@@ -3,7 +3,7 @@
 namespace Component;
 
 use Phalcon\Application\AbstractApplication;
-use Phalcon\Di\DiInterface;
+use Phalcon\Collection;
 use Phalcon\Helper\Str;
 
 /**
@@ -48,56 +48,6 @@ final class Application extends \Phalcon\Mvc\Application
     private $applicationClass = 'Application';
 
 
-    /**
-     * @override
-     *
-     * Application constructor.
-     *
-     * @param DiInterface|null $container
-     */
-    public function __construct(DiInterface $container = null)
-    {
-        parent::__construct($container);
-
-        $this->registerCommonNamespace();
-    }
-
-
-    /**********************************************************
-     *
-     *                        AUTOLOADER
-     *
-     **********************************************************/
-
-    /**
-     *  PSR-4 compliant autoloader for common folder
-     */
-    private function registerCommonNamespace()
-    {
-        $commonPath = $this->getCommonPath();
-        $commonNamespace = $this->getCommonNamespace();
-
-        // Register application's namespaces
-        (new \Phalcon\Loader())
-            ->registerNamespaces([$commonNamespace => $commonPath])
-            ->register();
-    }
-
-    /**
-     *  PSR-4 compliant autoloader for application folder
-     */
-    private function registerApplicationNamespace()
-    {
-        $applicationPath = $this->getApplicationPath();
-        $applicationNamespace = $this->getApplicationNamespace();
-
-        // Register application's namespaces
-        (new \Phalcon\Loader())
-            ->registerNamespaces([$applicationNamespace => $applicationPath])
-            ->register();
-    }
-
-
     /**********************************************************
      *
      *                        APPLICATION
@@ -108,24 +58,109 @@ final class Application extends \Phalcon\Mvc\Application
      * Register specific application's services for a given application
      *
      * @param string|null $applicationSlug
+     * @param string|null $applicationNamespace
+     * @param string|null $applicationPath
      */
-    public function registerApplicationServices(string $applicationSlug)
+    public function registerApplication(string $applicationSlug, ?string $applicationNamespace = null, ?string $applicationPath = null)
     {
-        // Register Application Config
-        $this->setupApplication($applicationSlug);
+        // Register Application Slug
+        $this->setApplicationSlug($applicationSlug);
+
+        // Register Application Namespace
+        $this->setApplicationNamespace($applicationNamespace);
+
+        // Register Application Path
+        $this->setApplicationPath($applicationPath);
 
         // Register Application Autoloader
-        $this->registerApplicationNamespace();
+        $this->registerApplicationProvider();
     }
 
     /**
-     * @param string $applicationSlug
+     * @param array $modules
+     * @param bool $merge
+     *
+     * @return AbstractApplication|void
      */
-    public function setupApplication(string $applicationSlug): void
+    public function registerModules(array $modules, $merge = false): AbstractApplication
     {
-        $this->applicationSlug = $applicationSlug;
-        $this->applicationNamespace = Str::camelize($this->applicationSlug);
-        $this->applicationPath = APPS_PATH . '/' . $this->applicationSlug;
+        parent::registerModules($modules, $merge);
+
+        foreach ($this->container->get('config')->get('modules') as $moduleName => $module) {
+            $this->registerModuleProvider($moduleName, $module);
+        }
+
+        return $this;
+    }
+
+
+    /**********************************************************
+     *
+     *                        AUTOLOADER
+     *
+     **********************************************************/
+
+    /**
+     * PSR-4 compliant autoloader for common folder
+     */
+    public function registerCommonProvider()
+    {
+        $commonPath = $this->getCommonPath();
+        $commonNamespace = $this->getCommonNamespace();
+
+        (new \Phalcon\Loader())
+            ->registerNamespaces([$commonNamespace => $commonPath])
+            ->register();
+
+        $applicationClass = $commonNamespace.'\\'.$this->applicationClass;
+        $applicationClass = new $applicationClass;
+
+        $applicationClass->registerAutoloaders($this->container);
+        $applicationClass->registerServices($this->container);
+        $applicationClass->registerRouter($this->container);
+    }
+
+    /**
+     * PSR-4 compliant autoloader for application folder
+     */
+    public function registerApplicationProvider()
+    {
+        $applicationPath = $this->getApplicationPath();
+        $applicationNamespace = $this->getApplicationNamespace();
+
+        (new \Phalcon\Loader())
+            ->registerNamespaces([$applicationNamespace => $applicationPath])
+            ->register();
+
+        $applicationClass = $applicationNamespace.'\\'.$this->applicationClass;
+        $applicationClass = new $applicationClass;
+
+        $applicationClass->registerAutoloaders($this->container);
+        $applicationClass->registerServices($this->container);
+        $applicationClass->registerRouter($this->container);
+    }
+
+    /**
+     * PSR-4 compliant autoloader for application folder
+     *
+     * @param string $moduleName
+     * @param        $module
+     */
+    public function registerModuleProvider(string $moduleName, $module)
+    {
+        $moduleNamespace = preg_replace('/\\\Module$/', '', $module->get('className'));
+        $modulePath = preg_replace('/\/Module.php$/', '', $module->get('path'));
+
+        (new \Phalcon\Loader())
+            ->registerNamespaces([$moduleNamespace => $modulePath])
+            ->register();
+
+        $moduleClass = $module->get('className');
+        $moduleClass = new $moduleClass;
+
+        $moduleClass->registerAutoloaders($this->container);
+        $moduleClass->registerServices($this->container);
+        $moduleClass->registerRouter($this->container, $moduleName, $module);
     }
 
 
@@ -136,7 +171,31 @@ final class Application extends \Phalcon\Mvc\Application
      **********************************************************/
 
     /**
-     *
+     * @param string $applicationSlug
+     */
+    private function setApplicationSlug(string $applicationSlug)
+    {
+        $this->applicationSlug = $applicationSlug;
+    }
+
+    /**
+     * @param null $applicationNamespace
+     */
+    private function setApplicationNamespace($applicationNamespace = null)
+    {
+        $this->applicationNamespace = $applicationNamespace ?: Str::camelize($this->applicationSlug);
+    }
+
+    /**
+     * @param null $applicationPath
+     */
+    private function setApplicationPath($applicationPath = null)
+    {
+        $this->applicationPath = $applicationPath ?: APPS_PATH . '/' . $this->applicationSlug;
+    }
+
+    /**
+     * @return bool
      */
     public function hasApplication(): bool
     {
@@ -176,22 +235,22 @@ final class Application extends \Phalcon\Mvc\Application
     }
 
     /**
-     * @param string $module_name
+     * @param string $moduleName
      * @return string
      */
-    public function getApplicationModulePath(string $module_name): string
+    public function getApplicationModulePath(string $moduleName): string
     {
-        return $this->getApplicationPath() . '/modules/' . $module_name;
+        return $this->getApplicationPath() . '/modules/' . $moduleName;
     }
 
     /**
-     * @param string $module_name
+     * @param string $moduleName
      * @return string
      */
-    public function getApplicationModuleNamespace(string $module_name): string
+    public function getApplicationModuleNamespace(string $moduleName): string
     {
-        $module_namespace = Str::camelize($module_name);
-        return $this->getApplicationNamespace() . '\\Modules\\' . $module_namespace;
+        $moduleNamespace = Str::camelize($moduleName);
+        return $this->getApplicationNamespace() . '\\Modules\\' . $moduleNamespace;
     }
 
     /**
@@ -211,97 +270,22 @@ final class Application extends \Phalcon\Mvc\Application
     }
 
     /**
-     * @param string $module_name
+     * @param string $moduleName
      * @return string
      */
-    public function getCommonModulePath(string $module_name): string
+    public function getCommonModulePath(string $moduleName): string
     {
-        return $this->getCommonPath() . '/modules/' . $module_name;
+        return $this->getCommonPath() . '/modules/' . $moduleName;
     }
 
     /**
-     * @param string $module_name
+     * @param string $moduleName
      * @return string
      */
-    public function getCommonModuleNamespace(string $module_name): string
+    public function getCommonModuleNamespace(string $moduleName): string
     {
-        $module_namespace = Str::camelize($module_name);
-        return $this->getCommonNamespace().'\\Modules\\' . $module_namespace;
-    }
-
-
-    /**********************************************************
-     *
-     *                        MODULES
-     *
-     **********************************************************/
-
-    /**
-     * @param array $modules
-     * @param bool $merge
-     *
-     * @return AbstractApplication|void
-     */
-    public function registerModules(array $modules, $merge = false): AbstractApplication
-    {
-        parent::registerModules($modules, $merge);
-
-        foreach ($this->container->get('config')->get('modules') as $moduleName => $module)
-        {
-            $namespace = preg_replace('/\\\Module$/', '', $module['className']);
-            $path = preg_replace('/\/Module.php$/', '', $module['path']);
-
-            (new \Phalcon\Loader())
-                ->registerNamespaces([$namespace => $path])
-                ->register();
-
-            $moduleClass = new $module['className'];
-            $moduleClass->registerAutoloaders($this->container);
-            $moduleClass->registerServices($this->container);
-
-            $this->registerRoutes($moduleName, $module);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param $moduleName
-     * @param $module
-     */
-    public function registerRoutes($moduleName, $module)
-    {
-        if ($this->container->get('config')->get('applicationType') === 'modules')
-        {
-            $router = $this->container->get('router');
-            $config = $this->container->get('config');
-
-            $namespace = preg_replace('/Module$/', 'Controllers', $module->get("className"));
-
-            $router->add('/'.$moduleName.'/:params', [
-                'namespace' => $namespace,
-                'module' => $moduleName,
-                'controller' => $module->get('defaultController') ?? $config->get('defaultController'),
-                'action' => $module->get('defaultAction') ?? $config->get('defaultAction'),
-                'params' => 1
-            ]);
-
-            $router->add('/'.$moduleName.'/:controller/:params', [
-                'namespace' => $namespace,
-                'module' => $moduleName,
-                'controller' => 1,
-                'action' => $module->get('defaultAction') ?? $config->get('defaultAction'),
-                'params' => 2
-            ]);
-
-            $router->add('/'.$moduleName.'/:controller/:action/:params', [
-                'namespace' => $namespace,
-                'module' => $moduleName,
-                'controller' => 1,
-                'action' => 2,
-                'params' => 3
-            ]);
-        }
+        $moduleNamespace = Str::camelize($moduleName);
+        return $this->getCommonNamespace().'\\Modules\\' . $moduleNamespace;
     }
 
 }

@@ -24,7 +24,7 @@ use Phalcon\Di\Injectable;
 class Dispatch extends Injectable
 {
     /**
-     * Dispatch application on first application hanf
+     * Dispatch apps when the application handles its first request
      *
      * @param Event $event
      * @param ApplicationComponent $application
@@ -79,11 +79,8 @@ class Dispatch extends Injectable
     private function dispatchApplicationBySession()
     {
         // Register application service if it is store in session
-        if ($this->session && $this->session->hasApplication())
-        {
-            $this->application->registerApplicationServices(
-                $this->session->getApplication('slug')
-            );
+        if ($this->session && $this->session->hasApplication()) {
+            $this->application->registerApplication($this->session->getApplication('slug'));
         }
     }
 
@@ -99,7 +96,7 @@ class Dispatch extends Injectable
         if ($this->config->has('host') && $this->config->get('host')->has($server_name))
         {
             if ($application = Application::getBySlug($this->config->get('host')->get($server_name))) {
-                $this->application->registerApplicationServices($application->getSlug());
+                $this->application->registerApplication($application->getSlug());
             }
         }
     }
@@ -112,7 +109,7 @@ class Dispatch extends Injectable
     private function dispatchApplicationByHash()
     {
         if ($this->request->has('_app') && $application = Application::getBySlug($this->request->get('_app'))) {
-            $this->application->registerApplicationServices($application->getSlug());
+            $this->application->registerApplication($application->getSlug());
         }
     }
 

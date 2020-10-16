@@ -3,10 +3,10 @@
 namespace Demo1\Modules\Product;
 
 use Phalcon\Di\DiInterface;
-use Phalcon\Mvc\ModuleDefinitionInterface;
+use Provider\ModuleProvider;
 
 
-class Module implements ModuleDefinitionInterface
+class Module extends ModuleProvider
 {
 
     /**

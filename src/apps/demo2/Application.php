@@ -3,10 +3,10 @@
 namespace Demo2;
 
 use Phalcon\Di\DiInterface;
-use Phalcon\Mvc\ModuleDefinitionInterface;
+use Provider\ApplicationProvider;
 
 
-class Application implements ModuleDefinitionInterface
+class Application extends ApplicationProvider
 {
 
     /**
@@ -16,21 +16,11 @@ class Application implements ModuleDefinitionInterface
      */
     public function registerAutoloaders(DiInterface $container = null)
     {
-        $applicationPath = $container->get('application')->getApplicationPath();
-
-        // Register application's namespaces
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                "Demo2\\Controllers" => $applicationPath.'/controllers'
+                "Demo2\\Controllers" => __DIR__.'/controllers'
             ])
             ->register();
     }
-
-    /**
-     *  Registers services related to the application
-     *
-     * @param DiInterface $container
-     */
-    public function registerServices(DiInterface $container) {}
 
 }

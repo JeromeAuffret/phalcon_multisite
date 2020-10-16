@@ -2,8 +2,8 @@
 
 namespace Handler;
 
-use Component\Application as ApplicationComponent;
-use Component\ServiceProvider as ServiceProviderComponent;
+use Component\Application;
+use Provider\ServiceProvider;
 use Exception;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Events\Manager;
@@ -13,7 +13,7 @@ use Middleware\Dispatch as DispatchMiddleware;
 class ApplicationHandler
 {
     /**
-     * @var ApplicationComponent
+     * @var Application
      */
     protected $application;
     /**
@@ -29,7 +29,7 @@ class ApplicationHandler
         $this->registerDiContainer();
         $this->registerCoreNamespaces();
         $this->registerProviders();
-        $this->registerBeforeHandle();
+        $this->registerBootEvent();
         $this->registerMvcApplication();
     }
 
@@ -62,11 +62,12 @@ class ApplicationHandler
     {
         (new \Phalcon\Loader())
             ->registerNamespaces([
+                'Acl'        => BASE_PATH . '/core/acl',
                 'Component'  => BASE_PATH . '/core/components',
                 'Error'      => BASE_PATH . '/core/errors',
                 'Middleware' => BASE_PATH . '/core/middlewares',
+                'Provider'   => BASE_PATH . '/core/providers',
                 'Service'    => BASE_PATH . '/core/services',
-                'Acl'        => BASE_PATH . '/core/acl',
                 'Libraries'  => BASE_PATH . '/libraries',
             ])
             ->register();
@@ -77,7 +78,7 @@ class ApplicationHandler
      */
     public function registerProviders()
     {
-        $serviceProvider = new ServiceProviderComponent();
+        $serviceProvider = new ServiceProvider();
         $serviceProvider->registerServices();
     }
 
@@ -87,27 +88,16 @@ class ApplicationHandler
     public function registerMvcApplication()
     {
         $this->application = $this->container->get('application');
-
-        if ($this->container->get('config')->get('applicationType') === 'modules')
-        {
-            $this->application->registerModules(
-                $this->container->get('config')->get('modules')->toArray()
-            );
-        }
     }
 
     /**
      * @return void
      */
-    public function registerBeforeHandle()
+    public function registerBootEvent()
     {
         $manager = new Manager();
-
         $this->container->get('application')->setEventsManager($manager);
-
-        $manager->attach(
-            'application:boot', new DispatchMiddleware()
-        );
+        $manager->attach('application:boot', new DispatchMiddleware());
     }
 
 }

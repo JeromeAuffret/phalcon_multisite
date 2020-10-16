@@ -3,10 +3,10 @@
 namespace Common\Modules\Api;
 
 use Phalcon\Di\DiInterface;
-use Phalcon\Mvc\ModuleDefinitionInterface;
+use Provider\ModuleProvider;
 
 
-class Module implements ModuleDefinitionInterface
+class Module  extends ModuleProvider
 {
 
     /**
@@ -32,17 +32,6 @@ class Module implements ModuleDefinitionInterface
      */
     public function registerServices(DiInterface $container)
     {
-        $this->registerApiRouter($container);
-        $this->registerApiDispatcher($container);
-    }
-
-    /**
-     * Register specific event to correctly dispatch API controllers
-     *
-     * @param DiInterface $container
-     */
-    private function registerApiDispatcher(DiInterface $container)
-    {
         $dispatcher = $container->get('dispatcher');
         $eventsManager = $dispatcher->getEventsManager();
 
@@ -58,22 +47,22 @@ class Module implements ModuleDefinitionInterface
      * Register specific routes for API module
      *
      * @param DiInterface $container
+     * @param $moduleName
+     * @param $module
      */
-    private function registerApiRouter(DiInterface $container)
+    public function registerRouter(DiInterface $container, $moduleName, $module)
     {
-//        $namespace = preg_replace('/Module$/', 'Controllers', self::class);
-//
-//        $router = $container->get('router');
-//        $router
-//            ->add('/api/{reference}/:controller/:action/:params', [
-//                'namespace' => $namespace,
-//                'module' => 'api',
-//                'controller' => 2,
-//                'action' => 3,
-//                'params' => 4
-//            ]);
-//
-//        $container->setShared('router', $router);
+        $namespace = preg_replace('/Module$/', 'Controllers', $module->get("className"));
+
+        $router = $container->get('router');
+        $router
+            ->add('/api/{reference}/:controller/:action/:params', [
+                'namespace' => $namespace,
+                'module' => 'api',
+                'controller' => 2,
+                'action' => 3,
+                'params' => 4
+            ]);
     }
 
 }

@@ -3,10 +3,10 @@
 namespace Common\Modules\Auth;
 
 use Phalcon\Di\DiInterface;
-use Phalcon\Mvc\ModuleDefinitionInterface;
+use Provider\ModuleProvider;
 
 
-class Module implements ModuleDefinitionInterface
+class Module extends ModuleProvider
 {
     /**
      *  Registers an autoloader related to the module
@@ -21,12 +21,5 @@ class Module implements ModuleDefinitionInterface
             ])
             ->register();
     }
-
-    /**
-     *  Registers services related to the module
-     *
-     * @param DiInterface $container
-     */
-    public function registerServices(DiInterface $container) {}
 
 }

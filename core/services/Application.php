@@ -24,6 +24,8 @@ class Application implements ServiceProviderInterface
         $container->setShared('application', function () use ($container) {
             return new ApplicationComponent($container);
         });
+
+        $container->get('application')->registerCommonProvider();
     }
 
 }
