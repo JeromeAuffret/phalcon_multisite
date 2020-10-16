@@ -34,10 +34,6 @@ class Application extends Injectable
         $this->dispatchApplicationBySession();
         $this->dispatchApplicationByHost();
         $this->dispatchApplicationByHash();
-
-        // Dispatch application class
-        $this->dispatchCommonClass();
-        $this->dispatchApplicationClass();
     }
 
     /**
@@ -80,36 +76,6 @@ class Application extends Injectable
         if ($this->request->has('_app') && $application = ApplicationModel::getBySlug($this->request->get('_app'))) {
             $this->application->registerApplication($application->getSlug());
         }
-    }
-
-    /**
-     *
-     */
-    private function dispatchCommonClass()
-    {
-        $applicationClass = $this->application->getCommonNamespace().'\\'.$this->application->getApplicationClass();
-
-        /** @var \Common\Application $application */
-        $application = new $applicationClass();
-
-        $application->registerAutoloaders($this->getDI());
-        $application->registerServices($this->getDI());
-    }
-
-    /**
-     *
-     */
-    private function dispatchApplicationClass()
-    {
-        if (!$this->application->hasApplication()) return;
-
-        $applicationClass = $this->application->getApplicationNamespace().'\\'.$this->application->getApplicationClass();
-
-        /** @var \Common\Application $application */
-        $application = new $applicationClass();
-
-        $application->registerAutoloaders($this->getDI());
-        $application->registerServices($this->getDI());
     }
 
 }

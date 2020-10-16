@@ -2,6 +2,7 @@
 
 namespace Middleware;
 
+use Component\Application as ApplicationComponent;
 use Component\Config;
 use Component\Session;
 use Phalcon\Events\Event;
@@ -24,13 +25,13 @@ class Dispatch extends Injectable
      * @param Dispatcher $dispatcher
      * @return void
      */
-    public function boot(Event $event, Dispatcher $dispatcher)
+    public function beforeDispatch(Event $event, Dispatcher $dispatcher)
     {
         // Disable view for call ajax or external call
         $this->isViewDisabled();
 
         // Set default module based on default configuration
-        $this->setDefaultModuleName($dispatcher);
+        $this->setDefaultModuleName();
     }
 
     /**
@@ -45,13 +46,11 @@ class Dispatch extends Injectable
 
     /**
      * Set default dispatcher
-     *
-     * @param Dispatcher $dispatcher
      */
-    private function setDefaultModuleName(Dispatcher $dispatcher)
+    private function setDefaultModuleName()
     {
-        if ($this->config->get('applicationType') === 'modules' && !$dispatcher->getModuleName()) {
-            $dispatcher->setModuleName($this->config->get('defaultModule'));
+        if ($this->config->get('applicationType') === 'modules' && !$this->dispatcher->getModuleName()) {
+            $this->dispatcher->setModuleName($this->config->get('defaultModule'));
         }
     }
 
