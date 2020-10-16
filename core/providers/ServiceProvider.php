@@ -1,6 +1,6 @@
 <?php
 
-namespace Component;
+namespace Provider;
 
 use Phalcon\Di\Injectable;
 use Service\Acl as AclService;

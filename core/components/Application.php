@@ -2,7 +2,8 @@
 
 namespace Component;
 
-use Phalcon\Di\Injectable;
+use Phalcon\Application\AbstractApplication;
+use Phalcon\Collection;
 use Phalcon\Helper\Str;
 
 /**
@@ -15,7 +16,7 @@ use Phalcon\Helper\Str;
  *
  * @package Component
  */
-final class Application extends Injectable
+final class Application extends \Phalcon\Mvc\Application
 {
     /**
      * @var string $commonNamespace
@@ -41,6 +42,11 @@ final class Application extends Injectable
      */
     private $applicationPath;
 
+    /**
+     * @var string $applicationClass
+     */
+    private $applicationClass = 'Application';
+
 
     /**********************************************************
      *
@@ -49,36 +55,112 @@ final class Application extends Injectable
      **********************************************************/
 
     /**
-     * @param string $applicationSlug
-     */
-    public function setupApplication(string $applicationSlug): void
-    {
-        $this->applicationSlug = $applicationSlug;
-        $this->applicationNamespace = Str::camelize($this->applicationSlug);
-        $this->applicationPath = APPS_PATH . '/' . $this->applicationSlug;
-    }
-
-    /**
      * Register specific application's services for a given application
      *
      * @param string|null $applicationSlug
+     * @param string|null $applicationNamespace
+     * @param string|null $applicationPath
      */
-    public function registerApplicationServices(string $applicationSlug)
+    public function registerApplication(string $applicationSlug, ?string $applicationNamespace = null, ?string $applicationPath = null)
     {
-        // Register Application Config
-        $this->setupApplication($applicationSlug);
+        // Register Application Slug
+        $this->setApplicationSlug($applicationSlug);
 
-        // Register Application Config
-        $this->config->registerApplicationConfig();
+        // Register Application Namespace
+        $this->setApplicationNamespace($applicationNamespace);
 
-        // Register Application Namespaces
-        $this->loader->registerApplicationNamespaces();
+        // Register Application Path
+        $this->setApplicationPath($applicationPath);
 
-        // Register Application Database
-        $this->database->registerApplicationDatabase();
+        // Register Application Autoloader
+        $this->registerApplicationProvider();
+    }
 
-        // Register Application Database
-        $this->acl->registerApplicationAcl();
+    /**
+     * @param array $modules
+     * @param bool $merge
+     *
+     * @return AbstractApplication|void
+     */
+    public function registerModules(array $modules, $merge = false): AbstractApplication
+    {
+        parent::registerModules($modules, $merge);
+
+        foreach ($this->container->get('config')->get('modules') as $moduleName => $module) {
+            $this->registerModuleProvider($moduleName, $module);
+        }
+
+        return $this;
+    }
+
+
+    /**********************************************************
+     *
+     *                        AUTOLOADER
+     *
+     **********************************************************/
+
+    /**
+     * PSR-4 compliant autoloader for common folder
+     */
+    public function registerCommonProvider()
+    {
+        $commonPath = $this->getCommonPath();
+        $commonNamespace = $this->getCommonNamespace();
+
+        (new \Phalcon\Loader())
+            ->registerNamespaces([$commonNamespace => $commonPath])
+            ->register();
+
+        $applicationClass = $commonNamespace.'\\'.$this->applicationClass;
+        $applicationClass = new $applicationClass;
+
+        $applicationClass->registerAutoloaders($this->container);
+        $applicationClass->registerServices($this->container);
+        $applicationClass->registerRouter($this->container);
+    }
+
+    /**
+     * PSR-4 compliant autoloader for application folder
+     */
+    public function registerApplicationProvider()
+    {
+        $applicationPath = $this->getApplicationPath();
+        $applicationNamespace = $this->getApplicationNamespace();
+
+        (new \Phalcon\Loader())
+            ->registerNamespaces([$applicationNamespace => $applicationPath])
+            ->register();
+
+        $applicationClass = $applicationNamespace.'\\'.$this->applicationClass;
+        $applicationClass = new $applicationClass;
+
+        $applicationClass->registerAutoloaders($this->container);
+        $applicationClass->registerServices($this->container);
+        $applicationClass->registerRouter($this->container);
+    }
+
+    /**
+     * PSR-4 compliant autoloader for application folder
+     *
+     * @param string $moduleName
+     * @param        $module
+     */
+    public function registerModuleProvider(string $moduleName, $module)
+    {
+        $moduleNamespace = preg_replace('/\\\Module$/', '', $module->get('className'));
+        $modulePath = preg_replace('/\/Module.php$/', '', $module->get('path'));
+
+        (new \Phalcon\Loader())
+            ->registerNamespaces([$moduleNamespace => $modulePath])
+            ->register();
+
+        $moduleClass = $module->get('className');
+        $moduleClass = new $moduleClass;
+
+        $moduleClass->registerAutoloaders($this->container);
+        $moduleClass->registerServices($this->container);
+        $moduleClass->registerRouter($this->container, $moduleName, $module);
     }
 
 
@@ -89,11 +171,43 @@ final class Application extends Injectable
      **********************************************************/
 
     /**
-     *
+     * @param string $applicationSlug
+     */
+    private function setApplicationSlug(string $applicationSlug)
+    {
+        $this->applicationSlug = $applicationSlug;
+    }
+
+    /**
+     * @param null $applicationNamespace
+     */
+    private function setApplicationNamespace($applicationNamespace = null)
+    {
+        $this->applicationNamespace = $applicationNamespace ?: Str::camelize($this->applicationSlug);
+    }
+
+    /**
+     * @param null $applicationPath
+     */
+    private function setApplicationPath($applicationPath = null)
+    {
+        $this->applicationPath = $applicationPath ?: APPS_PATH . '/' . $this->applicationSlug;
+    }
+
+    /**
+     * @return bool
      */
     public function hasApplication(): bool
     {
         return !!$this->applicationSlug;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApplicationClass(): string
+    {
+        return $this->applicationClass;
     }
 
     /**
@@ -121,22 +235,22 @@ final class Application extends Injectable
     }
 
     /**
-     * @param string $module_name
+     * @param string $moduleName
      * @return string
      */
-    public function getApplicationModulePath(string $module_name): string
+    public function getApplicationModulePath(string $moduleName): string
     {
-        return $this->getApplicationPath() . '/modules/' . $module_name;
+        return $this->getApplicationPath() . '/modules/' . $moduleName;
     }
 
     /**
-     * @param string $module_name
+     * @param string $moduleName
      * @return string
      */
-    public function getApplicationModuleNamespace(string $module_name): string
+    public function getApplicationModuleNamespace(string $moduleName): string
     {
-        $module_namespace = Str::camelize($module_name);
-        return $this->getApplicationNamespace() . '\\Modules\\' . $module_namespace;
+        $moduleNamespace = Str::camelize($moduleName);
+        return $this->getApplicationNamespace() . '\\Modules\\' . $moduleNamespace;
     }
 
     /**
@@ -156,22 +270,22 @@ final class Application extends Injectable
     }
 
     /**
-     * @param string $module_name
+     * @param string $moduleName
      * @return string
      */
-    public function getCommonModulePath(string $module_name): string
+    public function getCommonModulePath(string $moduleName): string
     {
-        return $this->getCommonPath() . '/modules/' . $module_name;
+        return $this->getCommonPath() . '/modules/' . $moduleName;
     }
 
     /**
-     * @param string $module_name
+     * @param string $moduleName
      * @return string
      */
-    public function getCommonModuleNamespace(string $module_name): string
+    public function getCommonModuleNamespace(string $moduleName): string
     {
-        $module_namespace = Str::camelize($module_name);
-        return $this->getCommonNamespace().'\\Modules\\' . $module_namespace;
+        $moduleNamespace = Str::camelize($moduleName);
+        return $this->getCommonNamespace().'\\Modules\\' . $moduleNamespace;
     }
 
 }

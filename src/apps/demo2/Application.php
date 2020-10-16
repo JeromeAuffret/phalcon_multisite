@@ -1,15 +1,16 @@
 <?php
 
-namespace Common\Modules\Auth;
+namespace Demo2;
 
 use Phalcon\Di\DiInterface;
-use Provider\ModuleProvider;
+use Provider\ApplicationProvider;
 
 
-class Module extends ModuleProvider
+class Application extends ApplicationProvider
 {
+
     /**
-     *  Registers an autoloader related to the module
+     *  Registers an autoloader related to the application
      *
      * @param DiInterface|null $container
      */
@@ -17,7 +18,7 @@ class Module extends ModuleProvider
     {
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Common\Modules\Auth\Controllers' => $container->get('application')->getCommonModulePath('auth') . '/controllers/'
+                "Demo2\\Controllers" => __DIR__.'/controllers'
             ])
             ->register();
     }

@@ -3,10 +3,10 @@
 namespace Common\Modules\Api;
 
 use Phalcon\Di\DiInterface;
-use Phalcon\Mvc\ModuleDefinitionInterface;
+use Provider\ModuleProvider;
 
 
-class Module implements ModuleDefinitionInterface
+class Module  extends ModuleProvider
 {
 
     /**
@@ -41,6 +41,28 @@ class Module implements ModuleDefinitionInterface
 
         $dispatcher->setEventsManager($eventsManager);
         $container->setShared('dispatcher', $dispatcher);
+    }
+
+    /**
+     * Register specific routes for API module
+     *
+     * @param DiInterface $container
+     * @param $moduleName
+     * @param $module
+     */
+    public function registerRouter(DiInterface $container, $moduleName, $module)
+    {
+        $namespace = preg_replace('/Module$/', 'Controllers', $module->get("className"));
+
+        $router = $container->get('router');
+        $router
+            ->add('/api/{reference}/:controller/:action/:params', [
+                'namespace' => $namespace,
+                'module' => 'api',
+                'controller' => 2,
+                'action' => 3,
+                'params' => 4
+            ]);
     }
 
 }

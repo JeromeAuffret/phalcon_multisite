@@ -25,11 +25,6 @@ class Database implements ServiceProviderInterface
 
         // Register main database
         $container->get('database')->registerMainDatabase();
-
-        // Register applications database
-        if ($container->get('application')->hasApplication()) {
-            $container->get('database')->registerApplicationDatabase();
-        }
     }
 
 }

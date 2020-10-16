@@ -21,9 +21,11 @@ class Application implements ServiceProviderInterface
      */
     public function register(DiInterface $container): void
     {
-        $container->setShared('application', function () {
-            return new ApplicationComponent();
+        $container->setShared('application', function () use ($container) {
+            return new ApplicationComponent($container);
         });
+
+        $container->get('application')->registerCommonProvider();
     }
 
 }

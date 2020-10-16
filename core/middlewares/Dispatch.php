@@ -23,28 +23,30 @@ use Phalcon\Di\Injectable;
  */
 class Dispatch extends Injectable
 {
-
     /**
-     * Dispatch application before setup
+     * Dispatch apps when the application handles its first request
      *
      * @param Event $event
-     * @param Dispatcher $dispatcher
+     * @param ApplicationComponent $application
      * @return void
      * @throws Exception
      */
-    public function beforeDispatch(Event $event, Dispatcher $dispatcher)
+    public function boot(Event $event, ApplicationComponent $application)
     {
-        // Set default module if not exist in dispatcher
-        if (!$dispatcher->getModuleName()) {
-            $dispatcher->setModuleName($this->config->get('defaultModule'));
-        }
+        // Defined application service
+        $this->dispatchApplicationBySession();
+        $this->dispatchApplicationByHost();
+        $this->dispatchApplicationByHash();
+
+        // Dispatch application class
+        $this->dispatchCommonClass();
+        $this->dispatchApplicationClass();
 
         // Disable view for call ajax or external call
         $this->isViewDisabled();
 
-        // Check if an application can be identified
-        $this->dispatchApplicationByHost();
-        $this->dispatchApplicationByHash();
+        // Set default module based on default configuration
+        $this->setDefaultModuleName($this->dispatcher);
     }
 
     /**
@@ -58,7 +60,32 @@ class Dispatch extends Injectable
     }
 
     /**
-     * Setup application loader in case of server_name matching host
+     * Set default dispatcher
+     *
+     * @param Dispatcher $dispatcher
+     */
+    private function setDefaultModuleName(Dispatcher $dispatcher)
+    {
+        if ($this->config->get('applicationType') === 'modules' && !$dispatcher->getModuleName()) {
+            $dispatcher->setModuleName($this->config->get('defaultModule'));
+        }
+    }
+
+    /**
+     * Setup application loader if application is defined in session
+     *
+     * @throws Exception
+     */
+    private function dispatchApplicationBySession()
+    {
+        // Register application service if it is store in session
+        if ($this->session && $this->session->hasApplication()) {
+            $this->application->registerApplication($this->session->getApplication('slug'));
+        }
+    }
+
+    /**
+     * Setup application loader if application is defined in host configuration
      *
      * @throws Exception
      */
@@ -69,21 +96,51 @@ class Dispatch extends Injectable
         if ($this->config->has('host') && $this->config->get('host')->has($server_name))
         {
             if ($application = Application::getBySlug($this->config->get('host')->get($server_name))) {
-                $this->application->registerApplicationServices($application->getSlug());
+                $this->application->registerApplication($application->getSlug());
             }
         }
     }
 
     /**
-     * Setup application loader in case of request has application_slug in parameters
+     * Setup application loader if application is defined in request parameters
      *
      * @throws Exception
      */
     private function dispatchApplicationByHash()
     {
         if ($this->request->has('_app') && $application = Application::getBySlug($this->request->get('_app'))) {
-            $this->application->registerApplicationServices($application->getSlug());
+            $this->application->registerApplication($application->getSlug());
         }
+    }
+
+    /**
+     *
+     */
+    private function dispatchCommonClass()
+    {
+        $applicationClass = $this->application->getCommonNamespace().'\\'.$this->application->getApplicationClass();
+
+        /** @var \Common\Application $application */
+        $application = new $applicationClass();
+
+        $application->registerAutoloaders($this->getDI());
+        $application->registerServices($this->getDI());
+    }
+
+    /**
+     *
+     */
+    private function dispatchApplicationClass()
+    {
+        if (!$this->application->hasApplication()) return;
+
+        $applicationClass = $this->application->getApplicationNamespace().'\\'.$this->application->getApplicationClass();
+
+        /** @var \Common\Application $application */
+        $application = new $applicationClass();
+
+        $application->registerAutoloaders($this->getDI());
+        $application->registerServices($this->getDI());
     }
 
 }

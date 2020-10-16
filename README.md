@@ -43,13 +43,13 @@ Applications can be identified using session and/or hosts.
 
 ### Host
 
-If are on local, you can edit the `/etc/hosts` and add something like following,
+In local env, you can edit the `/etc/hosts` and add something like,
 
     127.0.0.1       demo2.localhost 
     
-Now, visit you new host `http://demo2.localhost`.
+and visit the new host `http://demo2.localhost`.
 
-Host configuration can be found in `src/common/config/main.php`.
+Hosts configuration can be found in `src/common/config/main.php`.
 
 ### Session
 

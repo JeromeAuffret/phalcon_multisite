@@ -24,17 +24,6 @@ class Loader implements ServiceProviderInterface
         $container->setShared('loader', function () {
             return new LoaderComponent();
         });
-
-        // Register Main namespaces
-        $container->get('loader')->registerMainNamespaces();
-
-        // Register application namespaces
-        if ($container->get('application')->hasApplication())
-        {
-            $container->get('loader')->registerApplicationNamespaces(
-                $container->get('application')->getApplicationSlug()
-            );
-        }
     }
 
 }

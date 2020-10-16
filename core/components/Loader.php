@@ -24,56 +24,6 @@ final class Loader extends Injectable
 
     /**********************************************************
      *
-     *                          BASE
-     *
-     **********************************************************/
-
-    /**
-     * Register common namespace
-     */
-    public function registerMainNamespaces()
-    {
-        (new \Phalcon\Loader())
-            ->registerNamespaces([
-                'Controllers' => BASE_PATH . '/src/controllers',
-                'Models'      => BASE_PATH . '/src/models',
-                'Forms'       => BASE_PATH . '/src/forms',
-
-                'Common'              => COMMON_PATH,
-                'Common\\Models'      => COMMON_PATH . '/models/',
-                'Common\\Traits'      => COMMON_PATH . '/traits/',
-                'Common\\Controllers' => COMMON_PATH . '/controllers/',
-                'Common\\Forms'       => COMMON_PATH . '/forms/'
-            ])
-            ->register();
-    }
-
-    /**
-     * Loader Application loader and load namespaces in di
-     *
-     * @return void
-     */
-    public function registerApplicationNamespaces()
-    {
-        $application_path = $this->application->getApplicationPath();
-        $application_namespace = $this->application->getApplicationNamespace();
-
-        // Register application's namespaces
-        (new \Phalcon\Loader())
-            ->registerNamespaces([
-                $application_namespace => $application_path,
-                "$application_namespace\\Models"      => $application_path.'/models',
-                "$application_namespace\\Controllers" => $application_path.'/controllers',
-                "$application_namespace\\Traits"      => $application_path.'/traits',
-                "$application_namespace\\Forms"       => $application_path.'/forms',
-                "$application_namespace\\Console"     => $application_path.'/console',
-            ])
-            ->register();
-    }
-
-
-    /**********************************************************
-     *
      *                     BEFORE DISPATCH
      *
      **********************************************************/
@@ -101,7 +51,7 @@ final class Loader extends Injectable
             $app_controller_module_path = $this->application->getApplicationModulePath($module_name).'/controllers';
             $module_namespace = $this->application->getApplicationModuleNamespace($module_name).'\\Controllers';
 
-            if(file_exists($app_controller_module_path.'/'.$controller_file)) {
+            if (file_exists($app_controller_module_path.'/'.$controller_file)) {
                 (new \Phalcon\Loader())->registerNamespaces([$module_namespace => $app_controller_module_path])->register();
                 $dispatcher->setNamespaceName($module_namespace);
             }
