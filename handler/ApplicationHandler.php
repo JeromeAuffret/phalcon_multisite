@@ -87,10 +87,6 @@ class ApplicationHandler
     public function registerMvcApplication()
     {
         $this->application = $this->container->get('application');
-
-        $this->application->registerModules(
-            $this->container->get('config')->get('modules')->toArray()
-        );
     }
 
     /**

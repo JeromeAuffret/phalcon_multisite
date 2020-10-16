@@ -3,7 +3,6 @@
 namespace Component;
 
 use Phalcon\Application\AbstractApplication;
-use Phalcon\Collection;
 use Phalcon\Helper\Str;
 
 /**

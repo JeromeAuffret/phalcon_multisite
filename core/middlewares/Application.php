@@ -30,6 +30,9 @@ class Application extends Injectable
      */
     public function boot(Event $event, ApplicationComponent $application)
     {
+        // Register Common provider
+        $this->application->registerCommonProvider();
+
         // Defined application service
         $this->dispatchApplicationBySession();
         $this->dispatchApplicationByHost();
