@@ -39,49 +39,4 @@ final class Router extends \Phalcon\Mvc\Router
         }
     }
 
-    /**
-     * @return void
-     */
-    public function registerMainRoutesFile(): void
-    {
-        $container = Di::getDefault();
-        $app_path = $container->get('application')->getApplicationPath();
-
-        $app_config_path = $app_path.'/config/routes.php';
-        $app_common_path = COMMON_PATH.'/config/routes.php';
-
-        if (file_exists($app_config_path)) {
-            include $app_config_path;
-        }
-        else if (file_exists($app_common_path)) {
-            include $app_common_path;
-        }
-    }
-
-    /**
-     * @return void
-     */
-    public function registerModulesRoutesFile(): void
-    {
-        $container = Di::getDefault();
-        $modules = $container->get('config')->get('modules');
-        $app_path = $container->get('application')->getApplicationPath();
-
-        foreach ($modules as $key => $module)
-        {
-            $moduleName = basename(dirname($module->get('path')));
-
-            $app_config_path = $app_path.'/modules/'.$moduleName.'/config/routes.php';
-            $app_common_path = COMMON_PATH.'/modules/'.$moduleName.'/config/routes.php';
-
-            if (file_exists($app_config_path)) {
-                include $app_config_path;
-            }
-            else if (file_exists($app_common_path)) {
-                include $app_common_path;
-            }
-        }
-    }
-
-
 }

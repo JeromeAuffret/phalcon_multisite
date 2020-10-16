@@ -7,8 +7,7 @@ use Provider\ServiceProvider;
 use Exception;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Events\Manager;
-use Middleware\Dispatch as DispatchMiddleware;
-
+use Middleware\Application as ApplicationMiddleware;
 
 class ApplicationHandler
 {
@@ -88,6 +87,10 @@ class ApplicationHandler
     public function registerMvcApplication()
     {
         $this->application = $this->container->get('application');
+
+        $this->application->registerModules(
+            $this->container->get('config')->get('modules')->toArray()
+        );
     }
 
     /**
@@ -97,7 +100,7 @@ class ApplicationHandler
     {
         $manager = new Manager();
         $this->container->get('application')->setEventsManager($manager);
-        $manager->attach('application:boot', new DispatchMiddleware());
+        $manager->attach('application:boot', new ApplicationMiddleware());
     }
 
 }
