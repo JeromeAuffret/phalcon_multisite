@@ -3,7 +3,7 @@
 namespace Middleware;
 
 use Component\Config;
-use Component\Loader;
+use Component\Application;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Di\Injectable;
@@ -11,7 +11,7 @@ use Phalcon\Di\Injectable;
 /**
  * Class Controller
  *
- * @property Loader loader
+ * @property Application application
  * @property Config config
  * @package Middleware
  */
@@ -28,7 +28,7 @@ class Controller extends Injectable
     public function beforeDispatch(Event $event, Dispatcher $dispatcher)
     {
         // Register correct controller in dispatcher
-        $this->loader->dispatchController($dispatcher);
+        $this->application->dispatchController($dispatcher);
     }
 
 }

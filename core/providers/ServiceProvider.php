@@ -8,7 +8,6 @@ use Service\Application as ApplicationService;
 use Service\Config as ConfigService;
 use Service\Database as DbService;
 use Service\Dispatcher as DispatcherService;
-use Service\Loader as LoaderService;
 use Service\Router as RouterService;
 use Service\Session as SessionService;
 use Service\Url as UrlService;
@@ -23,7 +22,7 @@ final class ServiceProvider extends Injectable
 {
 
     /**
-     *
+     *  Default services
      */
     public function registerServices()
     {
@@ -36,8 +35,6 @@ final class ServiceProvider extends Injectable
         (new ConfigService)->register($container);
 
         (new DbService)->register($container);
-
-        (new LoaderService)->register($container);
 
         (new AclService)->register($container);
 

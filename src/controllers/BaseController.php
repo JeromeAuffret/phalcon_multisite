@@ -5,7 +5,6 @@ namespace Controllers;
 use Component\Acl;
 use Component\Application;
 use Component\Config;
-use Component\Loader;
 use Component\Session;
 use Component\View;
 use Phalcon\Acl\ComponentAware;
@@ -20,7 +19,6 @@ use Phalcon\Mvc\Dispatcher;
  *
  * @property Acl acl
  * @property Application application
- * @property Loader loader
  * @property Session session
  * @property Config config
  * @property View view
@@ -274,8 +272,8 @@ class BaseController extends Controller implements ComponentAware
         /**
          * Load specific view assets base on routing process
          */
-        $this->loader->registerApplicationAssetsCollection($app_style, 'css');
-        $this->loader->registerApplicationAssetsCollection($app_script, 'js');
+        $this->view->registerApplicationAssetsCollection($app_style, 'css');
+        $this->view->registerApplicationAssetsCollection($app_script, 'js');
     }
 
     /**
@@ -306,8 +304,8 @@ class BaseController extends Controller implements ComponentAware
         /**
          * Load specific view assets base on routing process
          */
-        $this->loader->registerViewAssetsCollection($view_style, 'css');
-        $this->loader->registerViewAssetsCollection($view_script, 'js');
+        $this->view->registerViewAssetsCollection($view_style, 'css');
+        $this->view->registerViewAssetsCollection($view_script, 'js');
     }
 
 

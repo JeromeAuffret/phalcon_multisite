@@ -3,7 +3,6 @@
 namespace Common\Modules\Api\Controllers;
 
 use Controllers\BaseController;
-use Component\Loader;
 use Exception;
 use Models\BaseModel;
 use Phalcon\Helper\Str;
@@ -77,7 +76,7 @@ class ControllerBase extends BaseController
     protected function instantiateModel()
     {
         $this->model_name = Str::camelize($this->reference);
-        $this->model_namespace = $this->loader->dispatchNamespace($this->model_name, 'Models');
+        $this->model_namespace = $this->application->dispatchNamespace($this->model_name, 'Models');
 
         if ($this->model_namespace)
         {

@@ -2,7 +2,10 @@
 
 namespace Component;
 
+use Phalcon\Assets\Collection;
 use Phalcon\Helper\Str;
+use Phalcon\Mvc\Dispatcher;
+use Phalcon\Mvc\Router;
 
 /**
  * Class Application
@@ -10,7 +13,6 @@ use Phalcon\Helper\Str;
  * @property Acl acl
  * @property Config config
  * @property Database database
- * @property Loader loader
  *
  * @package Component
  */
@@ -148,6 +150,138 @@ final class Application extends \Phalcon\Mvc\Application
 
             $moduleClass->initialize($this->container, $moduleName, $module);
         }
+    }
+
+
+    /**********************************************************
+     *
+     *                     BEFORE DISPATCH
+     *
+     **********************************************************/
+
+    /**
+     * Dispatch controller namespace between common and application folders
+     *
+     * @param Dispatcher $dispatcher
+     */
+    public function dispatchController(Dispatcher $dispatcher)
+    {
+        $moduleName = $dispatcher->getModuleName();
+        $application_namespace = $this->application->getApplicationNamespace();
+
+        $controllerClass = explode('\\', $dispatcher->getControllerClass());
+        $controllerFile = end($controllerClass).'.php';
+
+        if (end($controllerClass) === 'ErrorController') {
+            $dispatcher->setNamespaceName('Controllers');
+        }
+        elseif ($this->config->get('applicationType') === 'simple') {
+            $dispatcher->setNamespaceName($application_namespace.'\Controllers');
+        }
+        elseif ($this->config->get('applicationType') === 'modules') {
+            $appControllerModulePath = $this->application->getApplicationModulePath($moduleName).'/controllers';
+            $moduleNamespace = $this->application->getApplicationModuleNamespace($moduleName).'\\Controllers';
+
+            if (file_exists($appControllerModulePath.'/'.$controllerFile)) {
+                (new \Phalcon\Loader())->registerNamespaces([$moduleNamespace => $appControllerModulePath])->register();
+                $dispatcher->setNamespaceName($moduleNamespace);
+            }
+        }
+    }
+
+    /**
+     * Register correct controller in dispatcher based on application defined in session
+     *
+     * @param Dispatcher $dispatcher
+     * @param Router $router
+     * @return void
+     */
+    public function dispatchApiController(Dispatcher $dispatcher, Router $router)
+    {
+        $moduleName = $router->getModuleName();
+        $controllerName = $router->getControllerName();
+        $referenceName = $router->getParams()['reference'];
+        $referenceControllerFile = Str::camelize($referenceName).'Controller.php';
+
+        $appControllerModulePath = $this->application->getApplicationModulePath($moduleName).'/controllers/'.$controllerName;
+        $commonControllerModulePath = $this->application->getCommonModulePath($moduleName).'/controllers/'.$controllerName;
+
+        if ($controllerName === 'error') {
+            $dispatcher->setNamespaceName('Controllers');
+        }
+        else if ($this->application && file_exists($appControllerModulePath.'/'.$referenceControllerFile)) {
+            $namespace = $this->application->getApplicationModulePath($moduleName).'\Controllers\\'.$controllerName;
+
+            (new \Phalcon\Loader())->registerNamespaces([$namespace => $appControllerModulePath])->register();
+            $dispatcher->setNamespaceName($namespace);
+            $dispatcher->setControllerName($referenceName);
+        }
+        else if (file_exists($commonControllerModulePath.'/'.$referenceControllerFile)) {
+            $namespace = $this->application->getCommonModulePath($moduleName).'\Controllers\\'.$controllerName;
+
+            (new \Phalcon\Loader())->registerNamespaces([$namespace => $commonControllerModulePath])->register();
+            $dispatcher->setNamespaceName($namespace);
+            $dispatcher->setControllerName($referenceName);
+        }
+    }
+
+
+    /**********************************************************
+     *
+     *                        NAMESPACES
+     *
+     **********************************************************/
+
+    /**
+     * Dispatch a namespace between common and application folder
+     *
+     * @param string $className
+     * @param string $baseNamespace
+     * @return string|null
+     */
+    public function dispatchNamespace(string $className, string $baseNamespace)
+    {
+        // Get class path base on namespace. This use a lowercase version of PSR-4 standard for folder's name
+        $basePath = [];
+        foreach (explode('\\', $baseNamespace) as $namespace_folder) {
+            if (!empty($namespace_folder)) $basePath[] = Str::uncamelize($namespace_folder, '_');
+        }
+        $basePath = implode('/', $basePath);
+
+        $appPath = $this->application->getApplicationPath().'/'.$basePath.'/';
+        $commonPath = $this->application->getCommonPath().'/'.$basePath.'/';
+
+        $namespace = $path = null;
+        if (file_exists($appPath.$className.'.php')) {
+            $namespace = $this->application->getApplicationNamespace()."\\$baseNamespace\\$className";
+        }
+        elseif (file_exists($commonPath.$className.'.php')) {
+            $namespace = $this->application->getCommonNamespace()."\\$baseNamespace\\$className";
+        }
+        elseif ($this->config->get('applicationType') === 'modules')
+        {
+            foreach ($this->config->get('modules') as $moduleName => $definition)
+            {
+                $appModulePath = $this->application->getApplicationModulePath($moduleName).'/'.$basePath.'/';
+                $commonModulePath = $this->application->getCommonModulePath($moduleName).'/'.$basePath.'/';
+
+                if (file_exists($appModulePath.$className.'.php')) {
+                    $namespace = $this->application->getApplicationModuleNamespace($moduleName)."\\$baseNamespace\\$className";
+                    $path = $appModulePath.$className.'.php';
+                    break;
+                }
+                elseif (file_exists($commonModulePath.$className.'.php')) {
+                    $namespace = $this->application->getCommonModuleNamespace($moduleName)."\\$baseNamespace\\$className";
+                    $path = $commonModulePath.$className.'.php';
+                    break;
+                }
+            }
+        }
+
+        // Register namespace before return it
+        (new \Phalcon\Loader())->registerClasses([$namespace => $path])->register();
+
+        return $namespace;
     }
 
 
