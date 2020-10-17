@@ -3,19 +3,18 @@
 namespace Provider;
 
 use Phalcon\Di\DiInterface;
+use Phalcon\Mvc\ModuleDefinitionInterface;
 
 
-class ModuleProvider
+class ModuleProvider implements ModuleDefinitionInterface
 {
     /**
      * @param DiInterface $container
+     * @param $moduleName
+     * @param $module
      */
     public function initialize(DiInterface $container, $moduleName, $module)
     {
-        $this->registerAutoloader($container);
-
-        $this->registerServices($container);
-
         $this->registerRouter($container, $moduleName, $module);
     }
 
@@ -24,7 +23,7 @@ class ModuleProvider
      *
      * @param DiInterface|null $container
      */
-    public function registerAutoloader(DiInterface $container) {}
+    public function registerAutoloaders(DiInterface $container = null) {}
 
     /**
      *  Registers services related to the module

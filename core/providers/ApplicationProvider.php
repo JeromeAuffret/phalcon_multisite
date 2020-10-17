@@ -3,19 +3,19 @@
 namespace Provider;
 
 use Phalcon\Di\DiInterface;
+use Phalcon\Mvc\ModuleDefinitionInterface;
 
 
-class ApplicationProvider
+class ApplicationProvider  implements ModuleDefinitionInterface
 {
+
     /**
      * @param DiInterface $container
      */
     public function initialize(DiInterface $container)
     {
-        $this->registerAutoloader($container);
-
+        $this->registerAutoloaders($container);
         $this->registerServices($container);
-
         $this->registerRouter($container);
     }
 
@@ -24,7 +24,7 @@ class ApplicationProvider
      *
      * @param DiInterface|null $container
      */
-    protected function registerAutoloader(DiInterface $container)
+    public function registerAutoloaders(DiInterface $container = null)
     {
         (new \Phalcon\Loader())
             ->registerNamespaces([
@@ -46,7 +46,7 @@ class ApplicationProvider
      *
      * @param DiInterface $container
      */
-    protected function registerServices(DiInterface $container)
+    public function registerServices(DiInterface $container)
     {
         // Register Application Config
         $container->get('config')->registerApplicationConfig();
@@ -69,6 +69,6 @@ class ApplicationProvider
      *
      * @param DiInterface $container
      */
-    protected function registerRouter(DiInterface $container) {}
+    public function registerRouter(DiInterface $container) {}
 
 }

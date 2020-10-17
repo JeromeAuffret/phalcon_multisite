@@ -36,7 +36,7 @@ class Module  extends ModuleProvider
         $eventsManager = $dispatcher->getEventsManager();
 
         $eventsManager->attach('dispatch:beforeDispatch', function () use($container, $dispatcher) {
-            $container->get('loader')->dispatchApiController($dispatcher, $container->get('router'));
+            $container->get('application')->dispatchApiController($dispatcher, $container->get('router'));
         });
 
         $dispatcher->setEventsManager($eventsManager);

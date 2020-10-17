@@ -40,7 +40,7 @@ class Application extends Injectable
     }
 
     /**
-     * Setup application loader if application is defined in session
+     * Setup application if defined in session
      *
      * @throws Exception
      */
@@ -53,7 +53,7 @@ class Application extends Injectable
     }
 
     /**
-     * Setup application loader if application is defined in host configuration
+     * Setup application defined in host configuration
      *
      * @throws Exception
      */
@@ -70,7 +70,7 @@ class Application extends Injectable
     }
 
     /**
-     * Setup application loader if application is defined in request parameters
+     * Setup application defined in request parameters
      *
      * @throws Exception
      */
