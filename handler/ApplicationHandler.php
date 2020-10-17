@@ -5,8 +5,16 @@ namespace Handler;
 use Component\Application;
 use Exception;
 use Middleware\Application as ApplicationMiddleware;
-use Provider\ServiceProvider;
 use Phalcon\Di\FactoryDefault;
+
+use Service\Acl as AclService;
+use Service\Application as ApplicationService;
+use Service\Config as ConfigService;
+use Service\Database as DbService;
+use Service\Router as RouterService;
+use Service\Session as SessionService;
+use Service\Url as UrlService;
+use Service\View as ViewService;
 
 class ApplicationHandler
 {
@@ -30,27 +38,16 @@ class ApplicationHandler
         $this->container = new FactoryDefault();
 
         // Register core namespaces
-        (new \Phalcon\Loader())
-            ->registerNamespaces([
-                'Acl'        => BASE_PATH . '/core/acl',
-                'Component'  => BASE_PATH . '/core/components',
-                'Error'      => BASE_PATH . '/core/errors',
-                'Middleware' => BASE_PATH . '/core/middlewares',
-                'Provider'   => BASE_PATH . '/core/providers',
-                'Service'    => BASE_PATH . '/core/services',
-                'Libraries'  => BASE_PATH . '/libraries',
-            ])
-            ->register();
+        $this->registerCoreNamespaces();
 
         // Register main services in DI container
-        (new ServiceProvider())->registerServices();
+        $this->registerCoreServices();
 
         // Get application service
         $this->application = $this->container->get('application');
 
-        // Register boot event to correctly dispatch applications
-        $this->container->get('eventsManager')->attach('application:boot', new ApplicationMiddleware());
-        $this->application->setEventsManager($this->container->get('eventsManager'));
+        // Bind event to mvc application
+        $this->bindEvents();
     }
 
     /**
@@ -65,6 +62,76 @@ class ApplicationHandler
             $this->container->get('config')->get('requestUri')
         )
             ->getContent();
+    }
+
+    /**
+     * Register core namespaces
+     */
+    public function registerCoreNamespaces()
+    {
+        // Register core namespaces
+        (new \Phalcon\Loader())
+            ->registerNamespaces([
+                'Acl'        => BASE_PATH . '/core/acl',
+                'Component'  => BASE_PATH . '/core/components',
+                'Error'      => BASE_PATH . '/core/errors',
+                'Middleware' => BASE_PATH . '/core/middlewares',
+                'Provider'   => BASE_PATH . '/core/providers',
+                'Service'    => BASE_PATH . '/core/services',
+                'Libraries'  => BASE_PATH . '/libraries',
+            ])
+            ->register();
+    }
+
+    /**
+     * Register core services
+     */
+    public function registerCoreServices()
+    {
+        (new ApplicationService)
+            ->register($this->container);
+
+        (new SessionService)
+            ->register($this->container);
+
+        (new ConfigService)
+            ->register($this->container);
+
+        (new DbService)
+            ->register($this->container);
+
+        (new AclService)
+            ->register($this->container);
+
+        (new ViewService)
+            ->register($this->container);
+
+        (new UrlService)
+            ->register($this->container);
+
+        (new RouterService)
+            ->register($this->container);
+    }
+
+    /**
+     * Bind application events
+     */
+    public function bindEvents()
+    {
+        // Register eventsManager
+        $this->application->setEventsManager(
+            $this->container->get('eventsManager')
+        );
+
+        // Bind boot event to correctly dispatch applications
+        $this->application
+            ->getEventsManager()
+            ->attach('application:boot', new ApplicationMiddleware());
+
+        // Bind specific event define in module provider if needed
+        $this->application
+            ->getEventsManager()
+            ->attach('application:afterStartModule', new ApplicationMiddleware());
     }
 
 }

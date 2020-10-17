@@ -42,6 +42,27 @@ class Application extends Injectable
     }
 
     /**
+     * Register specific module events based on router
+     *
+     * @param Event $event
+     * @param ApplicationComponent $application
+     * @return void
+     * @throws Exception
+     */
+    public function afterStartModule(Event $event, ApplicationComponent $application)
+    {
+        $di = $this->getDI();
+
+        $moduleName = $di->get('router')->getModuleName();
+        $module = $application->getModule($moduleName);
+
+        $moduleClass = $module['className'];
+        $moduleClass = new $moduleClass;
+
+        $moduleClass->registerEvents($di);
+    }
+
+    /**
      * Setup application if defined in session
      *
      * @throws Exception

@@ -81,5 +81,12 @@ class ModuleProvider implements ModuleDefinitionInterface
      * @param DiInterface $container
      */
     public function registerAcl(DiInterface $container) {}
+    /**
+     * Register events related to the module
+     * Events are only bind when module is dispatch
+     *
+     * @param DiInterface $container
+     */
+    public function registerEvents(DiInterface $container) {}
 
 }
