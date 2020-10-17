@@ -23,4 +23,25 @@ class Module extends ModuleProvider
             ->register();
     }
 
+    /**
+     * Register acl rules related to the module
+     *
+     * @param DiInterface $container
+     */
+    public function registerAcl(DiInterface $container)
+    {
+        $acl = $container->get('acl');
+
+        // Roles
+        $acl->addRole('admin');
+        $acl->addRole('user');
+
+        // Components
+        $acl->addComponent('order_index', ['index']);
+
+        // Rules
+        $acl->allow('admin', 'order_index', '*');
+        $acl->allow('user', 'order_index', '*');
+    }
+
 }

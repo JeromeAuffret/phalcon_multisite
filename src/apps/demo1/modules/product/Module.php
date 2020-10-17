@@ -24,9 +24,24 @@ class Module extends ModuleProvider
     }
 
     /**
-     * Registers services related to the module
+     * Register acl rules related to the module
      *
      * @param DiInterface $container
      */
-    public function registerServices(DiInterface $container) {}
+    public function registerAcl(DiInterface $container)
+    {
+        $acl = $container->get('acl');
+
+        // Roles
+        $acl->addRole('admin');
+        $acl->addRole('user');
+
+        // Components
+        $acl->addComponent('product_index', ['index']);
+
+        // Rules
+        $acl->allow('admin', 'product_index', '*');
+        $acl->allow('user', 'product_index', '*');
+    }
+
 }

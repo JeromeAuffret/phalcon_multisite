@@ -16,6 +16,7 @@ class ModuleProvider implements ModuleDefinitionInterface
     public function initialize(DiInterface $container, $moduleName, $module)
     {
         $this->registerRouter($container, $moduleName, $module);
+        $this->registerAcl($container);
     }
 
     /**
@@ -33,7 +34,7 @@ class ModuleProvider implements ModuleDefinitionInterface
     public function registerServices(DiInterface $container) {}
 
     /**
-     * Register specific module router
+     * Register router related to the module
      *
      * @param DiInterface $container
      * @param $moduleName
@@ -73,5 +74,12 @@ class ModuleProvider implements ModuleDefinitionInterface
             ]);
         }
     }
+
+    /**
+     * Register acl rules related to the module
+     *
+     * @param DiInterface $container
+     */
+    public function registerAcl(DiInterface $container) {}
 
 }

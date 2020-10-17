@@ -17,6 +17,7 @@ class ApplicationProvider  implements ModuleDefinitionInterface
         $this->registerAutoloaders($container);
         $this->registerServices($container);
         $this->registerRouter($container);
+        $this->registerAcl($container);
     }
 
     /**
@@ -54,21 +55,32 @@ class ApplicationProvider  implements ModuleDefinitionInterface
         // Register Application Database
         $container->get('database')->registerApplicationDatabase();
 
-        // Register Application Database
-        $container->get('acl')->registerApplicationAcl();
-
-        // Register Application routes
-        $container->get('router')->registerRouter();
-
         // Register application specific modules
         $container->get('application')->registerModulesProvider();
     }
 
     /**
-     * Register specific application router
+     * Register router related to the application
      *
      * @param DiInterface $container
      */
     public function registerRouter(DiInterface $container) {}
+
+    /**
+     * Register acl rules related to the application
+     *
+     * @param DiInterface $container
+     */
+    public function registerAcl(DiInterface $container)
+    {
+        $acl = $container->get('acl');
+
+        $acl->addRole('admin');
+        $acl->addRole('user');
+
+        // Allow access to error's pages
+        $acl->addComponent('_error', ['NotFound', 'InternalError']);
+        $acl->allow('*', '_error', '*');
+    }
 
 }
