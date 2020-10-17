@@ -2,7 +2,7 @@
 
 namespace Middleware;
 
-use Component\Application as ApplicationComponent;
+use Component\Application;
 use Component\Config;
 use Component\Session;
 use Phalcon\Events\Event;
@@ -12,6 +12,7 @@ use Phalcon\Di\Injectable;
 /**
  * Class Dispatch
  *
+ * @property Application application
  * @property Config config
  * @property Session session
  * @package Middleware
@@ -32,6 +33,9 @@ class Dispatch extends Injectable
 
         // Set default module based on default configuration
         $this->setDefaultModuleName();
+
+        // Register correct controller in dispatcher
+        $this->application->dispatchController($dispatcher);
     }
 
     /**

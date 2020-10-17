@@ -9,7 +9,6 @@ use Phalcon\Mvc\Dispatcher as MvcDispatcher;
 use Middleware\Dispatch as DispatchMiddleware;
 use Middleware\Auth as AuthMiddleware;
 use Middleware\Error as ErrorMiddleware;
-use Middleware\Controller as ControllerMiddleware;
 use Middleware\Acl as AclMiddleware;
 
 /**
@@ -34,8 +33,7 @@ class Dispatcher implements ServiceProviderInterface
         $eventsManager = $container->get('eventsManager');
 
         $eventsManager->attach('dispatch:beforeDispatch', new DispatchMiddleware());
-        $eventsManager->attach('dispatch:beforeDispatch', new AuthMiddleware());
-        $eventsManager->attach('dispatch:beforeDispatch', new ControllerMiddleware());
+        $eventsManager->attach('dispatch:beforeExecuteRoute', new AuthMiddleware());
         $eventsManager->attach("dispatch:beforeExecuteRoute", new AclMiddleware());
         $eventsManager->attach("dispatch:beforeException", new ErrorMiddleware());
 

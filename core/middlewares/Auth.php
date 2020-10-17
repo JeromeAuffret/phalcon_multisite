@@ -27,7 +27,7 @@ class Auth extends Injectable
      * @return bool
      * @throws AuthException
      */
-    public function beforeDispatch(Event $event, Dispatcher $dispatcher)
+    public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
         // Allow access to public components
         if ($this->acl->isPublicComponent()) {
