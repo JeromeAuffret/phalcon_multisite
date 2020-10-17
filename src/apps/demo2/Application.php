@@ -14,7 +14,7 @@ class Application extends ApplicationProvider
      *
      * @param DiInterface|null $container
      */
-    public function registerAutoloaders(DiInterface $container = null)
+    public function registerAutoloaders(DiInterface $container)
     {
         (new \Phalcon\Loader())
             ->registerNamespaces([

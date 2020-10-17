@@ -7,13 +7,24 @@ use Phalcon\Di\DiInterface;
 
 class ModuleProvider
 {
+    /**
+     * @param DiInterface $container
+     */
+    public function initialize(DiInterface $container, $moduleName, $module)
+    {
+        $this->registerAutoloader($container);
+
+        $this->registerServices($container);
+
+        $this->registerRouter($container, $moduleName, $module);
+    }
 
     /**
      *  Registers an autoloader related to the module
      *
      * @param DiInterface|null $container
      */
-    public function registerAutoloaders(DiInterface $container = null) {}
+    public function registerAutoloader(DiInterface $container) {}
 
     /**
      *  Registers services related to the module

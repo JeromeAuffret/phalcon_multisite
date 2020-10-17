@@ -7,13 +7,24 @@ use Phalcon\Di\DiInterface;
 
 class ApplicationProvider
 {
+    /**
+     * @param DiInterface $container
+     */
+    public function initialize(DiInterface $container)
+    {
+        $this->registerAutoloader($container);
+
+        $this->registerServices($container);
+
+        $this->registerRouter($container);
+    }
 
     /**
      * Registers an autoloader related to the application
      *
      * @param DiInterface|null $container
      */
-    public function registerAutoloaders(DiInterface $container = null)
+    protected function registerAutoloader(DiInterface $container)
     {
         (new \Phalcon\Loader())
             ->registerNamespaces([
@@ -35,7 +46,7 @@ class ApplicationProvider
      *
      * @param DiInterface $container
      */
-    public function registerServices(DiInterface $container)
+    protected function registerServices(DiInterface $container)
     {
         // Register Application Config
         $container->get('config')->registerApplicationConfig();
@@ -50,9 +61,7 @@ class ApplicationProvider
         $container->get('router')->registerRouter();
 
         // Register application specific modules
-        $container->get('application')->registerModules(
-            $container->get('config')->get('modules')->toArray()
-        );
+        $container->get('application')->registerModulesProvider();
     }
 
     /**
@@ -60,6 +69,6 @@ class ApplicationProvider
      *
      * @param DiInterface $container
      */
-    public function registerRouter(DiInterface $container) {}
+    protected function registerRouter(DiInterface $container) {}
 
 }

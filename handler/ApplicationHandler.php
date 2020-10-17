@@ -49,8 +49,8 @@ class ApplicationHandler
         $this->application = $this->container->get('application');
 
         // Register boot event to correctly dispatch applications
-        $this->application->setEventsManager($this->container->get('eventsManager'));
         $this->container->get('eventsManager')->attach('application:boot', new ApplicationMiddleware());
+        $this->application->setEventsManager($this->container->get('eventsManager'));
     }
 
     /**

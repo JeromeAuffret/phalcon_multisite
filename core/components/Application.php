@@ -2,7 +2,6 @@
 
 namespace Component;
 
-use Phalcon\Application\AbstractApplication;
 use Phalcon\Helper\Str;
 
 /**
@@ -54,7 +53,7 @@ final class Application extends \Phalcon\Mvc\Application
      **********************************************************/
 
     /**
-     * Register specific application's services for a given application
+     * Initialize application
      *
      * @param string|null $applicationSlug
      * @param string|null $applicationNamespace
@@ -75,23 +74,6 @@ final class Application extends \Phalcon\Mvc\Application
         $this->registerApplicationProvider();
     }
 
-    /**
-     * @param array $modules
-     * @param bool $merge
-     *
-     * @return AbstractApplication|void
-     */
-    public function registerModules(array $modules, $merge = false): AbstractApplication
-    {
-        parent::registerModules($modules, $merge);
-
-        foreach ($this->container->get('config')->get('modules') as $moduleName => $module) {
-            $this->registerModuleProvider($moduleName, $module);
-        }
-
-        return $this;
-    }
-
 
     /**********************************************************
      *
@@ -101,6 +83,7 @@ final class Application extends \Phalcon\Mvc\Application
 
     /**
      * PSR-4 compliant autoloader for common folder
+     * Call ApplicationProvider for common
      */
     public function registerCommonProvider()
     {
@@ -114,13 +97,12 @@ final class Application extends \Phalcon\Mvc\Application
         $applicationClass = $commonNamespace.'\\'.$this->applicationClass;
         $applicationClass = new $applicationClass;
 
-        $applicationClass->registerAutoloaders($this->container);
-        $applicationClass->registerServices($this->container);
-        $applicationClass->registerRouter($this->container);
+        $applicationClass->initialize($this->container);
     }
 
     /**
      * PSR-4 compliant autoloader for application folder
+     * Call ApplicationProvider for application
      */
     public function registerApplicationProvider()
     {
@@ -134,32 +116,38 @@ final class Application extends \Phalcon\Mvc\Application
         $applicationClass = $applicationNamespace.'\\'.$this->applicationClass;
         $applicationClass = new $applicationClass;
 
-        $applicationClass->registerAutoloaders($this->container);
-        $applicationClass->registerServices($this->container);
-        $applicationClass->registerRouter($this->container);
+        $applicationClass->initialize($this->container);
     }
 
     /**
      * PSR-4 compliant autoloader for application folder
+     * Call ModuleProvider for each modules defined in configuration
      *
-     * @param string $moduleName
-     * @param        $module
+     * TODO this use the default module configuration use by phalcon. This could be improve to just use moduleName
      */
-    public function registerModuleProvider(string $moduleName, $module)
+    public function registerModulesProvider()
     {
-        $moduleNamespace = preg_replace('/\\\Module$/', '', $module->get('className'));
-        $modulePath = preg_replace('/\/Module.php$/', '', $module->get('path'));
+        foreach ($this->container->get('config')->get('modules') as $moduleName => $module)
+        {
+            $this->registerModules([
+                $moduleName => [
+                    'className' => $module->get('className'),
+                    'path' => $module->get('path')
+                ],
+            ], true );
 
-        (new \Phalcon\Loader())
-            ->registerNamespaces([$moduleNamespace => $modulePath])
-            ->register();
+            $moduleNamespace = preg_replace('/\\\Module$/', '', $module->get('className'));
+            $modulePath = preg_replace('/\/Module.php$/', '', $module->get('path'));
 
-        $moduleClass = $module->get('className');
-        $moduleClass = new $moduleClass;
+            (new \Phalcon\Loader())
+                ->registerNamespaces([$moduleNamespace => $modulePath])
+                ->register();
 
-        $moduleClass->registerAutoloaders($this->container);
-        $moduleClass->registerServices($this->container);
-        $moduleClass->registerRouter($this->container, $moduleName, $module);
+            $moduleClass = $module->get('className');
+            $moduleClass = new $moduleClass;
+
+            $moduleClass->initialize($this->container, $moduleName, $module);
+        }
     }
 
 
