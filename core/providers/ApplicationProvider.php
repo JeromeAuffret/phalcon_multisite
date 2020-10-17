@@ -2,6 +2,10 @@
 
 namespace Provider;
 
+use Middleware\Acl as AclMiddleware;
+use Middleware\Auth as AuthMiddleware;
+use Middleware\Dispatch as DispatchMiddleware;
+use Middleware\Error as ErrorMiddleware;
 use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 
@@ -18,6 +22,7 @@ class ApplicationProvider  implements ModuleDefinitionInterface
         $this->registerServices($container);
         $this->registerRouter($container);
         $this->registerAcl($container);
+        $this->registerEvents($container);
     }
 
     /**
@@ -31,13 +36,7 @@ class ApplicationProvider  implements ModuleDefinitionInterface
             ->registerNamespaces([
                 'Controllers' => BASE_PATH . '/src/controllers',
                 'Models'      => BASE_PATH . '/src/models',
-                'Forms'       => BASE_PATH . '/src/forms',
-
-                'Common'              => COMMON_PATH,
-                'Common\\Models'      => COMMON_PATH . '/models/',
-                'Common\\Traits'      => COMMON_PATH . '/traits/',
-                'Common\\Controllers' => COMMON_PATH . '/controllers/',
-                'Common\\Forms'       => COMMON_PATH . '/forms/'
+                'Forms'       => BASE_PATH . '/src/forms'
             ])
             ->register();
     }
@@ -83,4 +82,35 @@ class ApplicationProvider  implements ModuleDefinitionInterface
         $acl->allow('*', '_error', '*');
     }
 
+    /**
+     * Register events related to the module
+     * Events are only bind when module is dispatch
+     *
+     * @param DiInterface $container
+     */
+    public function registerEvents(DiInterface $container)
+    {
+        // Register eventManage in dispatcher
+        $container->get('dispatcher')->setEventsManager(
+            $container->get('eventsManager')
+        );
+
+        // Register events in dispatcher context
+        $container->get('dispatcher')
+            ->getEventsManager()
+            ->attach('dispatch:beforeDispatch', new DispatchMiddleware());
+
+        $container->get('dispatcher')
+            ->getEventsManager()
+            ->attach('dispatch:beforeExecuteRoute', new AuthMiddleware());
+
+        $container->get('dispatcher')
+            ->getEventsManager()
+            ->attach("dispatch:beforeExecuteRoute", new AclMiddleware());
+
+        $container->get('dispatcher')
+            ->getEventsManager()
+            ->attach("dispatch:beforeException", new ErrorMiddleware());
+
+    }
 }

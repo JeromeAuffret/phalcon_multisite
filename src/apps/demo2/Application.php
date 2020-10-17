@@ -16,6 +16,8 @@ class Application extends ApplicationProvider
      */
     public function registerAutoloaders(DiInterface $container = null)
     {
+        parent::registerAutoloaders();
+
         (new \Phalcon\Loader())
             ->registerNamespaces([
                 "Demo2\\Controllers" => __DIR__.'/controllers'

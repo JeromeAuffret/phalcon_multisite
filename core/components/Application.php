@@ -47,6 +47,11 @@ final class Application extends \Phalcon\Mvc\Application
      */
     private $applicationClass = 'Application';
 
+    /**
+     * @var string $applicationClass
+     */
+    private $moduleClass = 'Module';
+
 
     /**********************************************************
      *
@@ -155,7 +160,7 @@ final class Application extends \Phalcon\Mvc\Application
 
     /**********************************************************
      *
-     *                     BEFORE DISPATCH
+     *                    DISPATCH CONTROLLER
      *
      **********************************************************/
 
