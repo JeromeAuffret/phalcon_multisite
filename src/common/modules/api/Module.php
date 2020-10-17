@@ -2,6 +2,8 @@
 
 namespace Common\Modules\Api;
 
+use Acl\AclComponent;
+use Acl\AclUserRole;
 use Phalcon\Di\DiInterface;
 use Provider\ModuleProvider;
 
@@ -36,7 +38,7 @@ class Module  extends ModuleProvider
         $eventsManager = $dispatcher->getEventsManager();
 
         $eventsManager->attach('dispatch:beforeDispatch', function () use($container, $dispatcher) {
-            $container->get('loader')->dispatchApiController($dispatcher, $container->get('router'));
+            $container->get('application')->dispatchApiController($dispatcher, $container->get('router'));
         });
 
         $dispatcher->setEventsManager($eventsManager);
@@ -63,6 +65,41 @@ class Module  extends ModuleProvider
                 'action' => 3,
                 'params' => 4
             ]);
+    }
+
+    /**
+     * Register acl rules related to the module
+     *
+     * @param DiInterface $container
+     */
+    public function registerAcl(DiInterface $container)
+    {
+        $acl = $container->get('acl');
+
+        // Roles
+        $acl->addRole('admin');
+        $acl->addRole('user');
+
+        // Components
+        $acl->addComponent('api_data', ['get', 'create', 'update', 'delete']);
+        $acl->addComponent('api_form', ['index', 'get', 'create', 'update', 'delete']);
+
+        // Rules
+        $acl->allow('admin', 'api_data', '*');
+        $acl->allow('admin', 'api_form', '*');
+
+        $acl->allow('user', 'api_data', '*');
+        $acl->allow('user', 'api_form', '*');
+
+        // By default, prevent 'user' role to use DELETE method from api
+        $acl->allow('user', 'api_data', '*', function (AclUserRole $AclUserRole, AclComponent $AclComponent) {
+            return $AclComponent->getMethod() !== 'DELETE';
+        });
+
+        $acl->allow('user', 'api_form', '*', function (AclUserRole $AclUserRole, AclComponent $AclComponent) {
+            return $AclComponent->getMethod() !== 'DELETE';
+        });
+
     }
 
 }

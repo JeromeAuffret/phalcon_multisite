@@ -31,9 +31,6 @@ class Acl implements ServiceProviderInterface
 
             return $acl;
         });
-
-        // Register common acl
-        $container->get('acl')->registerMainAcl();
     }
 
 }

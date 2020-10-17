@@ -7,7 +7,7 @@ use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
 
 /**
- * Class Acl
+ * Class Application
  *
  * @package Service
  */

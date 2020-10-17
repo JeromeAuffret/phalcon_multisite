@@ -3,10 +3,22 @@
 namespace Provider;
 
 use Phalcon\Di\DiInterface;
+use Phalcon\Mvc\ModuleDefinitionInterface;
 
 
-class ApplicationProvider
+class ApplicationProvider  implements ModuleDefinitionInterface
 {
+
+    /**
+     * @param DiInterface $container
+     */
+    public function initialize(DiInterface $container)
+    {
+        $this->registerAutoloaders($container);
+        $this->registerServices($container);
+        $this->registerRouter($container);
+        $this->registerAcl($container);
+    }
 
     /**
      * Registers an autoloader related to the application
@@ -43,23 +55,32 @@ class ApplicationProvider
         // Register Application Database
         $container->get('database')->registerApplicationDatabase();
 
-        // Register Application Database
-        $container->get('acl')->registerApplicationAcl();
-
-        // Register Application routes
-        $container->get('router')->registerRouter();
-
         // Register application specific modules
-        $container->get('application')->registerModules(
-            $container->get('config')->get('modules')->toArray()
-        );
+        $container->get('application')->registerModulesProvider();
     }
 
     /**
-     * Register specific application router
+     * Register router related to the application
      *
      * @param DiInterface $container
      */
     public function registerRouter(DiInterface $container) {}
+
+    /**
+     * Register acl rules related to the application
+     *
+     * @param DiInterface $container
+     */
+    public function registerAcl(DiInterface $container)
+    {
+        $acl = $container->get('acl');
+
+        $acl->addRole('admin');
+        $acl->addRole('user');
+
+        // Allow access to error's pages
+        $acl->addComponent('_error', ['NotFound', 'InternalError']);
+        $acl->allow('*', '_error', '*');
+    }
 
 }

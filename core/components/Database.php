@@ -54,7 +54,7 @@ final class Database extends Injectable
      */
     public static function parseDatatableAdapter(\Phalcon\Config $database): string
     {
-        return 'Phalcon\Db\Adapter\Pdo\\' . $database->get('adapter');;
+        return 'Phalcon\Db\Adapter\Pdo\\' . $database->get('adapter');
     }
 
     /**

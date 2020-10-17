@@ -2,9 +2,13 @@
 
 namespace Component;
 
+use Phalcon\Assets\Collection;
+use Phalcon\Mvc\Dispatcher;
+
 /**
  * Class View
  *
+ * @property Application application
  * @package Component
  */
 final class View extends \Phalcon\Mvc\View
@@ -70,45 +74,95 @@ final class View extends \Phalcon\Mvc\View
     }
 
 
-    /************************************************************
+    /**********************************************************
      *
-     *                     DYNAMIC SIDEBAR
+     *                         ASSETS
      *
-     ************************************************************/
+     **********************************************************/
 
     /**
-     * @param $module
+     * Register Application general assets
      *
-     * @return bool
+     * @param Collection $collection
+     * @param            $type
+     *
+     * @return Collection
      */
-    public function getModuleMenu($module)
+    public function registerApplicationAssetsCollection(Collection $collection, $type)
     {
-        $app_path = $this->getDi()->get('application')->getApplicationPath();
+        $application = $this->getDI()->get('application');
+        $appPath = $application->getApplicationPath().'/assets/';
 
-        if (file_exists($app_path.'/modules/'.$module.'/views/menu.phtml')) {
-            $this->setPartialsDir($app_path.'/modules/'.$module.'/views/');
-        }
-        elseif (file_exists(COMMON_PATH.'/modules/'.$module.'/views/menu.phtml')) {
-            $this->setPartialsDir(COMMON_PATH.'/modules/'.$module.'/views/');
-        }
-        else {
-            return false;
+        // Load each files in $appPath by type
+        $assetPath = [];
+        foreach (glob($appPath.'/*.'.$type) as $file_path) {
+            array_push($assetPath, $file_path);
         }
 
-        return $this->getPartialContent('menu');
+        // Then register asset file if exist
+        foreach ($assetPath as $path) {
+            if ($type === 'css') {
+                $collection->addCss($path);
+            } elseif ($type === 'js') {
+                $collection->addJs($path);
+            }
+        }
+
+        return $collection;
     }
 
     /**
-     * @return bool
+     * Register Application assets
+     * Load assets based on module / controller / action path
+     *
+     * @param Collection $collection
+     * @param string     $type
+     * @return Collection
      */
-    public function getAdminReferenceMenu()
+    public function registerViewAssetsCollection(Collection $collection, string $type)
     {
-        $app_path = $this->getDi()->get('application')->getApplicationPath();
+        $container = $this->getDI();
 
-        if (file_exists($app_path.'/modules/admin/partials/reference.phtml')) {
-            $this->setPartialsDir($app_path.'/modules/admin/partials/');
-            return $this->getPartialContent('reference');
+        /* @var Application $application */
+        $application = $container->get('application');
+
+        /* @var Dispatcher $dispatcher */
+        $dispatcher = $container->get('dispatcher');
+
+        /* @var Config $config */
+        $config = $container->get('config');
+
+        $moduleName = $dispatcher->getModuleName();
+        $assetFilePath = $dispatcher->getControllerName().'/'.$dispatcher->getActionName().'.'.$type;
+
+        // Common and application assets roots paths
+        if ($config->get('applicationType') === 'modules') {
+            $appModulePath = $application->getApplicationModulePath($moduleName).'/assets/';
+            $commonModulePath = $application->getCommonModulePath($moduleName).'/assets/';
+        } else {
+            $appModulePath = $application->getApplicationPath().'/assets/';
+            $commonModulePath = $application->getCommonPath().'/assets/';
         }
+
+        // Load assets from app module path if exist. If not, use the common path if exist
+        $assetPath = [];
+        if (file_exists($appModulePath.$assetFilePath)) {
+            array_push($assetPath,$appModulePath.$assetFilePath);
+        }
+        else if (file_exists($commonModulePath.$assetFilePath)) {
+            array_push($assetPath,$commonModulePath.$assetFilePath);
+        }
+
+        // Then register asset file if exist
+        foreach ($assetPath as $path) {
+            if ($type === 'css') {
+                $collection->addCss($path);
+            } elseif ($type === 'js') {
+                $collection->addJs($path);
+            }
+        }
+
+        return $collection;
     }
 
 }
