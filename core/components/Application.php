@@ -2,10 +2,7 @@
 
 namespace Component;
 
-use Phalcon\Assets\Collection;
 use Phalcon\Helper\Str;
-use Phalcon\Mvc\Dispatcher;
-use Phalcon\Mvc\Router;
 
 /**
  * Class Application
@@ -157,80 +154,7 @@ final class Application extends \Phalcon\Mvc\Application
             $moduleClass = $module->get('className');
             $moduleClass = new $moduleClass;
 
-            $moduleClass->initialize($this->container, $moduleName, $module);
-        }
-    }
-
-
-    /**********************************************************
-     *
-     *                    DISPATCH CONTROLLER
-     *
-     **********************************************************/
-
-    /**
-     * Dispatch controller namespace between common and application folders
-     *
-     * @param Dispatcher $dispatcher
-     */
-    public function dispatchController(Dispatcher $dispatcher)
-    {
-        $moduleName = $dispatcher->getModuleName();
-        $application_namespace = $this->application->getApplicationNamespace();
-
-        $controllerClass = explode('\\', $dispatcher->getControllerClass());
-        $controllerFile = end($controllerClass).'.php';
-
-        if (end($controllerClass) === 'ErrorController') {
-            $dispatcher->setNamespaceName('Controllers');
-        }
-        elseif ($this->config->get('applicationType') === 'simple') {
-            $dispatcher->setNamespaceName($application_namespace.'\Controllers');
-        }
-        elseif ($this->config->get('applicationType') === 'modules') {
-            $appControllerModulePath = $this->application->getApplicationModulePath($moduleName).'/controllers';
-            $moduleNamespace = $this->application->getApplicationModuleNamespace($moduleName).'\\Controllers';
-
-            if (file_exists($appControllerModulePath.'/'.$controllerFile)) {
-                (new \Phalcon\Loader())->registerNamespaces([$moduleNamespace => $appControllerModulePath])->register();
-                $dispatcher->setNamespaceName($moduleNamespace);
-            }
-        }
-    }
-
-    /**
-     * Register correct controller in dispatcher based on application defined in session
-     *
-     * @param Dispatcher $dispatcher
-     * @param Router $router
-     * @return void
-     */
-    public function dispatchApiController(Dispatcher $dispatcher, Router $router)
-    {
-        $moduleName = $router->getModuleName();
-        $controllerName = $router->getControllerName();
-        $referenceName = $router->getParams()['reference'];
-        $referenceControllerFile = Str::camelize($referenceName).'Controller.php';
-
-        $appControllerModulePath = $this->application->getApplicationModulePath($moduleName).'/controllers/'.$controllerName;
-        $commonControllerModulePath = $this->application->getCommonModulePath($moduleName).'/controllers/'.$controllerName;
-
-        if ($controllerName === 'error') {
-            $dispatcher->setNamespaceName('Controllers');
-        }
-        else if ($this->application && file_exists($appControllerModulePath.'/'.$referenceControllerFile)) {
-            $namespace = $this->application->getApplicationModulePath($moduleName).'\Controllers\\'.$controllerName;
-
-            (new \Phalcon\Loader())->registerNamespaces([$namespace => $appControllerModulePath])->register();
-            $dispatcher->setNamespaceName($namespace);
-            $dispatcher->setControllerName($referenceName);
-        }
-        else if (file_exists($commonControllerModulePath.'/'.$referenceControllerFile)) {
-            $namespace = $this->application->getCommonModulePath($moduleName).'\Controllers\\'.$controllerName;
-
-            (new \Phalcon\Loader())->registerNamespaces([$namespace => $commonControllerModulePath])->register();
-            $dispatcher->setNamespaceName($namespace);
-            $dispatcher->setControllerName($referenceName);
+            $moduleClass->initialize($this->container, $moduleName);
         }
     }
 
@@ -365,22 +289,23 @@ final class Application extends \Phalcon\Mvc\Application
     }
 
     /**
-     * @param string $moduleName
+     * @param string|null $moduleName
      * @return string
      */
-    public function getApplicationModulePath(string $moduleName): string
+    public function getApplicationModulePath(?string $moduleName): ?string
     {
+        if (!$moduleName) return null;
         return $this->getApplicationPath() . '/modules/' . $moduleName;
     }
 
     /**
-     * @param string $moduleName
+     * @param string|null $moduleName
      * @return string
      */
-    public function getApplicationModuleNamespace(string $moduleName): string
+    public function getApplicationModuleNamespace(?string $moduleName): ?string
     {
-        $moduleNamespace = Str::camelize($moduleName);
-        return $this->getApplicationNamespace() . '\\Modules\\' . $moduleNamespace;
+        if (!$moduleName) return null;
+        return $this->getApplicationNamespace() . '\\Modules\\' . Str::camelize($moduleName);
     }
 
     /**
@@ -400,22 +325,23 @@ final class Application extends \Phalcon\Mvc\Application
     }
 
     /**
-     * @param string $moduleName
+     * @param string|null $moduleName
      * @return string
      */
-    public function getCommonModulePath(string $moduleName): string
+    public function getCommonModulePath(?string $moduleName): ?string
     {
+        if (!$moduleName) return null;
         return $this->getCommonPath() . '/modules/' . $moduleName;
     }
 
     /**
-     * @param string $moduleName
+     * @param string|null $moduleName
      * @return string
      */
-    public function getCommonModuleNamespace(string $moduleName): string
+    public function getCommonModuleNamespace(?string $moduleName): ?string
     {
-        $moduleNamespace = Str::camelize($moduleName);
-        return $this->getCommonNamespace().'\\Modules\\' . $moduleNamespace;
+        if (!$moduleName) return null;
+        return $this->getCommonNamespace().'\\Modules\\' . Str::camelize($moduleName);
     }
 
 }

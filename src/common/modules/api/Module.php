@@ -5,10 +5,11 @@ namespace Common\Modules\Api;
 use Acl\AclComponent;
 use Acl\AclUserRole;
 use Phalcon\Di\DiInterface;
+use Phalcon\Helper\Str;
 use Provider\ModuleProvider;
 
 
-class Module  extends ModuleProvider
+class Module extends ModuleProvider
 {
     /**
      * Registers an autoloader related to the module
@@ -30,17 +31,13 @@ class Module  extends ModuleProvider
      * Register specific routes for API module
      *
      * @param DiInterface $container
-     * @param $moduleName
-     * @param $module
      */
-    public function registerRouter(DiInterface $container, $moduleName, $module)
+    public function registerRouter(DiInterface $container)
     {
-        $namespace = preg_replace('/Module$/', 'Controllers', $module->get("className"));
-
         $router = $container->get('router');
         $router
             ->add('/api/{reference}/:controller/:action/:params', [
-                'namespace' => $namespace,
+                'namespace' => $this->controllerNamespace,
                 'module' => 'api',
                 'controller' => 2,
                 'action' => 3,
@@ -84,16 +81,43 @@ class Module  extends ModuleProvider
     }
 
     /**
+     * @Override
+     *
+     * Specific controller dispatch for api module
+     * Register correct controller in dispatcher
+     *
      * @param DiInterface $container
      */
-    public function registerEvents(DiInterface $container)
+    private function dispatchController(DiInterface $container)
     {
-        $container->get('dispatcher')
-            ->getEventsManager()
-            ->attach('dispatch:beforeDispatch', function () use($container) {
-                $container->get('application')
-                    ->dispatchApiController($container->get('dispatcher'), $container->get('router'));
-            });
-    }
+        $dispatcher = $container->get('dispatcher');
+        $router = $container->get('router');
+        $application = $container->get('application');
 
+        $moduleName = $router->getModuleName();
+        $controllerName = $router->getControllerName();
+        $referenceName = $router->getParams()['reference'];
+        $referenceControllerFile = Str::camelize($referenceName).'Controller.php';
+
+        $appControllerModulePath = $application->getApplicationModulePath($moduleName).'/controllers/'.$controllerName;
+        $commonControllerModulePath = $application->getCommonModulePath($moduleName).'/controllers/'.$controllerName;
+
+        if ($controllerName === 'error') {
+            $dispatcher->setNamespaceName('Controllers');
+        }
+        else if ($application && file_exists($appControllerModulePath.'/'.$referenceControllerFile)) {
+            $namespace = $application->getApplicationModulePath($moduleName).'\Controllers\\'.$controllerName;
+
+            (new \Phalcon\Loader())->registerNamespaces([$namespace => $appControllerModulePath])->register();
+            $dispatcher->setNamespaceName($namespace);
+            $dispatcher->setControllerName($referenceName);
+        }
+        else if (file_exists($commonControllerModulePath.'/'.$referenceControllerFile)) {
+            $namespace = $application->getCommonModulePath($moduleName).'\Controllers\\'.$controllerName;
+
+            (new \Phalcon\Loader())->registerNamespaces([$namespace => $commonControllerModulePath])->register();
+            $dispatcher->setNamespaceName($namespace);
+            $dispatcher->setControllerName($referenceName);
+        }
+    }
 }

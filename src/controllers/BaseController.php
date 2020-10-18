@@ -43,6 +43,9 @@ class BaseController extends Controller implements ComponentAware
      */
     public function beforeExecuteRoute(Dispatcher $dispatcher)
     {
+        // Disable view for call ajax or external call
+        $this->isViewDisabled();
+
         // Display maintenance page if defined in config
         $this->displayMaintenancePage();
 
@@ -55,6 +58,26 @@ class BaseController extends Controller implements ComponentAware
         // Initialise Assets collections
         if (!$this->view->isDisabled()) {
             $this->setupAssetsCollection();
+        }
+    }
+
+    /**
+     * If request is ajax we disable views
+     */
+    private function isViewDisabled()
+    {
+        if ($this->request->isAjax()) {
+            $this->view->disable();
+        }
+    }
+
+    /**
+     * Display maintenance page if defined in config
+     */
+    public function displayMaintenancePage()
+    {
+        if ($this->config->get('maintenance')) {
+            $this->view->setMainView('maintenance');
         }
     }
 
@@ -314,16 +337,6 @@ class BaseController extends Controller implements ComponentAware
      *                         HELPERS
      *
      ************************************************************/
-
-    /**
-     * Display maintenance page if defined in config
-     */
-    public function displayMaintenancePage()
-    {
-        if ($this->config->get('maintenance')) {
-            $this->view->setMainView('maintenance');
-        }
-    }
 
     /**
      *
