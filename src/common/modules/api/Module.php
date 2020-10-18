@@ -10,7 +10,6 @@ use Provider\ModuleProvider;
 
 class Module  extends ModuleProvider
 {
-
     /**
      * Registers an autoloader related to the module
      *
@@ -25,24 +24,6 @@ class Module  extends ModuleProvider
                 'Common\Modules\Api\Controllers\Form' => __DIR__ . '/controllers/form/',
             ])
             ->register();
-    }
-
-    /**
-     * Registers services related to the module
-     *
-     * @param DiInterface $container
-     */
-    public function registerServices(DiInterface $container)
-    {
-        $dispatcher = $container->get('dispatcher');
-        $eventsManager = $dispatcher->getEventsManager();
-
-        $eventsManager->attach('dispatch:beforeDispatch', function () use($container, $dispatcher) {
-            $container->get('application')->dispatchApiController($dispatcher, $container->get('router'));
-        });
-
-        $dispatcher->setEventsManager($eventsManager);
-        $container->setShared('dispatcher', $dispatcher);
     }
 
     /**
@@ -100,6 +81,19 @@ class Module  extends ModuleProvider
             return $AclComponent->getMethod() !== 'DELETE';
         });
 
+    }
+
+    /**
+     * @param DiInterface $container
+     */
+    public function registerEvents(DiInterface $container)
+    {
+        $container->get('dispatcher')
+            ->getEventsManager()
+            ->attach('dispatch:beforeDispatch', function () use($container) {
+                $container->get('application')
+                    ->dispatchApiController($container->get('dispatcher'), $container->get('router'));
+            });
     }
 
 }
