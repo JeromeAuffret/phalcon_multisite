@@ -6,7 +6,6 @@ use Component\Application as ApplicationComponent;
 use Component\Config;
 use Component\Session;
 use Exception;
-use Models\Application as ApplicationModel;
 use Phalcon\Events\Event;
 use Phalcon\Di\Injectable;
 
@@ -23,7 +22,7 @@ class Application extends Injectable
     /**
      * Dispatch apps when the application handles its first request
      *
-     * @param Event $event
+     * @param Event                $event
      * @param ApplicationComponent $application
      * @return void
      * @throws Exception
@@ -71,7 +70,9 @@ class Application extends Injectable
     {
         if ($this->session && $this->session->hasApplication())
         {
-            $this->application->registerApplication($this->session->getApplication('slug'));
+            $this->application->registerApplication(
+                $this->session->getApplication('slug')
+            );
         }
     }
 
@@ -87,10 +88,9 @@ class Application extends Injectable
 
         if ($this->config->has('host') && $this->config->get('host')->has($serverName))
         {
-            if ($application = ApplicationModel::getBySlug($this->config->get('host')->get($serverName)))
-            {
-                $this->application->registerApplication($application->getSlug());
-            }
+            $this->application->registerApplication(
+                $this->config->get('host')->get($serverName)
+            );
         }
     }
 
@@ -101,9 +101,11 @@ class Application extends Injectable
      */
     private function dispatchApplicationByHash()
     {
-        if ($this->request->has('_app') && $application = ApplicationModel::getBySlug($this->request->get('_app')))
+        if ($this->request->has('_app'))
         {
-            $this->application->registerApplication($application->getSlug());
+            $this->application->registerApplication(
+                $this->request->get('_app')
+            );
         }
     }
 
