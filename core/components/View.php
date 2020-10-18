@@ -23,35 +23,37 @@ final class View extends \Phalcon\Mvc\View
     public function getPartial(string $view, $vars = []): string
     {
         $di = $this->getDi();
-        $module = $di['router']->getModuleName();
-        $app_path = $di->get('application')->getApplicationPath();
+        $application = $di->get('application');
 
-        $view_app_path = $app_path.'/views';
-        $app_module_path = $app_path.'/modules/'.$module.'/views';
-        $view_common_path = COMMON_PATH.'/views';
-        $common_module_path = COMMON_PATH.'/modules/'.$module.'/views';
+        $router = $di->get('router');
+        $moduleName = $router->getModuleName();
 
-        $view_array = explode('/', $view);
+        $commonViewPath = $application->getCommonPath().'/views';
+        $commonModuleViewPath = $application->getCommonModulePath($moduleName).'/views';
 
-        $partial = end($view_array);
-        $partial_key = array_keys($view_array, $partial)[0];
+        $appViewPath = $application->getApplicationPath().'/views';
+        $appModuleViewPath = $application->getApplicationModulePath($moduleName).'/views';
+        
+        $viewArray = explode('/', $view);
+        $partial = end($viewArray);
+        $partialKey = array_keys($viewArray, $partial)[0];
 
-        unset($view_array[$partial_key]);
+        unset($viewArray[$partialKey]);
 
-        $partial_dir = implode('/', $view_array);
-        $partial_pattern = '/'.$partial_dir.'/'.$partial.'.phtml';
+        $partialDir = implode('/', $viewArray);
+        $partialPattern = '/'.$partialDir.'/'.$partial.'.phtml';
 
-        if (file_exists($app_module_path.$partial_pattern)) {
-            $this->setPartialsDir($app_module_path.'/'.$partial_dir.'/');
+        if (file_exists($appModuleViewPath.$partialPattern)) {
+            $this->setPartialsDir($appModuleViewPath.'/'.$partialDir.'/');
         }
-        elseif (file_exists($view_app_path.$partial_pattern)) {
-            $this->setPartialsDir($view_app_path.'/'.$partial_dir.'/');
+        elseif (file_exists($appViewPath.$partialPattern)) {
+            $this->setPartialsDir($appViewPath.'/'.$partialDir.'/');
         }
-        elseif (file_exists($common_module_path.$partial_pattern)) {
-            $this->setPartialsDir($common_module_path.'/'.$partial_dir.'/');
+        elseif (file_exists($commonModuleViewPath.$partialPattern)) {
+            $this->setPartialsDir($commonModuleViewPath.'/'.$partialDir.'/');
         }
-        elseif (file_exists($view_common_path.$partial_pattern)) {
-            $this->setPartialsDir($view_common_path.'/'.$partial_dir.'/');
+        elseif (file_exists($commonViewPath.$partialPattern)) {
+            $this->setPartialsDir($commonViewPath.'/'.$partialDir.'/');
         }
 
         return $this->getPartialContent($partial, $vars);
@@ -122,14 +124,8 @@ final class View extends \Phalcon\Mvc\View
     public function registerViewAssetsCollection(Collection $collection, string $type)
     {
         $container = $this->getDI();
-
-        /* @var Application $application */
         $application = $container->get('application');
-
-        /* @var Dispatcher $dispatcher */
         $dispatcher = $container->get('dispatcher');
-
-        /* @var Config $config */
         $config = $container->get('config');
 
         $moduleName = $dispatcher->getModuleName();
@@ -137,20 +133,20 @@ final class View extends \Phalcon\Mvc\View
 
         // Common and application assets roots paths
         if ($config->get('applicationType') === 'modules') {
-            $appModulePath = $application->getApplicationModulePath($moduleName).'/assets/';
-            $commonModulePath = $application->getCommonModulePath($moduleName).'/assets/';
+            $appModuleAssetPath = $application->getApplicationModulePath($moduleName).'/assets/';
+            $commonModuleAssetPath = $application->getCommonModulePath($moduleName).'/assets/';
         } else {
-            $appModulePath = $application->getApplicationPath().'/assets/';
-            $commonModulePath = $application->getCommonPath().'/assets/';
+            $appModuleAssetPath = $application->getApplicationPath().'/assets/';
+            $commonModuleAssetPath = $application->getCommonPath().'/assets/';
         }
 
         // Load assets from app module path if exist. If not, use the common path if exist
         $assetPath = [];
-        if (file_exists($appModulePath.$assetFilePath)) {
-            array_push($assetPath,$appModulePath.$assetFilePath);
+        if (file_exists($appModuleAssetPath.$assetFilePath)) {
+            array_push($assetPath,$appModuleAssetPath.$assetFilePath);
         }
-        else if (file_exists($commonModulePath.$assetFilePath)) {
-            array_push($assetPath,$commonModulePath.$assetFilePath);
+        else if (file_exists($commonModuleAssetPath.$assetFilePath)) {
+            array_push($assetPath,$commonModuleAssetPath.$assetFilePath);
         }
 
         // Then register asset file if exist

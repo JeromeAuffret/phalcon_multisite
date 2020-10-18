@@ -25,7 +25,11 @@ final class Application extends \Phalcon\Mvc\Application
     /**
      * @var string $commonPath
      */
-    private $commonPath = COMMON_PATH;
+    private $commonPath = BASE_PATH . "/src/common";
+    /**
+     * @var string $commonPath
+     */
+    private $applicationBasePath = BASE_PATH . "/src/apps";
 
     /**
      * @var string $application
@@ -317,7 +321,7 @@ final class Application extends \Phalcon\Mvc\Application
      */
     private function setApplicationPath($applicationPath = null)
     {
-        $this->applicationPath = $applicationPath ?: APPS_PATH . '/' . $this->applicationSlug;
+        $this->applicationPath = $applicationPath ?: ($this->applicationBasePath . '/' . $this->applicationSlug);
     }
 
     /**
@@ -339,7 +343,7 @@ final class Application extends \Phalcon\Mvc\Application
     /**
      * @return string
      */
-    public function getApplicationSlug(): string
+    public function getApplicationSlug(): ?string
     {
         return $this->applicationSlug;
     }

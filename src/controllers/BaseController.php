@@ -97,96 +97,95 @@ class BaseController extends Controller implements ComponentAware
      */
     public function dispatchViews()
     {
-        $application_path = $this->application ? $this->application->getApplicationPath() : null;
-        $module = $this->dispatcher->getModuleName();
+        $moduleName = $this->router->getModuleName();
 
-        $app_path = $application_path.'/views';
-        $app_module_path = $application_path.'/modules/'.$module.'/views';
+        $commonViewPath = $this->application->getCommonPath().'/views/';
+        $commonModuleViewPath = $this->application->getCommonModulePath($moduleName).'/views';
 
-        $common_path = COMMON_PATH.'/views/';
-        $common_module_path = COMMON_PATH.'/modules/'.$module.'/views';
+        $appViewPath = $this->application->getApplicationPath().'/views';
+        $appModuleViewPath = $this->application->getApplicationModulePath($moduleName).'/views';
 
-        $this->dispatchMainView($common_path, $common_module_path, $app_path, $app_module_path);
-        $this->dispatchLayoutDir($common_path, $common_module_path, $app_path, $app_module_path);
-        $this->dispatchViewsDir($common_path, $common_module_path, $app_path, $app_module_path);
+        $this->dispatchMainView($commonViewPath, $commonModuleViewPath, $appViewPath, $appModuleViewPath);
+        $this->dispatchLayoutDir($commonViewPath, $commonModuleViewPath, $appViewPath, $appModuleViewPath);
+        $this->dispatchViewsDir($commonViewPath, $commonModuleViewPath, $appViewPath, $appModuleViewPath);
     }
 
     /**
      * Set default view main
      *
-     * @param $common_path
-     * @param $common_module_path
-     * @param $app_path
-     * @param $app_module_path
+     * @param $commonViewPath
+     * @param $commonModuleViewPath
+     * @param $appViewPath
+     * @param $appModuleViewPath
      */
-    public function dispatchMainView($common_path, $common_module_path, $app_path, $app_module_path)
+    public function dispatchMainView($commonViewPath, $commonModuleViewPath, $appViewPath, $appModuleViewPath)
     {
-        if (file_exists($app_module_path.'/'.$this->view->getMainView().'.phtml')) {
-            $this->view->setMainView($app_module_path.'/'.$this->view->getMainView());
+        if (file_exists($appModuleViewPath.'/'.$this->view->getMainView().'.phtml')) {
+            $this->view->setMainView($appModuleViewPath.'/'.$this->view->getMainView());
         }
-        elseif (file_exists($app_path.'/'.$this->view->getMainView().'.phtml')) {
-            $this->view->setMainView($app_path.'/'.$this->view->getMainView());
+        elseif (file_exists($appViewPath.'/'.$this->view->getMainView().'.phtml')) {
+            $this->view->setMainView($appViewPath.'/'.$this->view->getMainView());
         }
-        elseif (file_exists($common_module_path.'/'.$this->view->getMainView().'.phtml')) {
-            $this->view->setMainView($common_module_path.'/'.$this->view->getMainView());
+        elseif (file_exists($commonModuleViewPath.'/'.$this->view->getMainView().'.phtml')) {
+            $this->view->setMainView($commonModuleViewPath.'/'.$this->view->getMainView());
         }
-        elseif (file_exists($common_path.'/'.$this->view->getMainView().'.phtml')) {
-            $this->view->setMainView($common_path.'/'.$this->view->getMainView());
+        elseif (file_exists($commonViewPath.'/'.$this->view->getMainView().'.phtml')) {
+            $this->view->setMainView($commonViewPath.'/'.$this->view->getMainView());
         }
     }
 
     /**
      * Set default layouts directory
      *
-     * @param $common_path
-     * @param $common_module_path
-     * @param $app_path
-     * @param $app_module_path
+     * @param $commonViewPath
+     * @param $commonModuleViewPath
+     * @param $appViewPath
+     * @param $appModuleViewPath
      */
-    public function dispatchLayoutDir($common_path, $common_module_path, $app_path, $app_module_path)
+    public function dispatchLayoutDir($commonViewPath, $commonModuleViewPath, $appViewPath, $appModuleViewPath)
     {
         if (!$this->view->getLayout()) {
             $this->view->setLayout('main');
         }
 
-        if (file_exists($app_module_path.'/layouts/'.$this->view->getLayout().'.phtml')) {
-            $this->view->setLayoutsDir($app_module_path.'/layouts/');
+        if (file_exists($appModuleViewPath.'/layouts/'.$this->view->getLayout().'.phtml')) {
+            $this->view->setLayoutsDir($appModuleViewPath.'/layouts/');
         }
-        elseif (file_exists($app_path.'/layouts/'.$this->view->getLayout().'.phtml')) {
-            $this->view->setLayoutsDir($app_path.'/layouts/');
+        elseif (file_exists($appViewPath.'/layouts/'.$this->view->getLayout().'.phtml')) {
+            $this->view->setLayoutsDir($appViewPath.'/layouts/');
         }
-        elseif (file_exists($common_module_path.'/layouts/'.$this->view->getLayout().'.phtml')) {
-            $this->view->setLayoutsDir($common_module_path.'/layouts/');
+        elseif (file_exists($commonModuleViewPath.'/layouts/'.$this->view->getLayout().'.phtml')) {
+            $this->view->setLayoutsDir($commonModuleViewPath.'/layouts/');
         }
-        elseif (file_exists($common_path.'/layouts/'.$this->view->getLayout().'.phtml')) {
-            $this->view->setLayoutsDir($common_path.'/layouts/');
+        elseif (file_exists($commonViewPath.'/layouts/'.$this->view->getLayout().'.phtml')) {
+            $this->view->setLayoutsDir($commonViewPath.'/layouts/');
         }
     }
 
     /**
      * Set default views directory
      *
-     * @param $common_path
-     * @param $common_module_path
-     * @param $app_path
-     * @param $app_module_path
+     * @param $commonViewPath
+     * @param $commonModuleViewPath
+     * @param $appViewPath
+     * @param $appModuleViewPath
      */
-    public function dispatchViewsDir($common_path, $common_module_path, $app_path, $app_module_path)
+    public function dispatchViewsDir($commonViewPath, $commonModuleViewPath, $appViewPath, $appModuleViewPath)
     {
-        $controller_name = $this->dispatcher->getControllerName();
-        $action_name = $this->dispatcher->getActionName();
+        $controllerName = $this->dispatcher->getControllerName();
+        $actionName = $this->dispatcher->getActionName();
 
-        if (file_exists($app_module_path.'/'.$controller_name.'/'.$action_name.'.phtml')) {
-            $this->view->setViewsDir($app_module_path);
+        if (file_exists($appModuleViewPath.'/'.$controllerName.'/'.$actionName.'.phtml')) {
+            $this->view->setViewsDir($appModuleViewPath);
         }
-        elseif (file_exists($app_path.'/'.$controller_name.'/'.$action_name.'.phtml')) {
-            $this->view->setViewsDir($app_path);
+        elseif (file_exists($appViewPath.'/'.$controllerName.'/'.$actionName.'.phtml')) {
+            $this->view->setViewsDir($appViewPath);
         }
-        elseif (file_exists($common_module_path.'/'.$controller_name.'/'.$action_name.'.phtml')) {
-            $this->view->setViewsDir($common_module_path);
+        elseif (file_exists($commonModuleViewPath.'/'.$controllerName.'/'.$actionName.'.phtml')) {
+            $this->view->setViewsDir($commonModuleViewPath);
         }
-        elseif (file_exists($common_path.'/'.$controller_name.'/'.$action_name.'.phtml')) {
-            $this->view->setViewsDir($common_path);
+        elseif (file_exists($commonViewPath.'/'.$controllerName.'/'.$actionName.'.phtml')) {
+            $this->view->setViewsDir($commonViewPath);
         }
     }
 
@@ -250,21 +249,21 @@ class BaseController extends Controller implements ComponentAware
      */
     public function setApplicationCollection()
     {
-        $asset_path = $this->getApplicationAssetPath();
+        $assetPath = $this->getApplicationAssetPath();
 
         $app_style = $this->assets->collection('app_style');
         $app_script = $this->assets->collection('app_script');
 
         $app_style
-            ->setTargetPath($asset_path.'/app.css')
-            ->setTargetUri($asset_path.'/app.css')
+            ->setTargetPath($assetPath.'/app.css')
+            ->setTargetUri($assetPath.'/app.css')
             ->setLocal(false)
             ->join(true)
             ->addFilter(new Cssmin());
 
         $app_script
-            ->setTargetPath($asset_path.'/app.js')
-            ->setTargetUri($asset_path.'/app.js')
+            ->setTargetPath($assetPath.'/app.js')
+            ->setTargetUri($assetPath.'/app.js')
             ->setLocal(false)
             ->join(true)
             ->addFilter(new Jsmin());
@@ -282,21 +281,21 @@ class BaseController extends Controller implements ComponentAware
      */
     public function setViewCollection()
     {
-        $asset_path = $this->getApplicationAssetPath();
+        $assetPath = $this->getApplicationAssetPath();
 
         $view_style = $this->assets->collection('view_style');
         $view_script = $this->assets->collection('view_script');
 
         $view_style
-            ->setTargetPath($asset_path.'/'.$this->getViewCollectionName().'.css')
-            ->setTargetUri($asset_path.'/'.$this->getViewCollectionName().'.css')
+            ->setTargetPath($assetPath.'/'.$this->getViewCollectionName().'.css')
+            ->setTargetUri($assetPath.'/'.$this->getViewCollectionName().'.css')
             ->setLocal(false)
             ->join(true)
             ->addFilter(new Cssmin());
 
         $view_script
-            ->setTargetPath($asset_path.'/'.$this->getViewCollectionName().'.js')
-            ->setTargetUri($asset_path.'/'.$this->getViewCollectionName().'.js')
+            ->setTargetPath($assetPath.'/'.$this->getViewCollectionName().'.js')
+            ->setTargetUri($assetPath.'/'.$this->getViewCollectionName().'.js')
             ->setLocal(false)
             ->join(true)
             ->addFilter(new Jsmin());
@@ -342,13 +341,13 @@ class BaseController extends Controller implements ComponentAware
      */
     public function getApplicationAssetPath()
     {
-        $asset_path = 'temp/'.($this->session->getApplication('slug') ?: 'shared');
+        $assetPath = 'temp/'.($this->application->getApplicationSlug() ?: 'shared');
 
-        if (!is_dir($asset_path)) {
-            mkdir($asset_path, 2777);
+        if (!is_dir($assetPath)) {
+            mkdir($assetPath, 2777);
         }
 
-        return $asset_path;
+        return $assetPath;
     }
 
 }

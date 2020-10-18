@@ -69,8 +69,8 @@ class Application extends Injectable
      */
     private function dispatchApplicationBySession()
     {
-        // Register application service if it is store in session
-        if ($this->session && $this->session->hasApplication()) {
+        if ($this->session && $this->session->hasApplication())
+        {
             $this->application->registerApplication($this->session->getApplication('slug'));
         }
     }
@@ -83,10 +83,12 @@ class Application extends Injectable
     private function dispatchApplicationByHost()
     {
         // Find server_name in main host configuration
-        $server_name = $this->config->get('serverName');
-        if ($this->config->has('host') && $this->config->get('host')->has($server_name))
+        $serverName = $this->config->get('serverName');
+
+        if ($this->config->has('host') && $this->config->get('host')->has($serverName))
         {
-            if ($application = ApplicationModel::getBySlug($this->config->get('host')->get($server_name))) {
+            if ($application = ApplicationModel::getBySlug($this->config->get('host')->get($serverName)))
+            {
                 $this->application->registerApplication($application->getSlug());
             }
         }
@@ -99,7 +101,8 @@ class Application extends Injectable
      */
     private function dispatchApplicationByHash()
     {
-        if ($this->request->has('_app') && $application = ApplicationModel::getBySlug($this->request->get('_app'))) {
+        if ($this->request->has('_app') && $application = ApplicationModel::getBySlug($this->request->get('_app')))
+        {
             $this->application->registerApplication($application->getSlug());
         }
     }

@@ -18,9 +18,11 @@ final class Config extends \Phalcon\Config
      */
     public function registerMainConfig()
     {
-        $this->mergeConfigFile(COMMON_PATH.'/config/main.php');
-        $this->mergeConfigFile(COMMON_PATH.'/config/config.php');
-        $this->mergeConfigFile(COMMON_PATH.'/config/modules.php', 'modules');
+        $commonPath = Di::getDefault()->get('application')->getCommonPath();
+
+        $this->mergeConfigFile($commonPath.'/config/main.php');
+        $this->mergeConfigFile($commonPath.'/config/config.php');
+        $this->mergeConfigFile($commonPath.'/config/modules.php', 'modules');
     }
 
     /**
