@@ -97,13 +97,14 @@ class BaseController extends Controller implements ComponentAware
      */
     public function dispatchViews()
     {
+        $application = $this->getDI()->get('application');
         $moduleName = $this->router->getModuleName();
 
-        $commonViewPath = $this->application->getCommonPath().'/views/';
-        $commonModuleViewPath = $this->application->getCommonModulePath($moduleName).'/views';
+        $commonViewPath = $application->getCommonPath().'/views/';
+        $commonModuleViewPath = $application->getCommonModulePath($moduleName).'/views';
 
-        $appViewPath = $this->application->getApplicationPath().'/views';
-        $appModuleViewPath = $this->application->getApplicationModulePath($moduleName).'/views';
+        $appViewPath = $application->getApplicationPath().'/views';
+        $appModuleViewPath = $application->getApplicationModulePath($moduleName).'/views';
 
         $this->dispatchMainView($commonViewPath, $commonModuleViewPath, $appViewPath, $appModuleViewPath);
         $this->dispatchLayoutDir($commonViewPath, $commonModuleViewPath, $appViewPath, $appModuleViewPath);
@@ -341,7 +342,7 @@ class BaseController extends Controller implements ComponentAware
      */
     public function getApplicationAssetPath()
     {
-        $assetPath = 'temp/'.($this->application->getApplicationSlug() ?: 'shared');
+        $assetPath = 'temp/'.($this->getDI()->get('application')->getApplicationSlug() ?: 'shared');
 
         if (!is_dir($assetPath)) {
             mkdir($assetPath, 2777);
