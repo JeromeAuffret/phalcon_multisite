@@ -1,17 +1,19 @@
 <?php
 
+$commonPath = \Phalcon\Di::getDefault()->get('application')->getCommonPath();
+
 return [
     'auth' => [
         'className' => 'Common\Modules\Auth\Module',
-        'path' => COMMON_PATH . '/modules/auth/Module.php',
+        'path' => $commonPath . '/modules/auth/Module.php',
         'defaultController' => 'login'
     ],
     'admin' => [
         'className' => 'Common\Modules\Admin\Module',
-        'path' => COMMON_PATH . '/modules/admin/Module.php'
+        'path' => $commonPath . '/modules/admin/Module.php'
     ],
-//    'api' => [
-//        'className' => 'Common\Modules\Api\Module',
-//        'path' => COMMON_PATH . '/modules/api/Module.php'
-//    ]
+    'api' => [
+        'className' => 'Common\Modules\Api\Module',
+        'path' => $commonPath . '/modules/api/Module.php'
+    ]
 ];

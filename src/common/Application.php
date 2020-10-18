@@ -19,10 +19,10 @@ class Application extends ApplicationProvider {
 
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Common\\Models'      => COMMON_PATH . '/models/',
-                'Common\\Traits'      => COMMON_PATH . '/traits/',
-                'Common\\Controllers' => COMMON_PATH . '/controllers/',
-                'Common\\Forms'       => COMMON_PATH . '/forms/'
+                'Common\\Models'      => $container->get('application')->getCommonPath() . '/models/',
+                'Common\\Traits'      => $container->get('application')->getCommonPath() . '/traits/',
+                'Common\\Controllers' => $container->get('application')->getCommonPath() . '/controllers/',
+                'Common\\Forms'       => $container->get('application')->getCommonPath() . '/forms/'
             ])
             ->register();
     }

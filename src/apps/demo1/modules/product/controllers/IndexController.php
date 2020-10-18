@@ -2,16 +2,14 @@
 
 namespace Demo1\Modules\Product\Controllers;
 
+use Controllers\BaseController;
 
-class IndexController extends ControllerBase
+class IndexController extends BaseController
 {
 
     /**
      *
      */
-    public function indexAction()
-    {
-
-    }
+    public function indexAction() {}
 
 }

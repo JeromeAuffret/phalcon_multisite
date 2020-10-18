@@ -1,10 +1,9 @@
 {
-    "name": "lacji/phalcon_multisite",
+    "name": "JeromeAuffret/phalcon_multisite",
     "type": "library",
-    "description": "This is a sample for a multisite architecture for the Phalcon PHP Framework",
+    "description": "Sample for a multisite architecture based on Phalcon Framework",
     "keywords": [
-        "phalcon",
-        "mutli site"
+        "phalcon", "mutlisite", "phalcon multisite", "sample"
     ],
     "license": "MIT",
     "authors": [
@@ -23,7 +22,7 @@
     "require-dev": {
 	    "codeception/codeception": "^3.1",
         "phalcon/ide-stubs": "4.0.0",
-        "phpunit/phpunit": "^8.4",
+        "phpunit/phpunit": "^8.5",
         "phalcon/devtools": "^4.0"
     },
     "autoload": {

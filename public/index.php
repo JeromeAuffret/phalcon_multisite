@@ -3,9 +3,6 @@
 error_reporting(E_ALL);
 
 define('BASE_PATH', dirname(__DIR__));
-define('SRC_PATH', BASE_PATH . "/src");
-define('COMMON_PATH', SRC_PATH . "/common");
-define('APPS_PATH', SRC_PATH . "/apps");
 
 try {
     // Require composer's autoloader
