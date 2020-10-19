@@ -15,18 +15,41 @@ use Phalcon\Helper\Str;
  */
 final class Application extends \Phalcon\Mvc\Application
 {
+
     /**
      * @var string $commonNamespace
      */
     private $commonNamespace = 'Common';
+
     /**
      * @var string $commonPath
      */
     private $commonPath = BASE_PATH . "/src/common";
+
     /**
      * @var string $commonPath
      */
     private $applicationBasePath = BASE_PATH . "/src/apps";
+
+    /**
+     * @var string $applicationClass
+     */
+    private $applicationClass = 'Application';
+
+    /**
+     * @var string $applicationClass
+     */
+    private $moduleBaseNamespace = 'Modules';
+
+    /**
+     * @var string $applicationClass
+     */
+    private $moduleClass = 'Module';
+
+    /**
+     * @var string $applicationClass
+     */
+    private $moduleBaseDir = 'modules';
 
     /**
      * @var string $application
@@ -43,16 +66,6 @@ final class Application extends \Phalcon\Mvc\Application
      */
     private $applicationPath;
 
-    /**
-     * @var string $applicationClass
-     */
-    private $applicationClass = 'Application';
-
-    /**
-     * @var string $applicationClass
-     */
-    private $moduleClass = 'Module';
-
 
     /**********************************************************
      *
@@ -63,7 +76,7 @@ final class Application extends \Phalcon\Mvc\Application
     /**
      * Initialize application
      *
-     * @param string|null $applicationSlug
+     * @param string $applicationSlug
      * @param string|null $applicationNamespace
      * @param string|null $applicationPath
      */
@@ -91,45 +104,39 @@ final class Application extends \Phalcon\Mvc\Application
 
     /**
      * PSR-4 compliant autoloader for common folder
-     * Call ApplicationProvider for common
+     * Initialize ApplicationProvider for common
      */
     public function registerCommonProvider()
     {
-        $commonPath = $this->getCommonPath();
-        $commonNamespace = $this->getCommonNamespace();
-
         (new \Phalcon\Loader())
-            ->registerNamespaces([$commonNamespace => $commonPath])
+            ->registerNamespaces([$this->commonNamespace => $this->commonPath])
             ->register();
 
-        $applicationClass = $commonNamespace.'\\'.$this->applicationClass;
-        $applicationClass = new $applicationClass;
+        $applicationProvider = $this->commonNamespace.'\\'.$this->applicationClass;
+        $applicationProvider = new $applicationProvider;
 
-        $applicationClass->initialize($this->container);
+        $applicationProvider->initialize($this->container);
     }
 
     /**
      * PSR-4 compliant autoloader for application folder
-     * Call ApplicationProvider for application
+     * Initialize ApplicationProvider for application
      */
     public function registerApplicationProvider()
     {
-        $applicationPath = $this->getApplicationPath();
-        $applicationNamespace = $this->getApplicationNamespace();
-
         (new \Phalcon\Loader())
-            ->registerNamespaces([$applicationNamespace => $applicationPath])
+            ->registerNamespaces([$this->applicationNamespace => $this->applicationPath])
             ->register();
 
-        $applicationClass = $applicationNamespace.'\\'.$this->applicationClass;
-        $applicationClass = new $applicationClass;
+        $applicationProvider = $this->applicationNamespace.'\\'.$this->applicationClass;
+        $applicationProvider = new $applicationProvider;
 
-        $applicationClass->initialize($this->container);
+        $applicationProvider->initialize($this->container);
     }
 
     /**
      * PSR-4 compliant autoloader for application folder
-     * Call ModuleProvider for each modules defined in configuration
+     * Initialize ModuleProvider for each modules defined in configuration
      *
      * TODO this use the default module configuration use by phalcon. This could be improve to just use moduleName
      */
@@ -144,6 +151,7 @@ final class Application extends \Phalcon\Mvc\Application
                 ],
             ], true );
 
+            // TODO Adapt regex to use $this->moduleClass
             $moduleNamespace = preg_replace('/\\\Module$/', '', $module->get('className'));
             $modulePath = preg_replace('/\/Module.php$/', '', $module->get('path'));
 
@@ -151,10 +159,10 @@ final class Application extends \Phalcon\Mvc\Application
                 ->registerNamespaces([$moduleNamespace => $modulePath])
                 ->register();
 
-            $moduleClass = $module->get('className');
-            $moduleClass = new $moduleClass;
+            $moduleProvider = $module->get('className');
+            $moduleProvider = new $moduleProvider;
 
-            $moduleClass->initialize($this->container, $moduleName);
+            $moduleProvider->initialize($this->container, $moduleName);
         }
     }
 
@@ -169,52 +177,63 @@ final class Application extends \Phalcon\Mvc\Application
      * Dispatch a namespace between common and application folder
      *
      * @param string $className
-     * @param string $baseNamespace
+     * @param string $baseNamespace Base namespace use to be concatenated between applicationNamespace and className
      * @return string|null
      */
-    public function dispatchNamespace(string $className, string $baseNamespace)
+    public function dispatchNamespace(string $className, string $baseNamespace = '')
     {
-        // Get class path base on namespace. This use a lowercase version of PSR-4 standard for folder's name
-        $basePath = [];
-        foreach (explode('\\', $baseNamespace) as $namespace_folder) {
-            if (!empty($namespace_folder)) $basePath[] = Str::uncamelize($namespace_folder, '_');
-        }
-        $basePath = implode('/', $basePath);
-
-        $appPath = $this->application->getApplicationPath().'/'.$basePath.'/';
-        $commonPath = $this->application->getCommonPath().'/'.$basePath.'/';
+        $basePath = $this->buildBasePath($baseNamespace);
+        $appPath = $this->applicationPath.'/'.$basePath;
+        $commonPath = $this->commonPath.'/'.$basePath;
 
         $namespace = $path = null;
-        if (file_exists($appPath.$className.'.php')) {
-            $namespace = $this->application->getApplicationNamespace()."\\$baseNamespace\\$className";
+        if (file_exists($appPath.'/'.$className.'.php')) {
+            return $this->applicationNamespace.'\\'.$baseNamespace.'\\'.$className;
         }
-        elseif (file_exists($commonPath.$className.'.php')) {
-            $namespace = $this->application->getCommonNamespace()."\\$baseNamespace\\$className";
+        elseif (file_exists($commonPath.'/'.$className.'.php')) {
+            return $this->commonNamespace.'\\'.$baseNamespace.'\\'.$className;
         }
         elseif ($this->config->get('applicationType') === 'modules')
         {
             foreach ($this->config->get('modules') as $moduleName => $definition)
             {
-                $appModulePath = $this->application->getApplicationModulePath($moduleName).'/'.$basePath.'/';
-                $commonModulePath = $this->application->getCommonModulePath($moduleName).'/'.$basePath.'/';
+                $appModulePath = $this->getApplicationModulePath($moduleName).'/'.$basePath;
+                $commonModulePath = $this->getCommonModulePath($moduleName).'/'.$basePath;
 
-                if (file_exists($appModulePath.$className.'.php')) {
-                    $namespace = $this->application->getApplicationModuleNamespace($moduleName)."\\$baseNamespace\\$className";
-                    $path = $appModulePath.$className.'.php';
+                if (file_exists($appModulePath.'/'.$className.'.php')) {
+                    $namespace = $this->getApplicationModuleNamespace($moduleName).'\\'.$baseNamespace.'\\'.$className;
+                    $path = $appModulePath.'/'.$className.'.php';
                     break;
                 }
-                elseif (file_exists($commonModulePath.$className.'.php')) {
-                    $namespace = $this->application->getCommonModuleNamespace($moduleName)."\\$baseNamespace\\$className";
-                    $path = $commonModulePath.$className.'.php';
+                elseif (file_exists($commonModulePath.'/'.$className.'.php')) {
+                    $namespace = $this->getCommonModuleNamespace($moduleName).'\\'.$baseNamespace.'\\'.$className;
+                    $path = $commonModulePath.'/'.$className.'.php';
                     break;
                 }
             }
         }
 
         // Register namespace before return it
-        (new \Phalcon\Loader())->registerClasses([$namespace => $path])->register();
+        (new \Phalcon\Loader())
+            ->registerClasses([$namespace => $path])
+            ->register();
 
         return $namespace;
+    }
+
+    /**
+     * Get class path based on namespace.
+     * This use a lowercase version of PSR-4 standard for folder's name
+     *
+     * @param string $baseNamespace
+     * @return string
+     */
+    private function buildBasePath(string $baseNamespace) {
+        $basePath = [];
+        foreach (explode('\\', $baseNamespace) as $namespace_folder) {
+            if (!empty($namespace_folder)) $basePath[] = Str::uncamelize($namespace_folder, '_');
+        }
+        return implode('/', $basePath);
     }
 
 
@@ -245,7 +264,7 @@ final class Application extends \Phalcon\Mvc\Application
      */
     private function setApplicationPath($applicationPath = null)
     {
-        $this->applicationPath = $applicationPath ?: ($this->applicationBasePath . '/' . $this->applicationSlug);
+        $this->applicationPath = $applicationPath ?: ($this->applicationBasePath.'/'.$this->applicationSlug);
     }
 
     /**
@@ -295,7 +314,7 @@ final class Application extends \Phalcon\Mvc\Application
     public function getApplicationModulePath(?string $moduleName): ?string
     {
         if (!$moduleName) return null;
-        return $this->getApplicationPath() . '/modules/' . $moduleName;
+        return $this->applicationPath.'/'.$this->moduleBaseDir.'/'.$moduleName;
     }
 
     /**
@@ -305,7 +324,7 @@ final class Application extends \Phalcon\Mvc\Application
     public function getApplicationModuleNamespace(?string $moduleName): ?string
     {
         if (!$moduleName) return null;
-        return $this->getApplicationNamespace() . '\\Modules\\' . Str::camelize($moduleName);
+        return $this->applicationNamespace.'\\'.$this->moduleBaseNamespace.'\\'.Str::camelize($moduleName);
     }
 
     /**
@@ -331,7 +350,7 @@ final class Application extends \Phalcon\Mvc\Application
     public function getCommonModulePath(?string $moduleName): ?string
     {
         if (!$moduleName) return null;
-        return $this->getCommonPath() . '/modules/' . $moduleName;
+        return $this->commonPath.'/'.$this->moduleBaseDir.'/'.$moduleName;
     }
 
     /**
@@ -341,7 +360,7 @@ final class Application extends \Phalcon\Mvc\Application
     public function getCommonModuleNamespace(?string $moduleName): ?string
     {
         if (!$moduleName) return null;
-        return $this->getCommonNamespace().'\\Modules\\' . Str::camelize($moduleName);
+        return $this->commonNamespace.'\\'.$this->moduleBaseNamespace.'\\'.Str::camelize($moduleName);
     }
 
 }

@@ -9,11 +9,11 @@ use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 
 
-class ApplicationProvider  implements ModuleDefinitionInterface
+class ApplicationProvider implements ModuleDefinitionInterface
 {
 
     /**
-     * @param DiInterface $container
+     * @param DiInterface|null $container
      */
     public function initialize(DiInterface $container)
     {
@@ -57,7 +57,7 @@ class ApplicationProvider  implements ModuleDefinitionInterface
         if ($container->get('config')->get('applicationType') === 'modules') {
             $container->get('application')->registerModulesProvider();
         }
-        // Register default namespace if simple application
+        // Set default namespace if simple application
         else if ($container->get('config')->get('applicationType') === 'simple') {
             $container->get('dispatcher')->setDefaultNamespace(
                 $container->get('application')->getApplicationNamespace().'\Controllers'
@@ -80,9 +80,6 @@ class ApplicationProvider  implements ModuleDefinitionInterface
     public function registerAcl(DiInterface $container)
     {
         $acl = $container->get('acl');
-
-        $acl->addRole('admin');
-        $acl->addRole('user');
 
         // Allow access to error's pages
         $acl->addComponent('_error', ['NotFound', 'InternalError']);
