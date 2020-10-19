@@ -10,6 +10,11 @@ use Phalcon\Mvc\ModuleDefinitionInterface;
 class ModuleProvider implements ModuleDefinitionInterface
 {
     /**
+     * @var DiInterface
+     */
+    protected $container;
+
+    /**
      * @var string
      */
     protected $moduleName;
@@ -33,18 +38,18 @@ class ModuleProvider implements ModuleDefinitionInterface
      */
     protected $defaultAction;
 
-
     /**
-     * @param DiInterface $container
-     * @param $moduleName
+     * @param DiInterface|null $container
+     * @param string|null $moduleName
      */
-    public function initialize(DiInterface $container, $moduleName)
+    public function initialize(DiInterface $container, string $moduleName)
     {
+        $this->moduleName = $moduleName;
+
         $config = $container->get('config');
 
-        $this->moduleName = $moduleName;
         $this->moduleDefinition = $config->get('modules')->get($moduleName);
-        $this->controllerNamespace = preg_replace('/Module$/', 'Controllers', $this->moduleDefinition->get("className"));
+        $this->controllerNamespace = preg_replace('/Module$/', 'Controllers', $this->moduleDefinition->get('className'));
         $this->defaultController = $this->moduleDefinition->get('defaultController') ?? $config->get('defaultController');
         $this->defaultAction = $this->moduleDefinition->get('defaultAction') ?? $config->get('defaultController');
 
@@ -136,7 +141,6 @@ class ModuleProvider implements ModuleDefinitionInterface
      */
     private function dispatchController(DiInterface $container)
     {
-        $config = $container->get('config');
         $dispatcher = $container->get('dispatcher');
         $application = $container->get('application');
 
@@ -147,12 +151,16 @@ class ModuleProvider implements ModuleDefinitionInterface
         if (end($controllerClass) === 'ErrorController') {
             $dispatcher->setNamespaceName('Controllers');
         }
-        elseif ($config->get('applicationType') === 'modules') {
+        else {
             $appControllerModulePath = $application->getApplicationModulePath($moduleName).'/controllers';
-            $moduleNamespace = $application->getApplicationModuleNamespace($moduleName).'\\Controllers';
+            $moduleNamespace = $application->getApplicationModuleNamespace($moduleName).'\\'.'Controllers';
 
-            if (file_exists($appControllerModulePath.'/'.$controllerFile)) {
-                (new \Phalcon\Loader())->registerNamespaces([$moduleNamespace => $appControllerModulePath])->register();
+            if (file_exists($appControllerModulePath.'/'.$controllerFile))
+            {
+                (new \Phalcon\Loader())
+                    ->registerNamespaces([$moduleNamespace => $appControllerModulePath])
+                    ->register();
+
                 $dispatcher->setNamespaceName($moduleNamespace);
             }
         }
