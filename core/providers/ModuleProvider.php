@@ -58,14 +58,14 @@ class ModuleProvider implements ModuleDefinitionInterface
     }
 
     /**
-     *  Registers an autoloader related to the module
+     * Registers an autoloader related to the module
      *
      * @param DiInterface|null $container
      */
     public function registerAutoloaders(DiInterface $container = null) {}
 
     /**
-     *  Registers services related to the module
+     * Registers services related to the module
      *
      * @param DiInterface $container
      */
@@ -125,45 +125,6 @@ class ModuleProvider implements ModuleDefinitionInterface
      *
      * @param DiInterface $container
      */
-    public function registerEvents(DiInterface $container)
-    {
-        // Register events in dispatcher service
-        $container->get('dispatcher')
-            ->getEventsManager()
-            ->attach('dispatch:beforeDispatch', function () use ($container) {
-                $this->dispatchController($container);
-            });
-    }
-
-    /**
-     * Register correct controller in dispatcher
-     * @param DiInterface $container
-     */
-    private function dispatchController(DiInterface $container)
-    {
-        $dispatcher = $container->get('dispatcher');
-        $application = $container->get('application');
-
-        $moduleName = $dispatcher->getModuleName();
-        $controllerClass = explode('\\', $dispatcher->getControllerClass());
-        $controllerFile = end($controllerClass).'.php';
-
-        if (end($controllerClass) === 'ErrorController') {
-            $dispatcher->setNamespaceName('Controllers');
-        }
-        else {
-            $appControllerModulePath = $application->getApplicationModulePath($moduleName).'/controllers';
-            $moduleNamespace = $application->getApplicationModuleNamespace($moduleName).'\\'.'Controllers';
-
-            if (file_exists($appControllerModulePath.'/'.$controllerFile))
-            {
-                (new \Phalcon\Loader())
-                    ->registerNamespaces([$moduleNamespace => $appControllerModulePath])
-                    ->register();
-
-                $dispatcher->setNamespaceName($moduleNamespace);
-            }
-        }
-    }
+    public function registerEvents(DiInterface $container) {}
 
 }

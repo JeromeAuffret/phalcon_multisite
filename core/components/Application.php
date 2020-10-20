@@ -39,12 +39,12 @@ final class Application extends \Phalcon\Mvc\Application
     /**
      * @var string $applicationClass
      */
-    private $moduleBaseNamespace = 'Modules';
+    private $moduleClass = 'Module';
 
     /**
      * @var string $applicationClass
      */
-    private $moduleClass = 'Module';
+    private $moduleBaseNamespace = 'Modules';
 
     /**
      * @var string $applicationClass
@@ -149,7 +149,7 @@ final class Application extends \Phalcon\Mvc\Application
                     'className' => $module->get('className'),
                     'path' => $module->get('path')
                 ],
-            ], true );
+            ], true);
 
             // TODO Adapt regex to use $this->moduleClass
             $moduleNamespace = preg_replace('/\\\Module$/', '', $module->get('className'));
@@ -164,76 +164,6 @@ final class Application extends \Phalcon\Mvc\Application
 
             $moduleProvider->initialize($this->container, $moduleName);
         }
-    }
-
-
-    /**********************************************************
-     *
-     *                        NAMESPACES
-     *
-     **********************************************************/
-
-    /**
-     * Dispatch a namespace between common and application folder
-     *
-     * @param string $className
-     * @param string $baseNamespace Base namespace use to be concatenated between applicationNamespace and className
-     * @return string|null
-     */
-    public function dispatchNamespace(string $className, string $baseNamespace = '')
-    {
-        $basePath = $this->buildBasePath($baseNamespace);
-        $appPath = $this->applicationPath.'/'.$basePath;
-        $commonPath = $this->commonPath.'/'.$basePath;
-
-        $namespace = $path = null;
-        if (file_exists($appPath.'/'.$className.'.php')) {
-            return $this->applicationNamespace.'\\'.$baseNamespace.'\\'.$className;
-        }
-        elseif (file_exists($commonPath.'/'.$className.'.php')) {
-            return $this->commonNamespace.'\\'.$baseNamespace.'\\'.$className;
-        }
-        elseif ($this->config->get('applicationType') === 'modules')
-        {
-            foreach ($this->config->get('modules') as $moduleName => $definition)
-            {
-                $appModulePath = $this->getApplicationModulePath($moduleName).'/'.$basePath;
-                $commonModulePath = $this->getCommonModulePath($moduleName).'/'.$basePath;
-
-                if (file_exists($appModulePath.'/'.$className.'.php')) {
-                    $namespace = $this->getApplicationModuleNamespace($moduleName).'\\'.$baseNamespace.'\\'.$className;
-                    $path = $appModulePath.'/'.$className.'.php';
-                    break;
-                }
-                elseif (file_exists($commonModulePath.'/'.$className.'.php')) {
-                    $namespace = $this->getCommonModuleNamespace($moduleName).'\\'.$baseNamespace.'\\'.$className;
-                    $path = $commonModulePath.'/'.$className.'.php';
-                    break;
-                }
-            }
-        }
-
-        // Register namespace before return it
-        (new \Phalcon\Loader())
-            ->registerClasses([$namespace => $path])
-            ->register();
-
-        return $namespace;
-    }
-
-    /**
-     * Get class path based on namespace.
-     * This use a lowercase version of PSR-4 standard for folder's name
-     *
-     * @param string $baseNamespace
-     * @return string
-     */
-    private function buildBasePath(string $baseNamespace) {
-        $basePath = [];
-        foreach (explode('\\', $baseNamespace) as $namespace_folder) {
-            if (!empty($namespace_folder)) $basePath[] = Str::uncamelize($namespace_folder, '_');
-        }
-        return implode('/', $basePath);
     }
 
 

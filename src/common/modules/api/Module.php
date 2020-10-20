@@ -83,6 +83,21 @@ class Module extends ModuleProvider
     /**
      * @Override
      *
+     * @param DiInterface $container
+     */
+    public function registerEvents(DiInterface $container)
+    {
+        // Register events in dispatcher service
+        $container->get('dispatcher')
+            ->getEventsManager()
+            ->attach('dispatch:beforeDispatch', function () use ($container) {
+                $this->dispatchController($container);
+            });
+    }
+
+    /**
+     * @Override
+     *
      * Specific controller dispatch for api module
      * Register correct controller in dispatcher
      *

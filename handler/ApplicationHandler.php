@@ -11,11 +11,17 @@ use Service\Acl as AclService;
 use Service\Application as ApplicationService;
 use Service\Config as ConfigService;
 use Service\Database as DbService;
+use Service\Dispatcher as DispatcherService;
 use Service\Router as RouterService;
 use Service\Session as SessionService;
 use Service\Url as UrlService;
 use Service\View as ViewService;
 
+/**
+ * Class ApplicationHandler
+ *
+ * @package Handler
+ */
 class ApplicationHandler
 {
     /**
@@ -47,7 +53,7 @@ class ApplicationHandler
         $this->application = $this->container->get('application');
 
         // Bind event to mvc application
-        $this->bindEvents();
+        $this->registerApplicationEvents();
     }
 
     /**
@@ -91,6 +97,9 @@ class ApplicationHandler
         (new ApplicationService)
             ->register($this->container);
 
+        (new DispatcherService)
+            ->register($this->container);
+
         (new SessionService)
             ->register($this->container);
 
@@ -114,9 +123,9 @@ class ApplicationHandler
     }
 
     /**
-     * Bind application events
+     * Register application events
      */
-    public function bindEvents()
+    public function registerApplicationEvents()
     {
         // Register eventsManager
         $this->application->setEventsManager(
@@ -126,12 +135,7 @@ class ApplicationHandler
         // Bind boot event to correctly dispatch applications
         $this->application
             ->getEventsManager()
-            ->attach('application:boot', new ApplicationMiddleware());
-
-        // Bind specific event define in module provider if needed
-        $this->application
-            ->getEventsManager()
-            ->attach('application:afterStartModule', new ApplicationMiddleware());
+            ->attach('application', new ApplicationMiddleware());
     }
 
 }

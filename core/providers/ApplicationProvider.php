@@ -4,6 +4,7 @@ namespace Provider;
 
 use Middleware\Acl as AclMiddleware;
 use Middleware\Auth as AuthMiddleware;
+use Middleware\Dispatch as DispatchMiddleware;
 use Middleware\Error as ErrorMiddleware;
 use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\ModuleDefinitionInterface;
@@ -60,7 +61,7 @@ class ApplicationProvider implements ModuleDefinitionInterface
         // Set default namespace if simple application
         else if ($container->get('config')->get('applicationType') === 'simple') {
             $container->get('dispatcher')->setDefaultNamespace(
-                $container->get('application')->getApplicationNamespace().'\Controllers'
+                $container->get('application')->getApplicationNamespace().'\\'.'Controllers'
             );
         }
     }
@@ -99,18 +100,22 @@ class ApplicationProvider implements ModuleDefinitionInterface
             $container->get('eventsManager')
         );
 
+        // Register events in dispatcher service
         $container->get('dispatcher')
             ->getEventsManager()
-            ->attach('dispatch:beforeExecuteRoute', new AuthMiddleware());
+            ->attach('dispatch', new DispatchMiddleware());
 
         $container->get('dispatcher')
             ->getEventsManager()
-            ->attach("dispatch:beforeExecuteRoute", new AclMiddleware());
+            ->attach('dispatch', new AuthMiddleware());
 
         $container->get('dispatcher')
             ->getEventsManager()
-            ->attach("dispatch:beforeException", new ErrorMiddleware());
+            ->attach("dispatch", new AclMiddleware());
 
+        $container->get('dispatcher')
+            ->getEventsManager()
+            ->attach("dispatch", new ErrorMiddleware());
     }
 
 }
