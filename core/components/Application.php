@@ -142,6 +142,8 @@ final class Application extends \Phalcon\Mvc\Application
      */
     public function registerModulesProvider()
     {
+        if (!$this->container->get('config')->get('applicationType') === 'modules') return;
+
         foreach ($this->container->get('config')->get('modules') as $moduleName => $module)
         {
             $this->registerModules([

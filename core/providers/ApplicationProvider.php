@@ -9,11 +9,16 @@ use Middleware\Error as ErrorMiddleware;
 use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 
-
+/**
+ * ApplicationProvider should not necessary implement ModuleDefinitionInterface but this try to keep the code uniform
+ */
 class ApplicationProvider implements ModuleDefinitionInterface
 {
 
     /**
+     * Initialize application providers.
+     * This register specific namespaces and services for an application.
+     *
      * @param DiInterface|null $container
      */
     public function initialize(DiInterface $container)
@@ -54,16 +59,11 @@ class ApplicationProvider implements ModuleDefinitionInterface
         // Register Application Database
         $container->get('database')->registerApplicationDatabase();
 
-        // Register application specific modules
-        if ($container->get('config')->get('applicationType') === 'modules') {
-            $container->get('application')->registerModulesProvider();
-        }
-        // Set default namespace if simple application
-        else if ($container->get('config')->get('applicationType') === 'simple') {
-            $container->get('dispatcher')->setDefaultNamespace(
-                $container->get('application')->getApplicationNamespace().'\\'.'Controllers'
-            );
-        }
+        // Register Application Modules
+        $container->get('application')->registerModulesProvider();
+
+        // Register default namespace
+        $container->get('dispatcher')->registerDefaultNamespace();
     }
 
     /**

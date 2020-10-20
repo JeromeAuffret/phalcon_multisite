@@ -6,6 +6,7 @@ use Component\Dispatcher as DispatcherComponent;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Di\Injectable;
+use ReflectionException;
 
 /**
  * Class Dispatch
@@ -22,6 +23,7 @@ class Dispatch extends Injectable
      * @param Event $event
      * @param Dispatcher $dispatcher
      * @return void
+     * @throws ReflectionException
      */
     public function beforeDispatch(Event $event, Dispatcher $dispatcher)
     {

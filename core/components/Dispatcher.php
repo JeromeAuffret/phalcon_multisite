@@ -11,9 +11,41 @@ use Phalcon\Helper\Str;
  */
 final class Dispatcher extends \Phalcon\Mvc\Dispatcher
 {
+    /**
+     * Register default namespace to be dispatch on empty routes
+     */
+    public function registerDefaultNamespace()
+    {
+        /** @var Application $application */
+        $application = $this->getDI()->get('application');
+        /** @var Config $config */
+        $config = $this->getDI()->get('config');
+
+        // Register application specific modules and set default namespace as default module namespace
+        if ($config->get('applicationType') === 'modules')
+        {
+            $defaultModule = $config->get('defaultModule');
+            $defaultNamespace = $application->getApplicationModuleNamespace($defaultModule);
+
+            $this->setDefaultNamespace(
+                $defaultNamespace.'\\'.'Controllers'
+            );
+        }
+
+        // Set default namespace if simple application
+        else if ($config->get('applicationType') === 'simple')
+        {
+            $defaultNamespace = $application->getApplicationNamespace();
+
+            $this->setDefaultNamespace(
+                $defaultNamespace.'\\'.'Controllers'
+            );
+        }
+    }
 
     /**
-     * Register correct controller in dispatcher
+     * Register correct controller namespace in dispatcher
+     *
      * @throws \ReflectionException
      */
     public function dispatchControllers()
