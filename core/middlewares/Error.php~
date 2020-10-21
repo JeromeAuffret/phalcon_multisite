@@ -99,11 +99,9 @@ class Error extends Injectable
 
                 if ($this->acl && $applicationType === 'simple' && $this->acl->userAllowed(null, $defaultController)) {
                     $this->response->redirect('');
-                }
-                elseif ($this->acl && $applicationType === 'modules' && $this->acl->userAllowed($defaultModule)) {
+                } else if ($this->acl && $applicationType === 'modules' && $this->acl->userAllowed($defaultModule)) {
                     $this->response->redirect('');
-                }
-                else {
+                } else {
                     $this->session->destroy();
                     $this->response->redirect('auth/login');
                 }
