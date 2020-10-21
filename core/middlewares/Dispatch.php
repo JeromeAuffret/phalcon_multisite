@@ -28,7 +28,7 @@ class Dispatch extends Injectable
     public function beforeDispatch(Event $event, Dispatcher $dispatcher)
     {
         // We destroy session on login page
-        if ($this->dispatcher->getActionName() === '_logout') {
+        if ($this->dispatcher->getActionName() === 'logout') {
             $this->session->destroy();
             $this->response->redirect('auth/login');
             $this->response->send();
