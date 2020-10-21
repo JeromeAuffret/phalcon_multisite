@@ -2,6 +2,7 @@
 
 namespace Middleware;
 
+use Acl\AclComponent;
 use Component\Acl;
 use Component\Session;
 use Error\AuthException;
@@ -29,12 +30,19 @@ class Auth extends Injectable
      */
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
+        $moduleName = $this->router->getModuleName();
+        $controllerName = $this->router->getControllerName();
+        $actionName = $this->router->getActionName();
+        $params = $this->router->getParams();
+
+        $AclComponent = new AclComponent($moduleName, $controllerName, $actionName, $params);
+
         // Allow access to public components
-        if ($this->acl->isPublicComponent()) {
+        if ($AclComponent->isPublicComponent()) {
             return true;
         }
         // For the auth module, we allow a registered user
-        else if ($dispatcher->getModuleName() === 'auth' || $this->session->hasUser()) {
+        else if ($moduleName === 'auth' || $this->session->hasUser()) {
             return true;
         }
         // Verify session otherwise

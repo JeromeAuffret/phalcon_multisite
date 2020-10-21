@@ -28,8 +28,13 @@ class Acl extends Injectable
      */
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
+        $moduleName = $this->router->getModuleName();
+        $controllerName = $this->router->getControllerName();
+        $actionName = $this->router->getActionName();
+        $params = $this->router->getParams();
+
         try {
-            if (!$this->acl->userAllowed()) {
+            if (!$this->acl->userAllowed($moduleName, $controllerName, $actionName, $params)) {
                 throw new AclException('Unauthorized');
             }
         } catch (Exception $e) {
