@@ -19,6 +19,7 @@ use Phalcon\Di\Injectable;
  */
 class Application extends Injectable
 {
+
     /**
      * Dispatch apps when the application handles its first request
      *

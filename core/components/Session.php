@@ -9,7 +9,6 @@ use Models\Application;
 use Phalcon\Collection;
 use Phalcon\Session\Manager as SessionManager;
 
-
 /**
  * Class Session
  *

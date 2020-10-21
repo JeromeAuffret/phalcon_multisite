@@ -5,7 +5,11 @@ namespace Acl;
 use Phalcon\Acl\RoleAware;
 use Phalcon\Collection;
 
-
+/**
+ * Class AclUserRole
+ *
+ * @package Acl
+ */
 class AclUserRole implements RoleAware
 {
     private $super_admin = ['admin'];
