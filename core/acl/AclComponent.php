@@ -5,7 +5,11 @@ namespace Acl;
 use Phalcon\Acl\ComponentAware;
 use Phalcon\Di;
 
-
+/**
+ * Class AclComponent
+ *
+ * @package Acl
+ */
 class AclComponent implements ComponentAware
 {
     protected $componentName;

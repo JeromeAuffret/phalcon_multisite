@@ -16,6 +16,8 @@ class Database implements ServiceProviderInterface
 
     /**
      * @param DiInterface $container
+     *
+     * @return void
      */
     public function register(DiInterface $container): void
     {

@@ -4,7 +4,11 @@ namespace Libraries;
 
 use DateTime;
 
-
+/**
+ * Class DateHelper
+ *
+ * @package Libraries
+ */
 final class DateHelper
 {
     /**

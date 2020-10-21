@@ -148,4 +148,5 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
         }
         return implode('/', $namespacePath);
     }
+
 }

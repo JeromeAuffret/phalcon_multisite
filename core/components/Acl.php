@@ -4,7 +4,6 @@ namespace Component;
 
 use Acl\AclComponent;
 use Acl\AclUserRole;
-
 use Phalcon\Acl\ComponentInterface;
 use Phalcon\Acl\RoleInterface;
 use Phalcon\Acl\Adapter\AbstractAdapter;
