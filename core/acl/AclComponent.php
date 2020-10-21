@@ -27,19 +27,24 @@ class AclComponent implements ComponentAware
     /**
      * AclComponent constructor.
      *
-     * @param $moduleName
-     * @param $controllerName
-     * @param $actionName
-     * @param $params
+     * @param string|null $moduleName
+     * @param string|null $controllerName
+     * @param string|null $actionName
+     * @param array $params
      */
-    public function __construct(string $moduleName = null, string $controllerName = null, string $actionName = null, array $params = [])
+    public function __construct(?string $moduleName, ?string $controllerName, ?string $actionName, array $params)
     {
-        $dispatcher = Di::getDefault()->get('dispatcher');
+        $config = Di::getDefault()->get('config');
 
-        $moduleName = $moduleName ?: $dispatcher->getModuleName();
-        $controllerName = $controllerName ?: $dispatcher->getControllerName();
-        $actionName = $actionName ?: $dispatcher->getActionName();
-        $params = $params ?? $dispatcher->getParams();
+        // In case of empty controllerName, we check for specific defaultController in module definition
+        if (!$controllerName) {
+            $controllerName = $config->get('modules')[$moduleName]['defaultController'] ?? $config->defaultController;
+        }
+
+        // In case of empty actionName, we check for specific defaultAction in module definition
+        if (!$actionName) {
+            $actionName = $config->get('modules')[$moduleName]['defaultAction'] ?? $config->defaultAction;
+        }
 
         $this->initialize($moduleName, $controllerName, $actionName, $params);
     }
@@ -79,6 +84,16 @@ class AclComponent implements ComponentAware
         $this->requestQuery = $container->get('request')->getQuery();
 
         $this->requestPost = $container->get('request')->getPost();
+    }
+
+    /**
+     * Verify is the given components is defined as public
+     *
+     * @return bool
+     */
+    public function isPublicComponent()
+    {
+        return in_array($this->getComponentName(), Di::getDefault()->get('config')->get('publicComponents')->getValues());
     }
 
 

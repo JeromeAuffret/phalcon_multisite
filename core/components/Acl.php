@@ -47,7 +47,7 @@ final class Acl extends Injectable implements AdapterInterface
         $AclComponent = new AclComponent($moduleName, $controllerName, $actionName, $params);
 
         // Prevent verification for public components
-        if ($this->isPublicComponent($moduleName, $controllerName, $actionName, $params)) {
+        if ($AclComponent->isPublicComponent()) {
             return true;
         }
         // UserAdmin can access to registered components
@@ -66,21 +66,6 @@ final class Acl extends Injectable implements AdapterInterface
                     $AclComponent->getParams() ?? null
                 );
         }
-    }
-
-    /**
-     * Verify is the given components is defined as public
-     *
-     * @param string|null $moduleName
-     * @param string|null $controllerName
-     * @param string|null $actionName
-     * @param array $params
-     * @return bool
-     */
-    public function isPublicComponent(string $moduleName = null, string $controllerName = null, string $actionName = null, array $params = [])
-    {
-        $AclComponent = new AclComponent($moduleName, $controllerName, $actionName, $params);
-        return in_array($AclComponent->getComponentName(), $this->config->get('publicComponents')->getValues());
     }
 
     /**
