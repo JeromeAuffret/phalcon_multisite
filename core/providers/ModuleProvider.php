@@ -6,7 +6,11 @@ use Phalcon\Collection;
 use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 
-
+/**
+ * Class ModuleProvider
+ *
+ * @package Provider
+ */
 class ModuleProvider implements ModuleDefinitionInterface
 {
     /**
@@ -43,7 +47,7 @@ class ModuleProvider implements ModuleDefinitionInterface
      * This register specific namespaces and services for a module.
      *
      * Keep in mind that each module's autoloader and services are registered in application initialisation (except for events)
-     * This allow communication between each module to use classes or check ACL access or whatever.
+     * This allow to use classes or check ACL access or whatever you need to do from another module.
      *
      * registerAutoloaders and registerServices are call internally by phalcon on module registration.
      *
@@ -55,11 +59,19 @@ class ModuleProvider implements ModuleDefinitionInterface
         $this->moduleName = $moduleName;
 
         $config = $container->get('config');
+        $application = $container->get('application');
 
         $this->moduleDefinition = $config->get('modules')->get($moduleName);
         $this->controllerNamespace = preg_replace('/Module$/', 'Controllers', $this->moduleDefinition->get('className'));
         $this->defaultController = $this->moduleDefinition->get('defaultController') ?? $config->get('defaultController');
         $this->defaultAction = $this->moduleDefinition->get('defaultAction') ?? $config->get('defaultController');
+
+        $application->registerModules([
+            $moduleName => [
+                'className' => $this->moduleDefinition->get('className'),
+                'path' => $this->moduleDefinition->get('path')
+            ],
+        ], true);
 
         $this->registerRouter($container);
         $this->registerAcl($container);

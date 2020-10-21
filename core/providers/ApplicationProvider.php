@@ -10,7 +10,9 @@ use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 
 /**
- * ApplicationProvider should not necessary implement ModuleDefinitionInterface but this try to keep the code uniform
+ * Class ApplicationProvider
+ *
+ * @package Provider
  */
 class ApplicationProvider implements ModuleDefinitionInterface
 {
@@ -78,14 +80,7 @@ class ApplicationProvider implements ModuleDefinitionInterface
      *
      * @param DiInterface $container
      */
-    public function registerAcl(DiInterface $container)
-    {
-        $acl = $container->get('acl');
-
-        // Allow access to error's pages
-        $acl->addComponent('_error', ['NotFound', 'InternalError']);
-        $acl->allow('*', '_error', '*');
-    }
+    public function registerAcl(DiInterface $container) {}
 
     /**
      * Register events related to the module

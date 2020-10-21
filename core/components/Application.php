@@ -142,17 +142,10 @@ final class Application extends \Phalcon\Mvc\Application
      */
     public function registerModulesProvider()
     {
-        if (!$this->container->get('config')->get('applicationType') === 'modules') return;
+        if ($this->container->get('config')->get('applicationType') !== 'modules') return;
 
         foreach ($this->container->get('config')->get('modules') as $moduleName => $module)
         {
-            $this->registerModules([
-                $moduleName => [
-                    'className' => $module->get('className'),
-                    'path' => $module->get('path')
-                ],
-            ], true);
-
             // TODO Adapt regex to use $this->moduleClass
             $moduleNamespace = preg_replace('/\\\Module$/', '', $module->get('className'));
             $modulePath = preg_replace('/\/Module.php$/', '', $module->get('path'));

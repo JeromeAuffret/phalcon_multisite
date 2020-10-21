@@ -132,7 +132,7 @@ class ApplicationHandler
             $this->container->get('eventsManager')
         );
 
-        // Bind boot event to correctly dispatch applications
+        // Bind events to correctly dispatch applications and modules
         $this->application
             ->getEventsManager()
             ->attach('application', new ApplicationMiddleware());

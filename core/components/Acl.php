@@ -43,14 +43,12 @@ final class Acl extends Injectable implements AdapterInterface
      */
     public function getAclComponent(string $moduleName = null, $controllerName = 'index', $actionName = 'index', $params = [])
     {
-        // If no parameters is pass, we use the current dispatcher to define AclComponent
-        if (!$moduleName) {
-            $dispatcher = $this->dispatcher;
-
-            $moduleName = $dispatcher->getModuleName();
-            $controllerName = $dispatcher->getControllerName();
-            $actionName = $dispatcher->getActionName();
-            $params = $dispatcher->getParams();
+        // If no parameters is pass, we use the current router to define AclComponent
+        if ($moduleName === null) {
+            $moduleName = $this->router->getModuleName();
+            $controllerName = $this->router->getControllerName();
+            $actionName = $this->router->getActionName();
+            $params = $this->router->getParams();
         }
 
         return new AclComponent($moduleName, $controllerName, $actionName, $params);
