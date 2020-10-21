@@ -56,10 +56,13 @@ class BaseController extends Controller implements ComponentAware
         $this->dispatchViews();
 
         // Initialise Assets collections
-        if (!$this->view->isDisabled()) {
-            $this->setupAssetsCollection();
-        }
+        $this->setupAssetsCollection();
     }
+
+    /**
+     * Easy access to destroy session in beforeDispatch Middleware
+     */
+    public function _logoutAction() {}
 
     /**
      * If request is ajax we disable views

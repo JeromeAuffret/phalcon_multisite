@@ -3,7 +3,6 @@
 namespace Component;
 
 use Phalcon\Assets\Collection;
-use Phalcon\Mvc\Dispatcher;
 
 /**
  * Class View

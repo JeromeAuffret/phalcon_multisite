@@ -32,14 +32,7 @@ class LoginController extends ControllerBase
      */
     public function indexAction()
     {
-        if ($this->request->isGet() && $this->session->hasUser())
-        {
-            // We destroy session on login page.
-            $this->session->destroy();
-        }
-
-        // Register User
-        else if ($this->request->isPost()) //  && $this->security->checkToken()
+        if ($this->request->isPost())
         {
             $login = $this->request->getPost('login');
             $password = $this->request->getPost('password');

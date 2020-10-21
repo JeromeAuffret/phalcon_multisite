@@ -61,10 +61,14 @@ class AclComponent implements ComponentAware
     {
         $container = Di::getDefault();
 
-        if ($container->get('config')->get('applicationType') === 'modules') {
-            $this->componentName = $controllerName === 'error' ? '_error' : $moduleName.'_'.$controllerName;
-        } elseif ($container->get('config')->get('applicationType') === 'simple') {
-            $this->componentName = $controllerName === 'error' ? '_error' : $controllerName;
+        if ($controllerName === 'error') {
+            $this->componentName = '_error';
+        }
+        elseif ($container->get('config')->get('applicationType') === 'modules') {
+            $this->componentName = $moduleName.'_'.$controllerName;
+        }
+        elseif ($container->get('config')->get('applicationType') === 'simple') {
+            $this->componentName = $controllerName;
         }
 
         $this->moduleName = $moduleName;

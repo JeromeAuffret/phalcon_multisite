@@ -17,17 +17,17 @@ class ControllerBase extends BaseController
     /* @var BaseModel $model */
     protected $model;
 
-    /* @var string $model_name */
-    protected $model_name;
+    /* @var string $modelName */
+    protected $modelName;
 
-    /* @var ModelInterface $model_namespace */
-    protected $model_namespace;
+    /* @var ModelInterface $modelNamespace */
+    protected $modelNamespace;
 
-    /* @var string $primary_key */
-    protected $primary_key = 'id';
+    /* @var string $primaryKey */
+    protected $primaryKey = 'id';
 
-    /* @var mixed $primary_value */
-    protected $primary_value;
+    /* @var mixed $primaryValue */
+    protected $primaryValue;
 
     /* @var array $parameters */
     protected $parameters = [];
@@ -57,11 +57,11 @@ class ControllerBase extends BaseController
         unset($params['reference']);
 
         if (isset($params[0])) {
-            $this->primary_value = intval($params[0]) ?: null;
+            $this->primaryValue = intval($params[0]) ?: null;
             unset($params[0]);
         }
         else {
-            $this->primary_value = null;
+            $this->primaryValue = null;
         }
 
         foreach ($params as $param) {
@@ -75,19 +75,19 @@ class ControllerBase extends BaseController
      */
     protected function instantiateModel()
     {
-        $this->model_name = Str::camelize($this->reference);
-        $this->model_namespace = $this->application->dispatchNamespace($this->model_name, 'Models');
+        $this->modelName = Str::camelize($this->reference);
+        $this->modelNamespace = $this->dispatcher->dispatchNamespace($this->modelName, 'Models');
 
-        if ($this->model_namespace)
+        if ($this->modelNamespace)
         {
-            if ($this->primary_value) {
-                $this->model = $this->model_namespace::findFirst($this->primary_key.' = '.$this->primary_value);
+            if ($this->primaryValue) {
+                $this->model = $this->modelNamespace::findFirst($this->primaryKey.' = '.$this->primaryValue);
             } else {
-                $this->model = new $this->model_namespace();
+                $this->model = new $this->modelNamespace();
             }
         }
 
-        if (!$this->model_namespace || !$this->model) {
+        if (!$this->modelNamespace || !$this->model) {
             throw new Exception('Not Found', 1);
         }
     }

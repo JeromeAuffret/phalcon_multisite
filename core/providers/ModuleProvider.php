@@ -6,7 +6,11 @@ use Phalcon\Collection;
 use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 
-
+/**
+ * Class ModuleProvider
+ *
+ * @package Provider
+ */
 class ModuleProvider implements ModuleDefinitionInterface
 {
     /**
@@ -39,6 +43,14 @@ class ModuleProvider implements ModuleDefinitionInterface
     protected $defaultAction;
 
     /**
+     * Initialize module providers.
+     * This register specific namespaces and services for a module.
+     *
+     * Keep in mind that each module's autoloader and services are registered in application initialisation (except for events)
+     * This allow to use classes or check ACL access or whatever you need to do from another module.
+     *
+     * registerAutoloaders and registerServices are call internally by phalcon on module registration.
+     *
      * @param DiInterface|null $container
      * @param string|null $moduleName
      */
@@ -47,25 +59,33 @@ class ModuleProvider implements ModuleDefinitionInterface
         $this->moduleName = $moduleName;
 
         $config = $container->get('config');
+        $application = $container->get('application');
 
         $this->moduleDefinition = $config->get('modules')->get($moduleName);
         $this->controllerNamespace = preg_replace('/Module$/', 'Controllers', $this->moduleDefinition->get('className'));
         $this->defaultController = $this->moduleDefinition->get('defaultController') ?? $config->get('defaultController');
         $this->defaultAction = $this->moduleDefinition->get('defaultAction') ?? $config->get('defaultController');
 
+        $application->registerModules([
+            $moduleName => [
+                'className' => $this->moduleDefinition->get('className'),
+                'path' => $this->moduleDefinition->get('path')
+            ],
+        ], true);
+
         $this->registerRouter($container);
         $this->registerAcl($container);
     }
 
     /**
-     *  Registers an autoloader related to the module
+     * Registers an autoloader related to the module
      *
      * @param DiInterface|null $container
      */
     public function registerAutoloaders(DiInterface $container = null) {}
 
     /**
-     *  Registers services related to the module
+     * Registers services related to the module
      *
      * @param DiInterface $container
      */
@@ -125,45 +145,6 @@ class ModuleProvider implements ModuleDefinitionInterface
      *
      * @param DiInterface $container
      */
-    public function registerEvents(DiInterface $container)
-    {
-        // Register events in dispatcher service
-        $container->get('dispatcher')
-            ->getEventsManager()
-            ->attach('dispatch:beforeDispatch', function () use ($container) {
-                $this->dispatchController($container);
-            });
-    }
-
-    /**
-     * Register correct controller in dispatcher
-     * @param DiInterface $container
-     */
-    private function dispatchController(DiInterface $container)
-    {
-        $dispatcher = $container->get('dispatcher');
-        $application = $container->get('application');
-
-        $moduleName = $dispatcher->getModuleName();
-        $controllerClass = explode('\\', $dispatcher->getControllerClass());
-        $controllerFile = end($controllerClass).'.php';
-
-        if (end($controllerClass) === 'ErrorController') {
-            $dispatcher->setNamespaceName('Controllers');
-        }
-        else {
-            $appControllerModulePath = $application->getApplicationModulePath($moduleName).'/controllers';
-            $moduleNamespace = $application->getApplicationModuleNamespace($moduleName).'\\'.'Controllers';
-
-            if (file_exists($appControllerModulePath.'/'.$controllerFile))
-            {
-                (new \Phalcon\Loader())
-                    ->registerNamespaces([$moduleNamespace => $appControllerModulePath])
-                    ->register();
-
-                $dispatcher->setNamespaceName($moduleNamespace);
-            }
-        }
-    }
+    public function registerEvents(DiInterface $container) {}
 
 }

@@ -4,15 +4,23 @@ namespace Provider;
 
 use Middleware\Acl as AclMiddleware;
 use Middleware\Auth as AuthMiddleware;
+use Middleware\Dispatch as DispatchMiddleware;
 use Middleware\Error as ErrorMiddleware;
 use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 
-
+/**
+ * Class ApplicationProvider
+ *
+ * @package Provider
+ */
 class ApplicationProvider implements ModuleDefinitionInterface
 {
 
     /**
+     * Initialize application providers.
+     * This register specific namespaces and services for an application.
+     *
      * @param DiInterface|null $container
      */
     public function initialize(DiInterface $container)
@@ -53,16 +61,11 @@ class ApplicationProvider implements ModuleDefinitionInterface
         // Register Application Database
         $container->get('database')->registerApplicationDatabase();
 
-        // Register application specific modules
-        if ($container->get('config')->get('applicationType') === 'modules') {
-            $container->get('application')->registerModulesProvider();
-        }
-        // Set default namespace if simple application
-        else if ($container->get('config')->get('applicationType') === 'simple') {
-            $container->get('dispatcher')->setDefaultNamespace(
-                $container->get('application')->getApplicationNamespace().'\Controllers'
-            );
-        }
+        // Register Application Modules
+        $container->get('application')->registerModulesProvider();
+
+        // Register default namespace
+        $container->get('dispatcher')->registerDefaultNamespace();
     }
 
     /**
@@ -77,14 +80,7 @@ class ApplicationProvider implements ModuleDefinitionInterface
      *
      * @param DiInterface $container
      */
-    public function registerAcl(DiInterface $container)
-    {
-        $acl = $container->get('acl');
-
-        // Allow access to error's pages
-        $acl->addComponent('_error', ['NotFound', 'InternalError']);
-        $acl->allow('*', '_error', '*');
-    }
+    public function registerAcl(DiInterface $container) {}
 
     /**
      * Register events related to the module
@@ -99,18 +95,22 @@ class ApplicationProvider implements ModuleDefinitionInterface
             $container->get('eventsManager')
         );
 
+        // Register events in dispatcher service
         $container->get('dispatcher')
             ->getEventsManager()
-            ->attach('dispatch:beforeExecuteRoute', new AuthMiddleware());
+            ->attach('dispatch', new DispatchMiddleware());
 
         $container->get('dispatcher')
             ->getEventsManager()
-            ->attach("dispatch:beforeExecuteRoute", new AclMiddleware());
+            ->attach('dispatch', new AuthMiddleware());
 
         $container->get('dispatcher')
             ->getEventsManager()
-            ->attach("dispatch:beforeException", new ErrorMiddleware());
+            ->attach("dispatch", new AclMiddleware());
 
+        $container->get('dispatcher')
+            ->getEventsManager()
+            ->attach("dispatch", new ErrorMiddleware());
     }
 
 }
