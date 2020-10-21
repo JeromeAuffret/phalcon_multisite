@@ -26,62 +26,25 @@ final class Acl extends Injectable implements AdapterInterface
 
     /**
      * @param $adapter
-     * @return Acl
      */
     public function setAdapter($adapter)
     {
         $this->adapter = $adapter;
-        return $this;
-    }
-
-    /**
-     * @param string|null $moduleName
-     * @param string $controllerName
-     * @param string $actionName
-     * @param array $params
-     * @return AclComponent
-     */
-    public function getAclComponent(string $moduleName = null, $controllerName = 'index', $actionName = 'index', $params = [])
-    {
-        // If no parameters is pass, we use the current router to define AclComponent
-        if ($moduleName === null) {
-            $moduleName = $this->router->getModuleName();
-            $controllerName = $this->router->getControllerName();
-            $actionName = $this->router->getActionName();
-            $params = $this->router->getParams();
-        }
-
-        return new AclComponent($moduleName, $controllerName, $actionName, $params);
-    }
-
-    /**
-     * Verify is the given components is defined as public
-     *
-     * @param string|null $moduleName
-     * @param string $controllerName
-     * @param string $actionName
-     * @param array $params
-     * @return bool
-     */
-    public function isPublicComponent(string $moduleName = null, $controllerName = 'index', $actionName = 'index', $params = [])
-    {
-        $AclComponent = $this->getAclComponent($moduleName, $controllerName, $actionName, $params);
-        return in_array($AclComponent->getComponentName(), $this->config->get('publicComponents')->getValues());
     }
 
     /**
      * Verify if the current profile is allowed to access a resource from a given module
      *
      * @param string|null $moduleName
-     * @param string $controllerName
-     * @param string $actionName
+     * @param string|null $controllerName
+     * @param string|null $actionName
      * @param array $params
      * @return bool
      */
-    public function userAllowed(string $moduleName = null, $controllerName = 'index', $actionName = 'index', $params = [])
+    public function userAllowed(string $moduleName = null, string $controllerName = null, string $actionName = null, array $params = [])
     {
         // Defined resource
-        $AclComponent = $this->getAclComponent($moduleName, $controllerName, $actionName, $params);
+        $AclComponent = new AclComponent($moduleName, $controllerName, $actionName, $params);
 
         // Prevent verification for public components
         if ($this->isPublicComponent($moduleName, $controllerName, $actionName, $params)) {
@@ -103,6 +66,21 @@ final class Acl extends Injectable implements AdapterInterface
                     $AclComponent->getParams() ?? null
                 );
         }
+    }
+
+    /**
+     * Verify is the given components is defined as public
+     *
+     * @param string|null $moduleName
+     * @param string|null $controllerName
+     * @param string|null $actionName
+     * @param array $params
+     * @return bool
+     */
+    public function isPublicComponent(string $moduleName = null, string $controllerName = null, string $actionName = null, array $params = [])
+    {
+        $AclComponent = new AclComponent($moduleName, $controllerName, $actionName, $params);
+        return in_array($AclComponent->getComponentName(), $this->config->get('publicComponents')->getValues());
     }
 
     /**

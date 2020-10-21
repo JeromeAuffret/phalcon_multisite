@@ -32,19 +32,14 @@ class AclComponent implements ComponentAware
      * @param $actionName
      * @param $params
      */
-    public function __construct($moduleName, $controllerName, $actionName, $params)
+    public function __construct(string $moduleName = null, string $controllerName = null, string $actionName = null, array $params = [])
     {
-        $config = Di::getDefault()->get('config');
+        $dispatcher = Di::getDefault()->get('dispatcher');
 
-        // In case of empty controllerName, we check for specific defaultController in module definition
-        if (!$controllerName) {
-            $controllerName = $config->get('modules')[$moduleName]['defaultController'] ?? $config->defaultController;
-        }
-
-        // In case of empty actionName, we check for specific defaultAction in module definition
-        if (!$actionName) {
-            $actionName = $config->get('modules')[$moduleName]['defaultAction'] ?? $config->defaultAction;
-        }
+        $moduleName = $moduleName ?: $dispatcher->getModuleName();
+        $controllerName = $controllerName ?: $dispatcher->getControllerName();
+        $actionName = $actionName ?: $dispatcher->getActionName();
+        $params = $params ?? $dispatcher->getParams();
 
         $this->initialize($moduleName, $controllerName, $actionName, $params);
     }
@@ -52,12 +47,12 @@ class AclComponent implements ComponentAware
     /**
      * Initialize Acl Component
      *
-     * @param string $moduleName
+     * @param string|null $moduleName
      * @param string $controllerName
      * @param string $actionName
      * @param array $params
      */
-    private function initialize(string $moduleName, string $controllerName, string $actionName, array $params)
+    private function initialize(?string $moduleName, string $controllerName, string $actionName, array $params)
     {
         $container = Di::getDefault();
 

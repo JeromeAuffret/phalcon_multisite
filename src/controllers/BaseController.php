@@ -62,7 +62,7 @@ class BaseController extends Controller implements ComponentAware
     /**
      * Easy access to destroy session in beforeDispatch Middleware
      */
-    public function _logoutAction() {}
+    public function logoutAction() {}
 
     /**
      * If request is ajax we disable views
@@ -77,7 +77,7 @@ class BaseController extends Controller implements ComponentAware
     /**
      * Display maintenance page if defined in config
      */
-    public function displayMaintenancePage()
+    private function displayMaintenancePage()
     {
         if ($this->config->get('maintenance')) {
             $this->view->setMainView('maintenance');
