@@ -2,6 +2,8 @@
 
 namespace Service;
 
+use Middleware\Dispatch as DispatchMiddleware;
+use Middleware\Error as ErrorMiddleware;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
 use Component\Dispatcher as DispatcherComponent;
@@ -21,8 +23,18 @@ class Dispatcher implements ServiceProviderInterface
      */
     public function register(DiInterface $container): void
     {
-        $container->setShared('dispatcher', function () {
-            return new DispatcherComponent();
+        $container->setShared('dispatcher', function () use ($container) {
+            $dispatcher =  new DispatcherComponent();
+
+            // Register core events in dispatcher
+            $eventManager = $container->get('eventsManager');
+
+            $eventManager->attach('dispatch', new DispatchMiddleware);
+            $eventManager->attach("dispatch", new ErrorMiddleware);
+
+            $dispatcher->setEventsManager($eventManager);
+
+            return $dispatcher;
         });
     }
 

@@ -5,7 +5,6 @@ namespace Provider;
 use Middleware\Acl as AclMiddleware;
 use Middleware\Auth as AuthMiddleware;
 use Middleware\Dispatch as DispatchMiddleware;
-use Middleware\Error as ErrorMiddleware;
 use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 
@@ -90,27 +89,10 @@ class ApplicationProvider implements ModuleDefinitionInterface
      */
     public function registerEvents(DiInterface $container)
     {
-        // Register eventsManager in dispatcher service
-        $container->get('dispatcher')->setEventsManager(
-            $container->get('eventsManager')
-        );
+        $eventManager = $container->get('dispatcher')->getEventsManager();
 
-        // Register events in dispatcher service
-        $container->get('dispatcher')
-            ->getEventsManager()
-            ->attach('dispatch', new DispatchMiddleware());
-
-        $container->get('dispatcher')
-            ->getEventsManager()
-            ->attach('dispatch', new AuthMiddleware());
-
-        $container->get('dispatcher')
-            ->getEventsManager()
-            ->attach("dispatch", new AclMiddleware());
-
-        $container->get('dispatcher')
-            ->getEventsManager()
-            ->attach("dispatch", new ErrorMiddleware());
+        $eventManager->attach('dispatch', new AuthMiddleware);
+        $eventManager->attach("dispatch", new AclMiddleware);
     }
 
 }

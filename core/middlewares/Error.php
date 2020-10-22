@@ -2,7 +2,6 @@
 
 namespace Middleware;
 
-use Component\Application;
 use Component\Acl;
 use Component\Config;
 use Component\Session;
@@ -18,7 +17,6 @@ use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
  * Class Error
  *
  * @property Acl    acl
- * @property Application application
  * @property Config config
  * @property Session session
  * @package Middleware
@@ -50,21 +48,12 @@ class Error extends Injectable
             {
                 case DispatchException::EXCEPTION_HANDLER_NOT_FOUND:
                 case DispatchException::EXCEPTION_ACTION_NOT_FOUND:
-                    $this->response->setStatusCode(404, 'Not Found');
-                    $dispatcher->forward([
-                        'namespace'  => 'Controllers',
-                        'controller' => 'error',
-                        'action'     => 'NotFound',
-                    ]);
+                    $this->forwardNotFound();
                     return false;
 
                 case DispatchException::EXCEPTION_INVALID_HANDLER:
                 case DispatchException::EXCEPTION_INVALID_PARAMS:
-                    $dispatcher->forward([
-                        'namespace'  => 'Controllers',
-                        'controller' => 'error',
-                        'action'     => 'InternalError',
-                    ]);
+                    $this->forwardInternalError();
                     return false;
             }
 
@@ -122,6 +111,32 @@ class Error extends Injectable
             $this->response->send();
             exit();
         }
+    }
+
+    /**
+     *
+     */
+    private function forwardNotFound()
+    {
+        $this->response->setStatusCode(404, 'Not Found');
+        $this->dispatcher->forward([
+            'namespace'  => 'Controllers',
+            'controller' => 'error',
+            'action'     => 'NotFound',
+        ]);
+    }
+
+    /**
+     *
+     */
+    private function forwardInternalError()
+    {
+        $this->response->setStatusCode(500, 'Internal Server Error');
+        $this->dispatcher->forward([
+            'namespace'  => 'Controllers',
+            'controller' => 'error',
+            'action'     => 'InternalError',
+        ]);
     }
 
 }

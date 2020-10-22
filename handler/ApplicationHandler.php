@@ -127,15 +127,11 @@ class ApplicationHandler
      */
     public function registerApplicationEvents()
     {
-        // Register eventsManager
-        $this->application->setEventsManager(
-            $this->container->get('eventsManager')
-        );
+        $eventsManager = $this->container->get('eventsManager');
 
-        // Bind events to correctly dispatch applications and modules
-        $this->application
-            ->getEventsManager()
-            ->attach('application', new ApplicationMiddleware());
+        $eventsManager->attach('application', new ApplicationMiddleware);
+
+        $this->application->setEventsManager($eventsManager);
     }
 
 }
