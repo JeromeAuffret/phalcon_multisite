@@ -5,11 +5,7 @@ namespace Demo2;
 use Phalcon\Di\DiInterface;
 use Provider\ApplicationProvider;
 
-/**
- * Class Application
- *
- * @package Demo2
- */
+
 class Application extends ApplicationProvider
 {
 
