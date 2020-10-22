@@ -24,21 +24,14 @@ class Router implements ServiceProviderInterface
             $router =  new \Phalcon\Mvc\Router();
 
             $config = $container->get('config');
+            $application = $container->get('application');
 
-            if ($config->get('applicationType') === 'modules') {
-                $moduleName = $config->get('defaultModule');
-                $router->setDefaultModule($moduleName);
+            // TODO this should be refactored in a RouterComponent
+            $defaultNamespace = $application->hasApplication() ? $application->getApplicationNamespace() : $application->getCommonNamespace();
 
-                $controllerName = $config->get('modules')[$moduleName]['defaultController'] ?? $config->defaultController;
-                $actionName = $config->get('modules')[$moduleName]['defaultAction'] ?? $config->defaultAction;
-            }
-            else {
-                $controllerName = $config->defaultController;
-                $actionName = $config->defaultAction;
-            }
-
-            $router->setDefaultController($controllerName);
-            $router->setDefaultAction($actionName);
+            $router->setDefaultNamespace($defaultNamespace.'\\Controllers');
+            $router->setDefaultController($config->defaultController);
+            $router->setDefaultAction($config->defaultAction);
 
             return $router;
         });

@@ -61,9 +61,6 @@ class ApplicationProvider implements ModuleDefinitionInterface
 
         // Register Application Modules
         $container->get('application')->registerModulesProvider();
-
-        // Register default namespace
-        $container->get('dispatcher')->registerDefaultNamespace();
     }
 
     /**
