@@ -7,7 +7,6 @@ use Component\Application;
 use Component\Config;
 use Component\Session;
 use Component\View;
-use Phalcon\Acl\ComponentAware;
 use Phalcon\Assets\Filters\Cssmin;
 use Phalcon\Assets\Filters\Jsmin;
 use Phalcon\Db\Adapter\AdapterInterface;
@@ -25,10 +24,8 @@ use Phalcon\Mvc\Dispatcher;
  * @property AdapterInterface main_db
  * @package Controllers
  */
-class BaseController extends Controller implements ComponentAware
+class BaseController extends Controller
 {
-    // ResourceAware implementation
-    protected $component_name;
 
     /************************************************************
      *
@@ -48,9 +45,6 @@ class BaseController extends Controller implements ComponentAware
 
         // Display maintenance page if defined in config
         $this->displayMaintenancePage();
-
-        // Defined controller as Acl Resource
-        $this->setComponentName();
 
         // Dispatch views directories
         $this->dispatchViews();
@@ -82,33 +76,6 @@ class BaseController extends Controller implements ComponentAware
         if ($this->config->get('maintenance')) {
             $this->view->setMainView('maintenance');
         }
-    }
-
-
-    /************************************************************
-     *
-     *                      COMPONENT AWARE
-     *
-     ************************************************************/
-
-    /**
-     * Set component name with pattern {module}_{controller}_{action}
-     */
-    public function setComponentName()
-    {
-        if ($this->config->get('applicationType') === 'modules') {
-            $this->component_name = $this->dispatcher->getModuleName().'_'.$this->dispatcher->getControllerName().'_'.$this->dispatcher->getActionName();
-        } elseif ($this->config->get('applicationType') === 'simple') {
-            $this->component_name = $this->dispatcher->getControllerName().'_'.$this->dispatcher->getActionName();
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function getComponentName(): string
-    {
-        return $this->component_name;
     }
 
 
