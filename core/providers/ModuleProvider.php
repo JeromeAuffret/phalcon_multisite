@@ -99,12 +99,6 @@ class ModuleProvider implements ModuleDefinitionInterface
     public function registerRouter(DiInterface $container)
     {
         $router = $container->get('router');
-        $config = $container->get('config');
-
-        // Register default module in router
-        $router->setDefaultModule(
-            $config->get('defaultModule')
-        );
 
         // Register a generic routing for modules
         $router->add('/'.$this->moduleName.'/:params', [
