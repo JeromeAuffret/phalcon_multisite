@@ -20,8 +20,27 @@ class Router implements ServiceProviderInterface
      */
     public function register(DiInterface $container): void
     {
-        $container->setShared('router', function () {
-            return new \Phalcon\Mvc\Router();
+        $container->setShared('router', function () use ($container) {
+            $router =  new \Phalcon\Mvc\Router();
+
+            $config = $container->get('config');
+
+            if ($config->get('applicationType') === 'modules') {
+                $moduleName = $config->get('defaultModule');
+                $router->setDefaultModule($moduleName);
+
+                $controllerName = $config->get('modules')[$moduleName]['defaultController'] ?? $config->defaultController;
+                $actionName = $config->get('modules')[$moduleName]['defaultAction'] ?? $config->defaultAction;
+            }
+            else {
+                $controllerName = $config->defaultController;
+                $actionName = $config->defaultAction;
+            }
+
+            $router->setDefaultController($controllerName);
+            $router->setDefaultAction($actionName);
+
+            return $router;
         });
     }
 

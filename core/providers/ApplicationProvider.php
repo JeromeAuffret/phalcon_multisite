@@ -4,7 +4,6 @@ namespace Provider;
 
 use Middleware\Acl as AclMiddleware;
 use Middleware\Auth as AuthMiddleware;
-use Middleware\Dispatch as DispatchMiddleware;
 use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 
@@ -82,8 +81,7 @@ class ApplicationProvider implements ModuleDefinitionInterface
     public function registerAcl(DiInterface $container) {}
 
     /**
-     * Register events related to the module
-     * Events are only bind when module is dispatch
+     * Register events related to the application
      *
      * @param DiInterface $container
      */
