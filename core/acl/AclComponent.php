@@ -12,24 +12,51 @@ use Phalcon\Di;
  */
 class AclComponent implements ComponentAware
 {
+    /**
+     * @var string
+     */
     protected $componentName;
 
+    /**
+     * @var string
+     */
     protected $moduleName;
 
+    /**
+     * @var string
+     */
     protected $controllerName;
 
+    /**
+     * @var String
+     */
     protected $actionName;
 
+    /**
+     * @var array
+     */
     protected $params;
 
+    /**
+     * @var string
+     */
     protected $requestMethod;
 
+    /**
+     * @var array
+     */
     protected $requestQuery;
 
+    /**
+     * @var array
+     */
     protected $requestPost;
 
     /**
      * AclComponent constructor.
+     *
+     * In case of empty controllerName or actionName,
+     * we get default in module definition or in global configuration
      *
      * @param string|null $moduleName
      * @param string|null $controllerName
@@ -40,12 +67,10 @@ class AclComponent implements ComponentAware
     {
         $config = Di::getDefault()->get('config');
 
-        // In case of empty controllerName, we check for specific defaultController in module definition
         if (!$controllerName) {
             $controllerName = $config->get('modules')[$moduleName]['defaultController'] ?? $config->defaultController;
         }
 
-        // In case of empty actionName, we check for specific defaultAction in module definition
         if (!$actionName) {
             $actionName = $config->get('modules')[$moduleName]['defaultAction'] ?? $config->defaultAction;
         }
@@ -64,14 +89,16 @@ class AclComponent implements ComponentAware
     private function initialize(?string $moduleName, string $controllerName, string $actionName, array $params)
     {
         $container = Di::getDefault();
+        $config = $container->get('config');
+        $request = $container->get('request');
 
         if ($controllerName === 'error') {
             $this->componentName = '_error';
         }
-        elseif ($container->get('config')->get('applicationType') === 'modules') {
+        elseif ($config->get('applicationType') === 'modules') {
             $this->componentName = $moduleName.'_'.$controllerName;
         }
-        elseif ($container->get('config')->get('applicationType') === 'simple') {
+        elseif ($config->get('applicationType') === 'simple') {
             $this->componentName = $controllerName;
         }
 
@@ -83,15 +110,15 @@ class AclComponent implements ComponentAware
 
         $this->params = $params;
 
-        $this->requestMethod = $container->get('request')->getMethod();
+        $this->requestMethod = $request->getMethod();
 
-        $this->requestQuery = $container->get('request')->getQuery();
+        $this->requestQuery = $request->getQuery();
 
-        $this->requestPost = $container->get('request')->getPost();
+        $this->requestPost = $request->getPost();
     }
 
     /**
-     * Verify is the given components is defined as public
+     * Verify if the given components is defined as public
      *
      * @return bool
      */

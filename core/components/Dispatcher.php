@@ -11,14 +11,13 @@ use Phalcon\Helper\Str;
  */
 final class Dispatcher extends \Phalcon\Mvc\Dispatcher
 {
+
     /**
      * Register default namespace to be dispatch on empty routes
      */
     public function registerDefaultNamespace()
     {
-        /** @var Application $application */
         $application = $this->getDI()->get('application');
-        /** @var Config $config */
         $config = $this->getDI()->get('config');
 
         // Register application specific modules and set default namespace as default module namespace
@@ -52,7 +51,6 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
     {
         if (!class_exists($this->getControllerClass())) return;
 
-        /** @var Application $application */
         $application = $this->getDI()->get('application');
 
         $controllerClass = $this->getControllerClass();
@@ -62,9 +60,12 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
         if (substr($controllerPath, -strlen('ErrorController')) === 'ErrorController') {
             $this->setNamespaceName('Controllers');
         }
-
+        // Prevent dispatching controller if no application is registered
+        elseif (!$application->hasApplication()) {
+            return;
+        }
         // If controller is part of common namespace we check if override exist in application folder
-        else if (substr($controllerClass, 0, strlen($application->getCommonNamespace())) === $application->getCommonNamespace())
+        elseif (substr($controllerClass, 0, strlen($application->getCommonNamespace())) === $application->getCommonNamespace())
         {
             $overridePath = str_replace($application->getCommonPath(), $application->getApplicationPath(), $controllerPath);
 
@@ -90,9 +91,7 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
      */
     public function dispatchNamespace(string $className, string $baseNamespace = '')
     {
-        /** @var Application $application */
         $application = $this->getDI()->get('application');
-        /** @var Config $config */
         $config = $this->getDI()->get('config');
 
         $basePath = $this->buildNamespacePath($baseNamespace);
