@@ -17,7 +17,6 @@ class LoginController extends ControllerBase
      */
     public function initialize()
     {
-        // The login page does not use layout level
         $this->view->disableLevel(
             View::LEVEL_LAYOUT
         );
