@@ -49,15 +49,7 @@ final class Session extends SessionManager
     public function setupUserRole()
     {
         $role = Role::getUserRole();
-
-        $this->setAclRole(
-            new AclUserRole (
-                $role ? $role->getSlug() : 'guest',
-                $this->getUser('id'),
-                $this->getUser('login'),
-                $this->getApplication('id')
-            )
-        );
+        $this->setAclRole($role ? $role->getSlug() : 'guest');
     }
 
     /**
@@ -70,7 +62,7 @@ final class Session extends SessionManager
     {
         if (!$key)
             return $this->get('user');
-        else if ($this->hasUser() && $this->get('user')->has($key))
+        elseif ($this->hasUser() && $this->get('user')->has($key))
             return $this->get('user')->get($key);
         else
             return null;
@@ -138,7 +130,7 @@ final class Session extends SessionManager
     {
         if (!$key)
             return $this->get('application');
-        else if ($this->hasApplication() && $this->get('application')->has($key))
+        elseif ($this->hasApplication() && $this->get('application')->has($key))
             return $this->get('application')->get($key);
         else
             return null;
@@ -180,20 +172,19 @@ final class Session extends SessionManager
      */
     public function getAclRole(): ?AclUserRole
     {
-        return $this->hasAclRole()
-            ? $this->get('acl_role')
-            : new AclUserRole(
-                'guest',
-                $this->getUser('id'),
-                $this->getUser('login'),
-                $this->getApplication('id')
-            );
+        $aclRole = $this->hasAclRole() ? $this->get('acl_role') : 'guest';
+        return new AclUserRole(
+            $aclRole,
+            $this->getUser('id'),
+            $this->getUser('login'),
+            $this->getApplication('id')
+        );
     }
 
     /**
-     * @param AclUserRole $aclRole
+     * @param string $aclRole
      */
-    public function setAclRole(AclUserRole $aclRole)
+    public function setAclRole(string $aclRole)
     {
         $this->set('acl_role', $aclRole);
     }

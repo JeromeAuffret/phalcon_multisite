@@ -178,7 +178,7 @@ class Role extends BaseModel
     /**
      * @return bool|ModelInterface
      */
-    public static function getUserRole()
+    public static function getUserRole(): ?Role
     {
         $session = Di::getDefault()->get('session');
 
