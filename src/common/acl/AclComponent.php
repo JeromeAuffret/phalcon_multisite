@@ -1,6 +1,6 @@
 <?php
 
-namespace Acl;
+namespace Common\Acl;
 
 use Phalcon\Acl\ComponentAware;
 use Phalcon\Di;

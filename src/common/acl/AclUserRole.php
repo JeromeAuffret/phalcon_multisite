@@ -1,6 +1,6 @@
 <?php
 
-namespace Acl;
+namespace Common\Acl;
 
 use Phalcon\Acl\RoleAware;
 use Phalcon\Collection;
@@ -22,7 +22,7 @@ class AclUserRole implements RoleAware
 
     protected $userLogin;
 
-    protected $parameters;
+    protected $superAdmin;
 
     /**
      * AclUserRole constructor.
@@ -31,19 +31,16 @@ class AclUserRole implements RoleAware
      * @param int|null    $userId
      * @param string|null $userLogin
      * @param int|null    $applicationId
-     * @param bool        $noAdmin
-     * @param array       $parameters
      */
-    public function __construct($role_name = 'guest', $userId = null, $userLogin = null, $applicationId = null, $noAdmin = false, array $parameters = [])
+    public function __construct($role_name = 'guest', $userId = null, $userLogin = null, $applicationId = null)
     {
         $this->roleName      = $role_name;
         $this->userId        = $userId;
         $this->userLogin     = $userLogin;
         $this->applicationId = $applicationId;
-        $this->parameters    = new Collection($parameters);
 
-        if (!$noAdmin && $this->loginIsSuperAdmin()) {
-            $this->setParameters('superAdmin', true);
+        if ($this->loginIsSuperAdmin()) {
+            $this->superAdmin = true;
         }
     }
 
@@ -52,7 +49,7 @@ class AclUserRole implements RoleAware
      */
     public function isSuperAdmin(): bool
     {
-        return $this->getParameters('superAdmin', false);
+        return !!$this->superAdmin;
     }
 
     /**
@@ -93,29 +90,6 @@ class AclUserRole implements RoleAware
     public function getIdApplication(): ?int
     {
         return $this->applicationId;
-    }
-
-    /**
-     * @param string|null $key
-     * @param null $default
-     * @return Collection|mixed
-     */
-    public function getParameters(?string $key = null, $default = null)
-    {
-        if ($key) {
-            return $this->parameters->get($key, $default);
-        } else {
-            return $this->parameters;
-        }
-    }
-
-    /**
-     * @param string $key
-     * @param $value
-     */
-    public function setParameters(string $key, $value)
-    {
-        $this->parameters->set($key, $value);
     }
 
 }

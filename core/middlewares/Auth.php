@@ -35,7 +35,8 @@ class Auth extends Injectable
         $actionName = $this->router->getActionName();
         $params = $this->router->getParams();
 
-        $AclComponent = new AclComponent($moduleName, $controllerName, $actionName, $params);
+        $aclComponentClass = $this->dispatcher->dispatchNamespace('AclComponent', 'Acl');
+        $AclComponent = new $aclComponentClass($moduleName, $controllerName, $actionName, $params);
 
         // Allow access to public components
         if ($AclComponent->isPublicComponent()) {

@@ -170,10 +170,11 @@ final class Session extends SessionManager
     /**
      * @return AclUserRole
      */
-    public function getAclRole(): ?AclUserRole
+    public function getAclRole()
     {
+        $aclRoleClass = $this->getDI()->get('dispatcher')->dispatchNamespace('AclUserRole', 'Acl');
         $aclRole = $this->hasAclRole() ? $this->get('acl_role') : 'guest';
-        return new AclUserRole(
+        return new $aclRoleClass(
             $aclRole,
             $this->getUser('id'),
             $this->getUser('login'),

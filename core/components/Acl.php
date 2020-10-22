@@ -2,8 +2,6 @@
 
 namespace Component;
 
-use Acl\AclComponent;
-use Acl\AclUserRole;
 use Phalcon\Acl\ComponentInterface;
 use Phalcon\Acl\RoleInterface;
 use Phalcon\Acl\Adapter\AbstractAdapter;
@@ -43,7 +41,8 @@ final class Acl extends Injectable implements AdapterInterface
     public function userAllowed(string $moduleName = null, string $controllerName = null, string $actionName = null, array $params = [])
     {
         // Defined resource
-        $AclComponent = new AclComponent($moduleName, $controllerName, $actionName, $params);
+        $aclComponentClass = $this->dispatcher->dispatchNamespace('AclComponent', 'Acl');
+        $AclComponent = new $aclComponentClass($moduleName, $controllerName, $actionName, $params);
 
         // Prevent verification for public components
         if ($AclComponent->isPublicComponent()) {
@@ -53,6 +52,7 @@ final class Acl extends Injectable implements AdapterInterface
         elseif ($this->isSuperAdmin()) {
             return $this->isComponent($AclComponent->getComponentName());
         }
+        // Check if acl is valid and resolve permission
         else {
             return
                 $this->roleIsRegistered()
@@ -88,7 +88,7 @@ final class Acl extends Injectable implements AdapterInterface
     /**
      * @return AclUserRole
      */
-    public function getUserRole(): AclUserRole
+    public function getUserRole()
     {
         return $this->session->getAclRole();
     }

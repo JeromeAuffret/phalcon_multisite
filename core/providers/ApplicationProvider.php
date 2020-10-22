@@ -37,11 +37,15 @@ class ApplicationProvider implements ModuleDefinitionInterface
      */
     public function registerAutoloaders(DiInterface $container = null)
     {
+        $commonPath = $container->get('application')->getCommonPath();
+
         (new \Phalcon\Loader())
             ->registerNamespaces([
                 'Controllers' => BASE_PATH . '/src/controllers',
                 'Models'      => BASE_PATH . '/src/models',
-                'Forms'       => BASE_PATH . '/src/forms'
+                'Forms'       => BASE_PATH . '/src/forms',
+
+                'Common\\Acl' => $commonPath . '/acl'
             ])
             ->register();
     }
