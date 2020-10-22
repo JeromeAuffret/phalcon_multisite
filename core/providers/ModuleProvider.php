@@ -22,6 +22,11 @@ class ModuleProvider implements ModuleDefinitionInterface
      * @var string
      */
     protected $moduleName;
+
+    /**
+     * @var string
+     */
+    protected $moduleNamespace;
     /**
      * @var string
      */
@@ -62,7 +67,8 @@ class ModuleProvider implements ModuleDefinitionInterface
         $application = $container->get('application');
 
         $this->moduleDefinition = $config->get('modules')->get($moduleName);
-        $this->controllerNamespace = preg_replace('/Module$/', 'Controllers', $this->moduleDefinition->get('className'));
+        $this->moduleNamespace = preg_replace('/\\\Module$/', '', $this->moduleDefinition->get('className'));
+        $this->controllerNamespace = $this->moduleNamespace.'\\Controllers';
         $this->defaultController = $this->moduleDefinition->get('defaultController') ?? $config->get('defaultController');
         $this->defaultAction = $this->moduleDefinition->get('defaultAction') ?? $config->get('defaultController');
 
@@ -72,6 +78,17 @@ class ModuleProvider implements ModuleDefinitionInterface
                 'path' => $this->moduleDefinition->get('path')
             ],
         ], true);
+
+        // TODO this should be refactored in a RouterComponent
+        if ($config->get('defaultModule') === $moduleName)
+        {
+            $router = $container->get('router');
+
+            $router->setDefaultModule($moduleName);
+            $router->setDefaultNamespace($this->controllerNamespace);
+            $router->setDefaultController($this->defaultController);
+            $router->setDefaultAction($this->defaultAction);
+        }
 
         $this->registerRouter($container);
         $this->registerAcl($container);

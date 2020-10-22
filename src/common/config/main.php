@@ -15,7 +15,7 @@ return [
     'baseUri'    => $baseUri,
     'requestUri' => $requestUri,
 
-    'defaultModule'     => 'admin',
+    'defaultModule'     => 'auth',
     'defaultController' => 'index',
     'defaultAction'     => 'index',
 
