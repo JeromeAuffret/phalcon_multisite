@@ -86,7 +86,7 @@ final class Acl extends Injectable implements AdapterInterface
     }
 
     /**
-     * @return AclUserRole
+     * @return object
      */
     public function getUserRole()
     {
