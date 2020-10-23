@@ -3,7 +3,6 @@
 namespace Common\Acl;
 
 use Phalcon\Acl\RoleAware;
-use Phalcon\Collection;
 
 /**
  * Class AclUserRole
@@ -12,17 +11,35 @@ use Phalcon\Collection;
  */
 class AclUserRole implements RoleAware
 {
+    /**
+     * @var string[]
+     */
     private $super_admin = ['admin'];
 
+    /**
+     * @var int|null
+     */
     protected $userId;
 
+    /**
+     * @var string
+     */
     protected $roleName;
 
+    /**
+     * @var int|null
+     */
     protected $applicationId;
 
+    /**
+     * @var string|null
+     */
     protected $userLogin;
 
-    protected $superAdmin;
+    /**
+     * @var bool
+     */
+    protected $superAdmin = false;
 
     /**
      * AclUserRole constructor.
