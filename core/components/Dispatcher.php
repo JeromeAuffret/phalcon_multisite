@@ -3,6 +3,7 @@
 namespace Component;
 
 use Phalcon\Helper\Str;
+use ReflectionException;
 
 /**
  * Class Dispatcher
@@ -16,7 +17,7 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
      * Register correct controller namespace in dispatcher
      * Override common class if exist in application folder
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function dispatchControllers()
     {
@@ -37,7 +38,7 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
      *
      * @param string $classNamespace
      * @return string
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function dispatchNamespace(string $classNamespace)
     {

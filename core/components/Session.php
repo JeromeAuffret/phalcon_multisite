@@ -174,6 +174,7 @@ final class Session extends SessionManager
     {
         $aclRoleClass = $this->getDI()->get('dispatcher')->dispatchNamespace(AclUserRole::class);
         $aclRole = $this->hasAclRole() ? $this->get('acl_role') : 'guest';
+
         return new $aclRoleClass(
             $aclRole,
             $this->getUser('id'),

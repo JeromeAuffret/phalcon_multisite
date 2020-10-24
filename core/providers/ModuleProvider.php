@@ -49,12 +49,12 @@ class ModuleProvider implements ModuleDefinitionInterface
 
     /**
      * Initialize module providers.
-     * This register specific namespaces and services for a module.
+     * Register a module in application service
+     * Register specific namespaces and services for a module
      *
-     * Keep in mind that each module's autoloader and services are registered in application initialisation (except for events)
-     * This allow to use classes or check ACL access or whatever you need to do from another module.
+     * Events are registered in afterModuleStart event ( ref : Application Middleware )
      *
-     * registerAutoloaders and registerServices are call internally by phalcon on module registration.
+     * `registerAutoloaders and registerServices are call internally by phalcon on registerModules`
      *
      * @param DiInterface|null $container
      * @param string|null $moduleName
