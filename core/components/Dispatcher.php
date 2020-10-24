@@ -42,21 +42,22 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
     public function dispatchNamespace(string $classNamespace)
     {
         $application = $this->getDI()->get('application');
+        $commonNamespace = $application->getCommonNamespace();
 
         // Prevent dispatching controller if no application is registered
         if (!$application->hasApplication()) {
             return $classNamespace;
         }
 
-        // If controller is part of common namespace we check if override exist in application folder
-        if (substr($classNamespace, 0, strlen($application->getCommonNamespace())) === $application->getCommonNamespace())
+        // If namespace is part of common, we check if override exist in application folder
+        if (substr($classNamespace, 0, strlen($commonNamespace)) === $commonNamespace)
         {
             $classPath = (new \ReflectionClass($classNamespace))->getFileName();
             $overridePath = str_replace($application->getCommonPath(), $application->getApplicationPath(), $classPath);
 
             if (file_exists($overridePath))
             {
-                $classNamespace = str_replace($application->getCommonNamespace(), $application->getApplicationNamespace(), $classNamespace);
+                $classNamespace = str_replace($commonNamespace, $application->getApplicationNamespace(), $classNamespace);
 
                 (new \Phalcon\Loader())
                     ->registerClasses([$classNamespace => $overridePath])
@@ -64,9 +65,43 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
             }
         }
 
-
         return $classNamespace;
-    }6
+    }
+
+    /**
+     * Helper method to dispatch a namespace between common and application folder
+     *
+     * @param string $classPath
+     * @return string
+     */
+    public function dispatchPath(string $classPath)
+    {
+        $application = $this->getDI()->get('application');
+        $commonPath = $application->getCommonPath();
+
+        // Prevent dispatching controller if no application is registered
+        if (!$application->hasApplication()) {
+            return $classPath;
+        }
+
+        // If path is part of common, we check if override exist in application folder
+        if (substr($classPath, 0, strlen($commonPath)) === $application->$commonPath())
+        {
+            $overridePath = str_replace($commonPath, $application->getApplicationPath(), $classPath);
+
+            if (file_exists($overridePath))
+            {
+                $classPath = $overridePath;
+                $classNamespace = $this->parseNamespaceFromFilePath($classPath);
+
+                (new \Phalcon\Loader())
+                    ->registerClasses([$classNamespace => $overridePath])
+                    ->register();
+            }
+        }
+
+        return $classPath;
+    }
 
     /**
      * Helper method to dispatch a class between common and application folder
@@ -132,6 +167,52 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
             if (!empty($namespace_folder)) $namespacePath[] = Str::uncamelize($namespace_folder, '_');
         }
         return implode('/', $namespacePath);
+    }
+
+    /**
+     * Parse the complete file namespace by reading class header
+     *
+     * https://stackoverflow.com/questions/7153000/get-class-name-from-file
+     * @param $filePath
+     * @return string
+     */
+    private function parseNamespaceFromFilePath($filePath)
+    {
+        $fp = fopen($filePath, 'r');
+        $class = $namespace = $buffer = '';
+        $i = 0;
+
+        while (!$class)
+        {
+            if (feof($fp)) break;
+
+            $buffer .= fread($fp, 512);
+            $tokens = token_get_all($buffer);
+
+            if (strpos($buffer, '{') === false) continue;
+
+            for (;$i<count($tokens);$i++) {
+                if ($tokens[$i][0] === T_NAMESPACE) {
+                    for ($j=$i+1;$j<count($tokens); $j++) {
+                        if ($tokens[$j][0] === T_STRING) {
+                            $namespace .= '\\'.$tokens[$j][1];
+                        } else if ($tokens[$j] === '{' || $tokens[$j] === ';') {
+                            break;
+                        }
+                    }
+                }
+
+                if ($tokens[$i][0] === T_CLASS) {
+                    for ($j=$i+1;$j<count($tokens);$j++) {
+                        if ($tokens[$j] === '{') {
+                            $class = $tokens[$i+2][1];
+                        }
+                    }
+                }
+            }
+        }
+
+        return $namespace.'\\'.$class;
     }
 
 }
