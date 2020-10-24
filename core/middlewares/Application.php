@@ -22,7 +22,7 @@ class Application extends Injectable
 
     /**
      * Dispatch applications on MVC boot event
-     * Register Common applicationProvider by default
+     * Register common's applicationProvider by default
      *
      * @param Event                $event
      * @param ApplicationComponent $application
@@ -60,6 +60,13 @@ class Application extends Injectable
 
         $moduleClass->registerEvents($this->getDI());
     }
+
+
+    /*************************************************************
+     *
+     *                     DISPATCH APPLICATIONS
+     *
+     *************************************************************/
 
     /**
      * Setup application if defined in session
