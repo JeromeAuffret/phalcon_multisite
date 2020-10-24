@@ -21,7 +21,8 @@ class Application extends Injectable
 {
 
     /**
-     * Dispatch apps when the application handles its first request
+     * Dispatch applications on MVC boot event
+     * Register Common applicationProvider by default
      *
      * @param Event                $event
      * @param ApplicationComponent $application
@@ -36,13 +37,13 @@ class Application extends Injectable
         $this->dispatchApplicationByHash();
 
         // Register common provider if no application is defined
-        if (!$this->application->hasApplication()) {
-            $this->application->registerCommonProvider();
+        if (!$application->hasApplication()) {
+            $application->registerCommonProvider();
         }
     }
 
     /**
-     * Register specific module events based on router
+     * Register specific module events from moduleProvider
      *
      * @param Event $event
      * @param ApplicationComponent $application
@@ -51,15 +52,13 @@ class Application extends Injectable
      */
     public function afterStartModule(Event $event, ApplicationComponent $application)
     {
-        $di = $this->getDI();
-
-        $moduleName = $di->get('router')->getModuleName();
+        $moduleName = $this->router->getModuleName();
         $module = $application->getModule($moduleName);
 
         $moduleClass = $module['className'];
         $moduleClass = new $moduleClass;
 
-        $moduleClass->registerEvents($di);
+        $moduleClass->registerEvents($this->getDI());
     }
 
     /**
