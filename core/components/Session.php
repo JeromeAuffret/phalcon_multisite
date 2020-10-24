@@ -2,7 +2,7 @@
 
 namespace Component;
 
-use Acl\AclUserRole;
+use Common\Acl\AclUserRole;
 use Models\Role;
 use Models\User;
 use Models\Application;
@@ -172,7 +172,7 @@ final class Session extends SessionManager
      */
     public function getAclRole()
     {
-        $aclRoleClass = $this->getDI()->get('dispatcher')->dispatchNamespace('AclUserRole', 'Acl');
+        $aclRoleClass = $this->getDI()->get('dispatcher')->dispatchNamespace(AclUserRole::class);
         $aclRole = $this->hasAclRole() ? $this->get('acl_role') : 'guest';
         return new $aclRoleClass(
             $aclRole,

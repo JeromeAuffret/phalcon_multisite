@@ -28,7 +28,7 @@ class FormController extends ControllerBase
     protected function instantiateModel()
     {
         $reference = Str::camelize($this->reference);
-        $this->form_namespace = $this->dispatcher->dispatchNamespace($reference.'Form', 'Forms');
+        $this->form_namespace = $this->dispatcher->dispatchClass($reference.'Form', 'Forms');
 
         if (!$this->form_namespace) {
             throw new Exception('Form not found for reference : ' . $this->reference, 1);
@@ -43,7 +43,7 @@ class FormController extends ControllerBase
 
         $this->form = new $this->form_namespace($data);
         $this->model_name = (new $this->form_namespace)->model_name ?: Str::camelize($this->reference);
-        $this->model_namespace = $this->dispatcher->dispatchNamespace($this->model_name, 'Models');
+        $this->model_namespace = $this->dispatcher->dispatchClass($this->model_name, 'Models');
 
         if ($this->model_namespace)
         {

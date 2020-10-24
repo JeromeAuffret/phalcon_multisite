@@ -2,7 +2,7 @@
 
 namespace Middleware;
 
-use Acl\AclComponent;
+use Common\Acl\AclComponent;
 use Component\Acl;
 use Component\Session;
 use Error\AuthException;
@@ -35,7 +35,7 @@ class Auth extends Injectable
         $actionName = $this->router->getActionName();
         $params = $this->router->getParams();
 
-        $aclComponentClass = $this->dispatcher->dispatchNamespace('AclComponent', 'Acl');
+        $aclComponentClass = $this->dispatcher->dispatchNamespace(AclComponent::class);
         $AclComponent = new $aclComponentClass($moduleName, $controllerName, $actionName, $params);
 
         // Allow access to public components

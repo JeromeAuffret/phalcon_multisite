@@ -76,7 +76,7 @@ class ControllerBase extends BaseController
     protected function instantiateModel()
     {
         $this->modelName = Str::camelize($this->reference);
-        $this->modelNamespace = $this->dispatcher->dispatchNamespace($this->modelName, 'Models');
+        $this->modelNamespace = $this->dispatcher->dispatchClass($this->modelName, 'Models');
 
         if ($this->modelNamespace)
         {

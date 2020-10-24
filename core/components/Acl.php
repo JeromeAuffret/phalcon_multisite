@@ -2,6 +2,7 @@
 
 namespace Component;
 
+use Common\Acl\AclComponent;
 use Phalcon\Acl\ComponentInterface;
 use Phalcon\Acl\RoleInterface;
 use Phalcon\Acl\Adapter\AbstractAdapter;
@@ -41,14 +42,14 @@ final class Acl extends Injectable implements AdapterInterface
     public function userAllowed(string $moduleName = null, string $controllerName = null, string $actionName = null, array $params = [])
     {
         // Defined resource
-        $aclComponentClass = $this->dispatcher->dispatchNamespace('AclComponent', 'Acl');
+        $aclComponentClass = $this->dispatcher->dispatchNamespace(AclComponent::class);
         $AclComponent = new $aclComponentClass($moduleName, $controllerName, $actionName, $params);
 
         // Prevent verification for public components
         if ($AclComponent->isPublicComponent()) {
             return true;
         }
-        // UserAdmin can access to registered components
+        // superAdmin can access to every registered components
         elseif ($this->isSuperAdmin()) {
             return $this->isComponent($AclComponent->getComponentName());
         }

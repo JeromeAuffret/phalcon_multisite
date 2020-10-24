@@ -14,52 +14,68 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
 
     /**
      * Register correct controller namespace in dispatcher
+     * Override common class if exist in application folder
      *
      * @throws \ReflectionException
      */
     public function dispatchControllers()
     {
-        if (!class_exists($this->getControllerClass())) return;
-
-        $application = $this->getDI()->get('application');
-
         $controllerClass = $this->getControllerClass();
-        $controllerPath = (new \ReflectionClass($controllerClass))->getFileName();
 
         // Error controllers is not overridable
-        if (substr($controllerPath, -strlen('ErrorController')) === 'ErrorController') {
+        if (substr($controllerClass, -strlen('ErrorController')) === 'ErrorController') {
             $this->setNamespaceName('Controllers');
-        }
-        // Prevent dispatching controller if no application is registered
-        elseif (!$application->hasApplication()) {
             return;
         }
-        // If controller is part of common namespace we check if override exist in application folder
-        elseif (substr($controllerClass, 0, strlen($application->getCommonNamespace())) === $application->getCommonNamespace())
-        {
-            $overridePath = str_replace($application->getCommonPath(), $application->getApplicationPath(), $controllerPath);
 
-            if (file_exists($overridePath))
-            {
-                $overrideNamespace = str_replace($application->getCommonNamespace(), $application->getApplicationNamespace(), $controllerClass);
-
-                (new \Phalcon\Loader())
-                    ->registerClasses([$overrideNamespace => $overridePath])
-                    ->register();
-
-                $this->setNamespaceName((new \ReflectionClass($overrideNamespace))->getNamespaceName());
-            }
-        }
+        $controllerClass = $this->dispatchNamespace($controllerClass);
+        $this->setNamespaceName((new \ReflectionClass($controllerClass))->getNamespaceName());
     }
 
     /**
      * Helper method to dispatch a namespace between common and application folder
      *
+     * @param string $classNamespace
+     * @return string
+     * @throws \ReflectionException
+     */
+    public function dispatchNamespace(string $classNamespace)
+    {
+        $application = $this->getDI()->get('application');
+
+        // Prevent dispatching controller if no application is registered
+        if (!$application->hasApplication()) {
+            return $classNamespace;
+        }
+
+        // If controller is part of common namespace we check if override exist in application folder
+        if (substr($classNamespace, 0, strlen($application->getCommonNamespace())) === $application->getCommonNamespace())
+        {
+            $classPath = (new \ReflectionClass($classNamespace))->getFileName();
+            $overridePath = str_replace($application->getCommonPath(), $application->getApplicationPath(), $classPath);
+
+            if (file_exists($overridePath))
+            {
+                $classNamespace = str_replace($application->getCommonNamespace(), $application->getApplicationNamespace(), $classNamespace);
+
+                (new \Phalcon\Loader())
+                    ->registerClasses([$classNamespace => $overridePath])
+                    ->register();
+            }
+        }
+
+
+        return $classNamespace;
+    }6
+
+    /**
+     * Helper method to dispatch a class between common and application folder
+     *
      * @param string $className
      * @param string $baseNamespace Base namespace use to be concatenated between applicationNamespace and className
      * @return string|null
      */
-    public function dispatchNamespace(string $className, string $baseNamespace = '')
+    public function dispatchClass(string $className, string $baseNamespace = '')
     {
         $application = $this->getDI()->get('application');
         $config = $this->getDI()->get('config');
