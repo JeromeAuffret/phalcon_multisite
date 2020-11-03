@@ -36,11 +36,10 @@ class Application extends Injectable
         $this->dispatchApplicationByHost();
         $this->dispatchApplicationByHash();
 
-        if ($application->hasApplication()) {
+        if ($application->hasApplication())
             $application->registerApplicationProvider();
-        } else {
+        else
             $application->registerCommonProvider();
-        }
     }
 
     /**

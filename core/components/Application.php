@@ -92,9 +92,6 @@ final class Application extends \Phalcon\Mvc\Application
 
         // Register Application Path
         $this->setApplicationPath($applicationPath);
-
-        // Register Application Autoloader
-        $this->registerApplicationProvider();
     }
 
 
