@@ -1,0 +1,28 @@
+<?php
+
+namespace Controllers;
+
+use Component\Application;
+use Phalcon\Mvc\Controller;
+
+/**
+ * Class ErrorController
+ *
+ * @property Application application
+ * @package Controllers
+ */
+class LogoutController extends Controller
+{
+
+    public function indexAction()
+    {
+        if ($this->di->has('session')) {
+            $this->session->destroy();
+        }
+
+        $this->response->redirect('');
+        $this->response->send();
+        exit();
+    }
+
+}

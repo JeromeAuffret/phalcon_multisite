@@ -74,9 +74,7 @@ final class Application extends \Phalcon\Mvc\Application
      **********************************************************/
 
     /**
-     * Initialize application :
-     *  - Register application variables
-     *  - Initialize applicationProvider
+     * Setup application in service
      *
      * @param string $applicationSlug
      * @param string|null $applicationNamespace

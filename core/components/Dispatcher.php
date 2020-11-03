@@ -29,6 +29,12 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
             return;
         }
 
+        // Logout controllers is not overridable
+        if (substr($controllerClass, -strlen('LogoutController')) === 'LogoutController') {
+            $this->setNamespaceName('Controllers');
+            return;
+        }
+
         $controllerClass = $this->dispatchNamespace($controllerClass);
         $this->setNamespaceName((new \ReflectionClass($controllerClass))->getNamespaceName());
     }

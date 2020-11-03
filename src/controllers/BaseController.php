@@ -54,11 +54,6 @@ class BaseController extends Controller
     }
 
     /**
-     * Easy access to destroy session in beforeDispatch Middleware
-     */
-    public function logoutAction() {}
-
-    /**
      * If request is ajax we disable views
      */
     private function isViewDisabled()

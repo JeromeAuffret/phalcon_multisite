@@ -95,6 +95,9 @@ class AclComponent implements ComponentAware
         if ($controllerName === 'error') {
             $this->componentName = '_error';
         }
+        elseif ($controllerName === 'logout') {
+            $this->componentName = '_logout';
+        }
         elseif ($config->get('applicationType') === 'modules') {
             $this->componentName = $moduleName.'_'.$controllerName;
         }
