@@ -1,15 +1,15 @@
 {
-    "name": "JeromeAuffret/phalcon_multisite",
+    "name": "phalcon_multisite",
     "type": "library",
     "description": "Sample for a multisite architecture based on Phalcon Framework",
     "keywords": [
-        "phalcon", "mutlisite", "phalcon multisite", "sample"
+        "phalcon", "mutlisite", "phalcon multisite", "modules"
     ],
     "license": "MIT",
     "authors": [
         {
             "name": "Jerome Auffret",
-            "email": "jerome.auffret.ja@gamil.com"
+            "email": "jerome.auffret.ja@gmail.com"
         }
     ],
     "require": {
@@ -21,7 +21,7 @@
     },
     "require-dev": {
 	    "codeception/codeception": "^3.1",
-        "phalcon/ide-stubs": "4.0.5",
+        "phalcon/ide-stubs": "^4.0",
         "phpunit/phpunit": "^8.5",
         "phalcon/devtools": "^4.0"
     },
