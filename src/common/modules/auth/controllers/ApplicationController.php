@@ -21,8 +21,10 @@ class ApplicationController extends ControllerBase
             $this->session->destroyApplicationSession();
         }
 
+        $id_user = $this->session->getUser('id');
+
         $this->view->setVar('application_list',
-            $this->acl->isSuperAdmin() ? Application::find() : Application::getUserApplicationList()
+            $this->acl->isSuperAdmin() ? Application::find() : Application::getUserApplicationList($id_user)
         );
     }
 

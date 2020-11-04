@@ -176,18 +176,18 @@ class Role extends BaseModel
      **********************************************************/
 
     /**
-     * @return bool|ModelInterface
+     * @param int $id_user
+     * @param int $id_application
+     * @return Role|null
      */
-    public static function getUserRole(): ?Role
+    public static function getUserRole(int $id_user, int $id_application): ?Role
     {
-        $session = Di::getDefault()->get('session');
-
         return (new self)->modelsManager->createBuilder()
             ->addFrom(self::class, 'Role')
             ->innerJoin(UserRole::class, 'Role.id = UserRole.id_role', 'UserRole')
             ->where('UserRole.id_user = ?1 AND Role.id_application = ?2', [
-                1 => $session->getUser('id'),
-                2 => $session->getApplication('id')
+                1 => $id_user,
+                2 => $id_application
             ])
             ->getQuery()
             ->execute()

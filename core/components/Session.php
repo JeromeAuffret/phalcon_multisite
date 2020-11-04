@@ -48,7 +48,7 @@ final class Session extends SessionManager
      */
     public function setupUserRole()
     {
-        $role = Role::getUserRole();
+        $role = Role::getUserRole($this->getUser('id'), $this->getApplication('id'));
         $this->setAclRole($role ? $role->getSlug() : 'guest');
     }
 

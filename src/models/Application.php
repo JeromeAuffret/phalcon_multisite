@@ -175,17 +175,16 @@ class Application extends BaseModel
      **********************************************************/
 
     /**
+     * @param int $id_user
      * @return bool|ModelInterface
      */
-    public static function getUserApplicationList()
+    public static function getUserApplicationList(int $id_user)
     {
-        $session = Di::getDefault()->get('session');
-
         return (new self)->modelsManager->createBuilder()
             ->addFrom(self::class, 'Application')
             ->innerJoin(Role::class, 'Role.id_application = Application.id', 'Role')
             ->innerJoin(UserRole::class, 'UserRole.id_role = Role.id', 'UserRole')
-            ->where('UserRole.id_user = ?0', [ $session->getUser('id') ])
+            ->where('UserRole.id_user = ?0', [ $id_user ])
             ->getQuery()
             ->execute();
     }

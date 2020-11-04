@@ -11,6 +11,7 @@ use Phalcon\Mvc\Controller;
  */
 class LogoutController extends Controller
 {
+    
     /**
      *
      */
