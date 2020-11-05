@@ -1,5 +1,5 @@
 {
-    "name": "phalcon_multisite",
+    "name": "jeerome-auffret/phalcon-multisite",
     "type": "library",
     "description": "Sample for a multisite architecture based on Phalcon Framework",
     "keywords": [
@@ -20,7 +20,7 @@
         "vlucas/phpdotenv": "^3.6"
     },
     "require-dev": {
-	    "codeception/codeception": "^3.1",
+        "codeception/codeception": "^3.1",
         "phalcon/ide-stubs": "^4.0",
         "phpunit/phpunit": "^8.5",
         "phalcon/devtools": "^4.0"
