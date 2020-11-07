@@ -2,7 +2,7 @@
 
 namespace Component;
 
-use Common\Acl\AclUserRole;
+use Acl\AclUserRole;
 use Models\Role;
 use Models\User;
 use Models\Application;

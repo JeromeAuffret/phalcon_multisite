@@ -2,8 +2,8 @@
 
 namespace Common\Modules\Auth;
 
-use Common\Acl\AclComponent;
-use Common\Acl\AclUserRole;
+use Acl\AclComponent;
+use Acl\AclUserRole;
 use Phalcon\Di\DiInterface;
 use Provider\ModuleProvider;
 

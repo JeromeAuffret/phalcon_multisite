@@ -2,7 +2,7 @@
 
 namespace Middlewares;
 
-use Common\Acl\AclComponent;
+use Acl\AclComponent;
 use Component\Acl;
 use Component\SessionManager;
 use Error\AuthException;

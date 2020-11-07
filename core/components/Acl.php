@@ -2,7 +2,7 @@
 
 namespace Component;
 
-use Common\Acl\AclComponent;
+use Acl\AclComponent;
 use Phalcon\Acl\ComponentInterface;
 use Phalcon\Acl\RoleInterface;
 use Phalcon\Acl\Adapter\AbstractAdapter;
