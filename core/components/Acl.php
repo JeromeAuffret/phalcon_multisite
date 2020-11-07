@@ -12,9 +12,9 @@ use Phalcon\Di\Injectable;
 /**
  * Class Acl
  *
- * @property Application application
- * @property Session     session
- * @property Config      config
+ * @property Application    application
+ * @property sessionManager sessionManager
+ * @property Config         config
  * @package Component
  */
 final class Acl extends Injectable implements AdapterInterface
@@ -91,7 +91,7 @@ final class Acl extends Injectable implements AdapterInterface
      */
     public function getUserRole()
     {
-        return $this->session->getAclRole();
+        return $this->sessionManager->getAclRole();
     }
 
     /**

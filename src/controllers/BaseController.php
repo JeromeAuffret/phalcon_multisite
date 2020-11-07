@@ -5,7 +5,7 @@ namespace Controllers;
 use Component\Acl;
 use Component\Application;
 use Component\Config;
-use Component\Session;
+use Component\SessionManager;
 use Component\View;
 use Phalcon\Assets\Filters\Cssmin;
 use Phalcon\Assets\Filters\Jsmin;
@@ -18,7 +18,7 @@ use Phalcon\Mvc\Dispatcher;
  *
  * @property Acl acl
  * @property Application application
- * @property Session session
+ * @property SessionManager sessionManager
  * @property Config config
  * @property View view
  * @property AdapterInterface main_db

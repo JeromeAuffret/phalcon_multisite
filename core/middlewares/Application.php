@@ -4,7 +4,7 @@ namespace Middleware;
 
 use Component\Application as ApplicationComponent;
 use Component\Config;
-use Component\Session;
+use Component\SessionManager;
 use Exception;
 use Phalcon\Events\Event;
 use Phalcon\Di\Injectable;
@@ -14,7 +14,7 @@ use Phalcon\Di\Injectable;
  *
  * @property ApplicationComponent application
  * @property Config config
- * @property Session session
+ * @property SessionManager sessionManager
  * @package Middleware
  */
 class Application extends Injectable
@@ -76,10 +76,10 @@ class Application extends Injectable
      */
     private function dispatchApplicationBySession()
     {
-        if ($this->session && $this->session->hasApplication())
+        if ($this->di->has('session') && $this->sessionManager->hasApplication())
         {
             $this->application->registerApplication(
-                $this->session->getApplication('slug')
+                $this->sessionManager->getApplication('slug')
             );
         }
     }

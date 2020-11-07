@@ -17,11 +17,11 @@ class ApplicationController extends ControllerBase
      */
     public function indexAction()
     {
-        if ($this->request->isGet() && $this->session->hasApplication()) {
-            $this->session->destroyApplicationSession();
+        if ($this->request->isGet() && $this->sessionManager->hasApplication()) {
+            $this->sessionManager->destroyApplicationSession();
         }
 
-        $id_user = $this->session->getUser('id');
+        $id_user = $this->sessionManager->getUser('id');
 
         $this->view->setVar('application_list',
             $this->acl->isSuperAdmin() ? Application::find() : Application::getUserApplicationList($id_user)
@@ -39,7 +39,7 @@ class ApplicationController extends ControllerBase
             throw new AuthException('Application Not Found');
         }
 
-        $this->session->setupApplicationSession($application);
+        $this->sessionManager->setupApplicationSession($application);
 
         $this->response->redirect('');
     }

@@ -2,10 +2,11 @@
 
 namespace Service;
 
-use Component\Session as SessionComponent;
+use Component\SessionManager;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
-use Phalcon\Session\Adapter\Stream as SessionAdapter;
+use Phalcon\Session\Adapter\Stream;
+use Phalcon\Session\Manager;
 
 /**
  * Class Session
@@ -24,13 +25,18 @@ class Session implements ServiceProviderInterface
     {
         $container->setShared('session', function ()
         {
-            $manager = new SessionComponent();
+            $manager = new Manager();
             $manager
-                ->setAdapter(new SessionAdapter())
+                ->setAdapter(new Stream())
                 ->setName('auth-session')
                 ->start();
 
             return $manager;
+        });
+
+        $container->setShared('sessionManager', function ()
+        {
+            return new SessionManager();
         });
     }
 

@@ -5,7 +5,11 @@ namespace Common\Modules\Admin\Controllers;
 use Controllers\BaseController;
 use Models\Application;
 
-
+/**
+ * Class ControllerBase
+ *
+ * @package Common\Modules\Admin\Controllers
+ */
 class ControllerBase extends BaseController
 {
     protected $id_application;
@@ -17,7 +21,7 @@ class ControllerBase extends BaseController
     public function initialize()
     {
         $this->application = Application::findFirst(
-            $this->session->getApplication('id')
+            $this->sessionManager->getApplication('id')
         );
     }
 

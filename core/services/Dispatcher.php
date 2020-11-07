@@ -30,7 +30,7 @@ class Dispatcher implements ServiceProviderInterface
             $eventManager = $container->get('eventsManager');
 
             $eventManager->attach('dispatch', new DispatchMiddleware);
-            $eventManager->attach("dispatch", new ErrorMiddleware);
+            $eventManager->attach('dispatch', new ErrorMiddleware);
 
             $dispatcher->setEventsManager($eventManager);
 

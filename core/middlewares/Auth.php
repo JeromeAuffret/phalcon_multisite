@@ -4,7 +4,7 @@ namespace Middleware;
 
 use Common\Acl\AclComponent;
 use Component\Acl;
-use Component\Session;
+use Component\SessionManager;
 use Error\AuthException;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;

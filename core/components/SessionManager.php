@@ -7,14 +7,15 @@ use Models\Role;
 use Models\User;
 use Models\Application;
 use Phalcon\Collection;
-use Phalcon\Session\Manager as SessionManager;
+use Phalcon\Di\Injectable;
+
 
 /**
- * Class Session
+ * Class sessionManager
  *
  * @package Component
  */
-final class Session extends SessionManager
+final class SessionManager extends Injectable
 {
 
     /*******************************************************
@@ -28,7 +29,7 @@ final class Session extends SessionManager
      */
     public function hasUser(): bool
     {
-        return $this->has('user');
+        return $this->session->has('user');
     }
 
     /**
@@ -38,7 +39,7 @@ final class Session extends SessionManager
      */
     public function setupUserSession(User $user)
     {
-        $this->set('user', new Collection($user->toArray()));
+        $this->session->set('user', new Collection($user->toArray()));
         $this->setupUserRole();
     }
 
@@ -61,9 +62,9 @@ final class Session extends SessionManager
     public function getUser($key = null)
     {
         if (!$key)
-            return $this->get('user');
-        elseif ($this->hasUser() && $this->get('user')->has($key))
-            return $this->get('user')->get($key);
+            return $this->session->get('user');
+        elseif ($this->hasUser() && $this->session->get('user')->has($key))
+            return $this->session->get('user')->get($key);
         else
             return null;
     }
@@ -77,10 +78,10 @@ final class Session extends SessionManager
     public function setUser($key, $value)
     {
         if ($this->hasUser()) {
-            $user = $this->get('user');
+            $user = $this->session->get('user');
             $user->set($key, $value);
 
-            $this->set('user', $user);
+            $this->session->set('user', $user);
         }
     }
 
@@ -98,7 +99,7 @@ final class Session extends SessionManager
      */
     public function hasApplication(): bool
     {
-        return $this->has('application');
+        return $this->session->has('application');
     }
 
     /**
@@ -106,7 +107,7 @@ final class Session extends SessionManager
      */
     public function destroyApplicationSession()
     {
-        $this->remove('application');
+        $this->session->remove('application');
     }
 
     /**
@@ -116,7 +117,7 @@ final class Session extends SessionManager
      */
     public function setupApplicationSession(Application $application)
     {
-        $this->set('application', new Collection($application->toArray()));
+        $this->session->set('application', new Collection($application->toArray()));
         $this->setupUserRole();
     }
 
@@ -129,9 +130,9 @@ final class Session extends SessionManager
     public function getApplication($key = null)
     {
         if (!$key)
-            return $this->get('application');
-        elseif ($this->hasApplication() && $this->get('application')->has($key))
-            return $this->get('application')->get($key);
+            return $this->session->get('application');
+        elseif ($this->hasApplication() && $this->session->get('application')->has($key))
+            return $this->session->get('application')->get($key);
         else
             return null;
     }
@@ -145,10 +146,10 @@ final class Session extends SessionManager
     public function setApplication($key, $value)
     {
         if ($this->hasApplication()) {
-            $application = $this->get('application');
+            $application = $this->session->get('application');
             $application->set($key, $value);
 
-            $this->set('application', $application);
+            $this->session->set('application', $application);
         }
     }
 
@@ -164,7 +165,7 @@ final class Session extends SessionManager
      */
     public function hasAclRole(): bool
     {
-        return $this->has('acl_role');
+        return $this->session->has('acl_role');
     }
 
     /**
@@ -173,7 +174,7 @@ final class Session extends SessionManager
     public function getAclRole()
     {
         $aclRoleClass = $this->getDI()->get('dispatcher')->dispatchNamespace(AclUserRole::class);
-        $aclRole = $this->hasAclRole() ? $this->get('acl_role') : 'guest';
+        $aclRole = $this->hasAclRole() ? $this->session->get('acl_role') : 'guest';
 
         return new $aclRoleClass(
             $aclRole,
@@ -188,7 +189,7 @@ final class Session extends SessionManager
      */
     public function setAclRole(string $aclRole)
     {
-        $this->set('acl_role', $aclRole);
+        $this->session->set('acl_role', $aclRole);
     }
 
 }

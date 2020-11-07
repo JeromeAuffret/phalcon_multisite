@@ -18,7 +18,6 @@ use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
  *
  * @property Acl    acl
  * @property Config config
- * @property Session session
  * @package Middleware
  */
 class Error extends Injectable
