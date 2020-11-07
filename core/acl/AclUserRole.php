@@ -44,14 +44,14 @@ class AclUserRole implements RoleAware
     /**
      * AclUserRole constructor.
      *
-     * @param string      $role_name
+     * @param string      $roleName
      * @param int|null    $userId
      * @param string|null $userLogin
      * @param int|null    $applicationId
      */
-    public function __construct($role_name = 'guest', $userId = null, $userLogin = null, $applicationId = null)
+    public function __construct($roleName = 'guest', $userId = null, $userLogin = null, $applicationId = null)
     {
-        $this->roleName      = $role_name;
+        $this->roleName      = $roleName;
         $this->userId        = $userId;
         $this->userLogin     = $userLogin;
         $this->applicationId = $applicationId;
