@@ -2,8 +2,6 @@
 
 namespace Provider;
 
-use Middleware\Acl as AclMiddleware;
-use Middleware\Auth as AuthMiddleware;
 use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 
@@ -12,7 +10,7 @@ use Phalcon\Mvc\ModuleDefinitionInterface;
  *
  * @package Provider
  */
-class ApplicationProvider implements ModuleDefinitionInterface
+abstract class ApplicationProvider implements ModuleDefinitionInterface
 {
 
     /**
@@ -55,17 +53,7 @@ class ApplicationProvider implements ModuleDefinitionInterface
      *
      * @param DiInterface $container
      */
-    public function registerServices(DiInterface $container)
-    {
-        // Register Application Config
-        $container->get('config')->registerApplicationConfig();
-
-        // Register Application Database
-        $container->get('database')->registerApplicationDatabase();
-
-        // Register Application Modules
-        $container->get('application')->registerModulesProvider();
-    }
+    public function registerServices(DiInterface $container) {}
 
     /**
      * Register router related to the application
@@ -86,12 +74,6 @@ class ApplicationProvider implements ModuleDefinitionInterface
      *
      * @param DiInterface $container
      */
-    public function registerEvents(DiInterface $container)
-    {
-        $eventManager = $container->get('dispatcher')->getEventsManager();
-
-        $eventManager->attach('dispatch', new AuthMiddleware);
-        $eventManager->attach("dispatch", new AclMiddleware);
-    }
+    public function registerEvents(DiInterface $container) {}
 
 }

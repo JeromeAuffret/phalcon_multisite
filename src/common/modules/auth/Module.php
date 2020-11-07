@@ -2,14 +2,15 @@
 
 namespace Common\Modules\Auth;
 
-use Acl\AclComponent;
-use Acl\AclUserRole;
+use Common\Acl\AclComponent;
+use Common\Acl\AclUserRole;
 use Phalcon\Di\DiInterface;
 use Provider\ModuleProvider;
 
 
 class Module extends ModuleProvider
 {
+
     /**
      *  Registers an autoloader related to the module
      *
@@ -17,9 +18,11 @@ class Module extends ModuleProvider
      */
     public function registerAutoloaders(DiInterface $container = null)
     {
+        $modulePath = $container->get('application')->getCommonModulePath('auth');
+
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Common\Modules\Auth\Controllers' => $container->get('application')->getCommonModulePath('auth') . '/controllers/'
+                'Common\Modules\Auth\Controllers' => $modulePath . '/controllers/'
             ])
             ->register();
     }

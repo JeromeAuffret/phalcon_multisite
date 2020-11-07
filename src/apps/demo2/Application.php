@@ -29,4 +29,15 @@ class Application extends ApplicationProvider
             ->register();
     }
 
+    /**
+     * Registers services related to the application
+     *
+     * @param DiInterface $container
+     */
+    public function registerServices(DiInterface $container)
+    {
+        // Register Application Config
+        $container->get('config')->registerApplicationConfig();
+    }
+
 }

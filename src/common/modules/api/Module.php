@@ -11,6 +11,7 @@ use Provider\ModuleProvider;
 
 class Module extends ModuleProvider
 {
+
     /**
      * Registers an autoloader related to the module
      *

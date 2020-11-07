@@ -11,8 +11,9 @@ use Phalcon\Mvc\ModuleDefinitionInterface;
  *
  * @package Provider
  */
-class ModuleProvider implements ModuleDefinitionInterface
+abstract class ModuleProvider implements ModuleDefinitionInterface
 {
+
     /**
      * @var DiInterface
      */

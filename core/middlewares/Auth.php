@@ -1,6 +1,6 @@
 <?php
 
-namespace Middleware;
+namespace Middlewares;
 
 use Common\Acl\AclComponent;
 use Component\Acl;
@@ -13,7 +13,7 @@ use Phalcon\Di\Injectable;
 /**
  * Class Auth
  *
- * @property Session session
+ * @property SessionManager sessionManager
  * @property Acl acl
  * @package Middleware
  */
@@ -43,11 +43,11 @@ class Auth extends Injectable
             return true;
         }
         // For the auth module, we allow a registered user
-        else if ($moduleName === 'auth' || $this->session->hasUser()) {
+        else if ($moduleName === 'auth' && $this->sessionManager->hasUser()) {
             return true;
         }
-        // Verify session otherwise
-        else if ($this->session->hasUser() && $this->session->hasApplication()) {
+        // Verify user and application otherwise
+        else if ($this->sessionManager->hasUser() && $this->sessionManager->hasApplication()) {
             return true;
         }
 
