@@ -4,7 +4,6 @@ namespace Middleware;
 
 use Component\Acl;
 use Component\Config;
-use Component\Session;
 use Error\AclException;
 use Error\AuthException;
 use Exception;
@@ -12,6 +11,7 @@ use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
+use ReflectionException;
 
 /**
  * Class Error
@@ -41,10 +41,11 @@ class Error extends Injectable
         $this->response->setStatusCode(500, 'Internal Server Error');
 
         // Catch dispatch exception and render error page
-        if ($exception instanceof DispatchException)
+        if ($exception instanceof DispatchException || $exception instanceof ReflectionException)
         {
             switch ($exception->getCode())
             {
+                case -1: // ReflectionException
                 case DispatchException::EXCEPTION_HANDLER_NOT_FOUND:
                 case DispatchException::EXCEPTION_ACTION_NOT_FOUND:
                     $this->forwardNotFound();
