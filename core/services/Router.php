@@ -24,15 +24,8 @@ class Router implements ServiceProviderInterface
         $container->setShared('router', function () use ($container) {
             $router =  new RouterComponent();
 
-            $config = $container->get('config');
-            $application = $container->get('application');
-
-            // TODO this should be refactored in a RouterComponent
-            $defaultNamespace = $application->hasApplication() ? $application->getApplicationNamespace() : $application->getCommonNamespace();
-
-            $router->setDefaultNamespace($defaultNamespace.'\\Controllers');
-            $router->setDefaultController($config->defaultController);
-            $router->setDefaultAction($config->defaultAction);
+            $router->setDI($container);
+            $router->initDefaults();
 
             return $router;
         });

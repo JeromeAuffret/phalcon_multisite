@@ -66,6 +66,7 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
 
         $config = $container->get('config');
         $application = $container->get('application');
+        $router = $container->get('router');
 
         $this->moduleDefinition = $config->get('modules')->get($moduleName);
         $this->moduleNamespace = preg_replace('/\\\Module$/', '', $this->moduleDefinition->get('className'));
@@ -80,16 +81,8 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
             ],
         ], true);
 
-        // TODO this should be refactored in a RouterComponent
-        if ($config->get('defaultModule') === $moduleName)
-        {
-            $router = $container->get('router');
-
-            $router->setDefaultModule($moduleName);
-            $router->setDefaultNamespace($this->controllerNamespace);
-            $router->setDefaultController($this->defaultController);
-            $router->setDefaultAction($this->defaultAction);
-        }
+        // Register router defaults for the given module
+        $router->initModuleDefaults($moduleName, $this->controllerNamespace, $this->defaultController, $this->defaultAction);
 
         $this->registerRouter($container);
         $this->registerAcl($container);
