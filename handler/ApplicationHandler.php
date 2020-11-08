@@ -24,10 +24,12 @@ use Service\View as ViewService;
  */
 class ApplicationHandler
 {
+
     /**
      * @var Application
      */
     protected $application;
+
     /**
      * @var FactoryDefault
      */
@@ -59,7 +61,7 @@ class ApplicationHandler
     /**
      * Handle application's response
      *
-     * @return string`
+     * @return string
      * @throws Exception
      */
     public function handle(): string

@@ -13,7 +13,7 @@ use Phalcon\Http\ResponseInterface;
 /**
  * Class ApplicationController
  *
- * @package Common\Modules\Auth\Controllers
+ * @package Modules\Auth\Controllers
  */
 class ApplicationController extends ControllerBase
 {

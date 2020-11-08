@@ -7,7 +7,11 @@ use Acl\AclUserRole;
 use Phalcon\Di\DiInterface;
 use Provider\ModuleProvider;
 
-
+/**
+ * Class Module
+ *
+ * @package Modules\Auth
+ */
 class Module extends ModuleProvider
 {
 
@@ -18,11 +22,9 @@ class Module extends ModuleProvider
      */
     public function registerAutoloaders(DiInterface $container = null)
     {
-        $modulePath = $container->get('application')->getCommonModulePath('auth');
-
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Common\Modules\Auth\Controllers' => $modulePath . '/controllers/'
+                'Common\Modules\Auth\Controllers' => __DIR__ . '/controllers/'
             ])
             ->register();
     }

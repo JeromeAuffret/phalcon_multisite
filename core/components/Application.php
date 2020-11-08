@@ -25,7 +25,7 @@ final class Application extends \Phalcon\Mvc\Application
     /**
      * @var string $commonPath
      */
-    private $commonPath = BASE_PATH . "/src/common";
+    private $commonPath = BASE_PATH . "/src";
 
     /**
      * @var string $commonPath
@@ -99,7 +99,7 @@ final class Application extends \Phalcon\Mvc\Application
             ->registerNamespaces([$this->commonNamespace => $this->commonPath])
             ->register();
 
-        $applicationProvider = $this->commonNamespace.'\\'.$this->applicationClass;
+        $applicationProvider = (!empty($this->commonNamespace) ? $this->commonNamespace.'\\' : '') . $this->applicationClass;
         $applicationProvider = new $applicationProvider;
 
         $applicationProvider->initialize($this->container);
@@ -410,7 +410,7 @@ final class Application extends \Phalcon\Mvc\Application
     public function getCommonModuleNamespace(?string $moduleName): ?string
     {
         if (!$moduleName) return null;
-        return $this->commonNamespace.'\\'.$this->moduleBaseNamespace.'\\'.Str::camelize($moduleName);
+        return (!empty($this->commonNamespace) ? $this->commonNamespace.'\\' : '') . $this->moduleBaseNamespace.'\\'.Str::camelize($moduleName);
     }
 
 }

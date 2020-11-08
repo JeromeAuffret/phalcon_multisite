@@ -2,13 +2,13 @@
 
 namespace Common\Modules\Admin\Controllers;
 
-use Controllers\BaseController;
+use Common\Controllers\BaseController;
 use Models\Application;
 
 /**
  * Class ControllerBase
  *
- * @package Common\Modules\Admin\Controllers
+ * @package Modules\Admin\Controllers
  */
 class ControllerBase extends BaseController
 {

@@ -2,7 +2,7 @@
 
 namespace Demo2\Controllers;
 
-use Controllers\BaseController;
+use Common\Controllers\BaseController;
 
 
 class IndexController extends BaseController

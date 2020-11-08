@@ -2,7 +2,7 @@
 
 namespace Common\Modules\Api\Controllers;
 
-use Controllers\BaseController;
+use Common\Controllers\BaseController;
 use Exception;
 use Models\BaseModel;
 use Phalcon\Helper\Str;

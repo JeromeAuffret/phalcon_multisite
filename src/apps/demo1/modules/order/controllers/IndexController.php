@@ -2,7 +2,7 @@
 
 namespace Demo1\Modules\Order\Controllers;
 
-use Controllers\BaseController;
+use Common\Controllers\BaseController;
 
 class IndexController extends BaseController
 {

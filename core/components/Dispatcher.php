@@ -19,19 +19,19 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
      *
      * @throws ReflectionException
      */
-    public function dispatchControllers()
+    public function dispatchControllerNamespace()
     {
         $controllerClass = $this->getControllerClass();
 
         // Error controllers is not overridable
         if (substr($controllerClass, -strlen('ErrorController')) === 'ErrorController') {
-            $this->setNamespaceName('Controllers');
+            $this->setNamespaceName('Common\Controllers');
             return;
         }
 
         // Logout controllers is not overridable
         if (substr($controllerClass, -strlen('LogoutController')) === 'LogoutController') {
-            $this->setNamespaceName('Controllers');
+            $this->setNamespaceName('Common\Controllers');
             return;
         }
 
@@ -180,6 +180,7 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
      * Parse the complete file namespace by reading class header
      *
      * https://stackoverflow.com/questions/7153000/get-class-name-from-file
+     *
      * @param $filePath
      * @return string
      */

@@ -2,7 +2,7 @@
 
 namespace Demo1\Modules\Admin\Controllers;
 
-use Common\Modules\Admin\Controllers\IndexController as CommonIndexController;
+use Modules\Admin\Controllers\IndexController as CommonIndexController;
 
 
 class IndexController extends CommonIndexController

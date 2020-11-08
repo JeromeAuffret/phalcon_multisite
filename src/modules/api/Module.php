@@ -8,7 +8,11 @@ use Phalcon\Di\DiInterface;
 use Phalcon\Helper\Str;
 use Provider\ModuleProvider;
 
-
+/**
+ * Class Module
+ *
+ * @package Modules\Api
+ */
 class Module extends ModuleProvider
 {
 

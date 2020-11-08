@@ -7,6 +7,11 @@ use Middlewares\Auth as AuthMiddleware;
 use Phalcon\Di\DiInterface;
 use Provider\ApplicationProvider;
 
+/**
+ * Class Application
+ *
+ * @package Common
+ */
 class Application extends ApplicationProvider
 {
 

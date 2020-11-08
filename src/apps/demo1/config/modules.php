@@ -5,11 +5,11 @@ $common_path = \Phalcon\Di::getDefault()->get('application')->getCommonPath();
 
 return [
     'admin' => [
-        'className' => 'Common\Modules\Admin\Module',
+        'className' => 'Modules\Admin\Module',
         'path' => $common_path . '/modules/admin/Module.php'
     ],
     'api' => [
-        'className' => 'Common\Modules\Api\Module',
+        'className' => 'Modules\Api\Module',
         'path' => $common_path . '/modules/api/Module.php'
     ],
     'dashboard' => [

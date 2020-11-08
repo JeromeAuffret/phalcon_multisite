@@ -2,8 +2,7 @@
 
 namespace Common\Modules\Auth\Controllers;
 
-use Controllers\BaseController;
-use Phalcon\Mvc\View;
+use Common\Controllers\BaseController;
 
 
 class ControllerBase extends BaseController {}

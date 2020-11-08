@@ -49,13 +49,13 @@ In local env, you can edit the `/etc/hosts` and add something like,
     
 and visit the new host `http://demo2.localhost`.
 
-Hosts configuration can be found in `src/common/config/main.php`.
+Hosts configuration can be found in `src/config/main.php`.
 
 ### Session
 
 #### Configuration
 
-The main database need to be configure in `src/common/config/main.php`. \
+The main database need to be configure in `src/config/main.php`. \
 Additionally, you can add a `config.php`, which is ignored from git, to store sensitive configuration.
 
 ```
@@ -74,4 +74,4 @@ Additionally, you can add a `config.php`, which is ignored from git, to store se
     
 To deploy the default main database, run :
 
-    php vendor/bin/phalcon-migrations migration run --config=src/common/config/main.php
+    php vendor/bin/phalcon-migrations migration run --config=src/config/main.php

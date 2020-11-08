@@ -27,7 +27,7 @@ class Dispatch extends Injectable
      */
     public function beforeDispatch(Event $event, Dispatcher $dispatcher)
     {
-        $this->dispatcher->dispatchControllers();
+        $this->dispatcher->dispatchControllerNamespace();
     }
 
 }

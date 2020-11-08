@@ -1,6 +1,6 @@
 <?php
 
-namespace Controllers;
+namespace Common\Controllers;
 
 use Component\Application;
 use Phalcon\Mvc\Controller;
@@ -14,6 +14,7 @@ use Phalcon\Mvc\View;
  */
 class ErrorController extends Controller
 {
+
     /**
      *
      */

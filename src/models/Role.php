@@ -1,13 +1,15 @@
 <?php
 
-namespace Models;
+namespace Common\Models;
 
-use Phalcon\Di;
 use Phalcon\Mvc\Model\ResultInterface;
 use Phalcon\Mvc\Model\ResultSetInterface;
-use Phalcon\Mvc\ModelInterface;
 
-
+/**
+ * Class Role
+ *
+ * @package Common\Models
+ */
 class Role extends BaseModel
 {
 

@@ -5,7 +5,11 @@ namespace Common\Modules\Admin;
 use Phalcon\Di\DiInterface;
 use Provider\ModuleProvider;
 
-
+/**
+ * Class Module
+ *
+ * @package Modules\Admin
+ */
 class Module extends ModuleProvider
 {
 
