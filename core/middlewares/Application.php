@@ -6,6 +6,7 @@ use Component\Application as ApplicationComponent;
 use Component\Config;
 use Component\SessionManager;
 use Exception;
+use Models\Application as ApplicationModel;
 use Phalcon\Events\Event;
 use Phalcon\Di\Injectable;
 
@@ -76,11 +77,28 @@ class Application extends Injectable
      */
     private function dispatchApplicationBySession()
     {
-        if ($this->di->has('session') && $this->sessionManager->hasApplication())
+        if ($this->di->has('session') && $this->session->exists())
         {
-            $this->application->registerApplication(
-                $this->sessionManager->getApplication('slug')
-            );
+            // Register application information in service if exist in session
+            if ($this->sessionManager->hasApplication()) {
+                $this->application->registerApplication(
+                    $this->sessionManager->getApplication()->toArray()
+                );
+            }
+
+            // Register user information in service if exist in session
+            if ($this->sessionManager->hasUser()) {
+                $this->application->registerUser(
+                    $this->sessionManager->getUser()->toArray()
+                );
+            }
+
+            // Register userRole information in service if exist in session
+            if ($this->sessionManager->hasUserRole()) {
+                $this->application->setUserRole(
+                    $this->sessionManager->getUserRole()
+                );
+            }
         }
     }
 
@@ -91,14 +109,22 @@ class Application extends Injectable
      */
     private function dispatchApplicationByHost()
     {
-        // Find server_name in main host configuration
+        // Find serverName in main host configuration
         $serverName = $this->config->get('serverName');
 
         if ($this->config->has('host') && $this->config->get('host')->has($serverName))
         {
-            $this->application->registerApplication(
+            $application = $this->dispatcher->dispatchNamespace(ApplicationModel::class);
+            $application = $application::getBySlug(
                 $this->config->get('host')->get($serverName)
             );
+
+            if ($application)
+            {
+                $this->application->registerApplication(
+                    $application->toArray()
+                );
+            }
         }
     }
 
@@ -111,9 +137,17 @@ class Application extends Injectable
     {
         if ($this->request->has('_app'))
         {
-            $this->application->registerApplication(
+            $application = $this->dispatcher->dispatchNamespace(ApplicationModel::class);
+            $application = $application::getBySlug(
                 $this->request->get('_app')
             );
+
+            if ($application)
+            {
+                $this->application->registerApplication(
+                    $application->toArray()
+                );
+            }
         }
     }
 

@@ -41,7 +41,9 @@ class LoginController extends ControllerBase
                 throw new AuthException('User Not Found', 1);
             }
 
-            $this->sessionManager->setupUserSession($user);
+            if ($this->di->has('session') && $this->session->exists()) {
+                $this->sessionManager->setupUserSession($user);
+            }
 
             $this->response->redirect('auth/application');
         }

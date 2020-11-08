@@ -3,6 +3,7 @@
 namespace Component;
 
 use Acl\AclComponent;
+use Acl\AclUserRole;
 use Phalcon\Acl\ComponentInterface;
 use Phalcon\Acl\RoleInterface;
 use Phalcon\Acl\Adapter\AbstractAdapter;
@@ -13,7 +14,6 @@ use Phalcon\Di\Injectable;
  * Class Acl
  *
  * @property Application    application
- * @property sessionManager sessionManager
  * @property Config         config
  * @package Component
  */
@@ -28,6 +28,14 @@ final class Acl extends Injectable implements AdapterInterface
     public function setAdapter($adapter)
     {
         $this->adapter = $adapter;
+    }
+
+    /**
+     * @return AbstractAdapter
+     */
+    public function getAdapter()
+    {
+        return $this->adapter;
     }
 
     /**
@@ -60,7 +68,7 @@ final class Acl extends Injectable implements AdapterInterface
                 && $this->moduleIsRegistered($AclComponent->getModuleName())
                 && $this->isComponent($AclComponent->getComponentName())
                 && $this->isAllowed(
-                    $this->getUserRole(),
+                    $this->getAclRole(),
                     $AclComponent,
                     $AclComponent->getActionName(),
                     $AclComponent->getParams() ?? null
@@ -87,11 +95,19 @@ final class Acl extends Injectable implements AdapterInterface
     }
 
     /**
-     * @return object
+     * @return AclUserRole
      */
-    public function getUserRole()
+    public function getAclRole()
     {
-        return $this->sessionManager->getAclRole();
+        $aclRoleClass = $this->getDI()->get('dispatcher')->dispatchNamespace(AclUserRole::class);
+        $userRole = $this->application->hasUserRole() ? $this->application->getUserRole() : 'guest';
+
+        return new $aclRoleClass(
+            $userRole,
+            $this->application->getUser('id'),
+            $this->application->getUser('login'),
+            $this->application->getApplication('id')
+        );
     }
 
     /**
@@ -99,7 +115,7 @@ final class Acl extends Injectable implements AdapterInterface
      */
     public function getRoleName(): string
     {
-        return $this->getUserRole()->getRoleName();
+        return $this->getAclRole()->getRoleName();
     }
 
     /**
@@ -107,7 +123,7 @@ final class Acl extends Injectable implements AdapterInterface
      */
     public function isSuperAdmin(): bool
     {
-        return $this->getUserRole()->isSuperAdmin();
+        return $this->getAclRole()->isSuperAdmin();
     }
 
     /**
@@ -115,7 +131,7 @@ final class Acl extends Injectable implements AdapterInterface
      */
     public function loginIsSuperAdmin(): bool
     {
-        return $this->getUserRole()->loginIsSuperAdmin();
+        return $this->getAclRole()->loginIsSuperAdmin();
     }
 
 

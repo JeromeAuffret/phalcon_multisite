@@ -2,7 +2,6 @@
 
 namespace Component;
 
-use Acl\AclUserRole;
 use Models\Role;
 use Models\User;
 use Models\Application;
@@ -50,7 +49,7 @@ final class SessionManager extends Injectable
     public function setupUserRole()
     {
         $role = Role::getUserRole($this->getUser('id'), $this->getApplication('id'));
-        $this->setAclRole($role ? $role->getSlug() : 'guest');
+        $this->setUserRole($role ? $role->getSlug() : 'guest');
     }
 
     /**
@@ -163,33 +162,25 @@ final class SessionManager extends Injectable
     /**
      * @return boolean
      */
-    public function hasAclRole(): bool
+    public function hasUserRole(): bool
     {
-        return $this->session->has('acl_role');
+        return $this->session->has('user_role');
     }
 
     /**
-     * @return AclUserRole
+     * @return string
      */
-    public function getAclRole()
+    public function getUserRole()
     {
-        $aclRoleClass = $this->getDI()->get('dispatcher')->dispatchNamespace(AclUserRole::class);
-        $aclRole = $this->hasAclRole() ? $this->session->get('acl_role') : 'guest';
-
-        return new $aclRoleClass(
-            $aclRole,
-            $this->getUser('id'),
-            $this->getUser('login'),
-            $this->getApplication('id')
-        );
+        $this->session->get('user_role');
     }
 
     /**
      * @param string $aclRole
      */
-    public function setAclRole(string $aclRole)
+    public function setUserRole(string $aclRole)
     {
-        $this->session->set('acl_role', $aclRole);
+        $this->session->set('user_role', $aclRole);
     }
 
 }

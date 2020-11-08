@@ -2,6 +2,7 @@
 
 namespace Component;
 
+use Phalcon\Collection;
 use Phalcon\Helper\Str;
 
 /**
@@ -52,45 +53,34 @@ final class Application extends \Phalcon\Mvc\Application
     private $moduleBaseDir = 'modules';
 
     /**
+     * @var Collection $application
+     */
+    private $application = null;
+
+    /**
+     * @var Collection $user
+     */
+    private $user = null;
+
+    /**
+     * @var String $userRole
+     */
+    private $userRole = null;
+
+    /**
      * @var string $application
      */
-    private $applicationSlug;
+    private $applicationSlug = null;
 
     /**
      * @var string $applicationNamespace
      */
-    private $applicationNamespace;
+    private $applicationNamespace = null;
 
     /**
      * @var string $applicationPath
      */
-    private $applicationPath;
-
-
-    /**********************************************************
-     *
-     *                        APPLICATION
-     *
-     **********************************************************/
-
-    /**
-     * Setup application in service
-     *
-     * @param string $applicationSlug
-     * @param string|null $applicationNamespace
-     * @param string|null $applicationPath
-     */
-    public function registerApplication(string $applicationSlug, ?string $applicationNamespace = null, ?string $applicationPath = null)
-    {
-        // Register Application Slug
-        $this->setApplicationSlug($applicationSlug);
-
-        // Register Application Namespace
-        $this->setApplicationNamespace($applicationNamespace);
-
-        // Register Application Path
-        $this->setApplicationPath($applicationPath);
-    }
+    private $applicationPath = null;
 
 
     /**********************************************************
@@ -144,9 +134,9 @@ final class Application extends \Phalcon\Mvc\Application
 
         foreach ($config->get('modules') as $moduleName => $module)
         {
-            // TODO Adapt regex to use $this->moduleClass
-            $moduleNamespace = preg_replace('/\\\Module$/', '', $module->get('className'));
-            $modulePath = preg_replace('/\/Module.php$/', '', $module->get('path'));
+            // TODO Adapt regex to use moduleClass variable
+            $moduleNamespace = preg_replace('/\\\\'.$this->moduleClass.'$/', '', $module->get('className'));
+            $modulePath = preg_replace('/\/'.$this->moduleClass.'.php$/', '', $module->get('path'));
 
             (new \Phalcon\Loader())
                 ->registerNamespaces([$moduleNamespace => $modulePath])
@@ -162,32 +152,20 @@ final class Application extends \Phalcon\Mvc\Application
 
     /**********************************************************
      *
-     *                     GETTERS / SETTERS
+     *                     APPLICATION
      *
      **********************************************************/
 
     /**
-     * @param string $applicationSlug
+     * @param array $application
      */
-    private function setApplicationSlug(string $applicationSlug)
+    public function registerApplication(array $application)
     {
-        $this->applicationSlug = $applicationSlug;
-    }
+        $this->application = new Collection($application);
 
-    /**
-     * @param null $applicationNamespace
-     */
-    private function setApplicationNamespace($applicationNamespace = null)
-    {
-        $this->applicationNamespace = $applicationNamespace ?: Str::camelize($this->applicationSlug);
-    }
-
-    /**
-     * @param null $applicationPath
-     */
-    private function setApplicationPath($applicationPath = null)
-    {
-        $this->applicationPath = $applicationPath ?: ($this->applicationBasePath.'/'.$this->applicationSlug);
+        if ($this->application->has('slug')) {
+            $this->setApplicationSlug($this->application->get('slug'));
+        }
     }
 
     /**
@@ -196,6 +174,155 @@ final class Application extends \Phalcon\Mvc\Application
     public function hasApplication(): bool
     {
         return !!$this->applicationSlug;
+    }
+
+    /**
+     * Return application collection o given key value
+     *
+     * @param mixed|null $key
+     * @return Collection|mixed|null
+     */
+    public function getApplication($key = null)
+    {
+        if (!$key)
+            return $this->application;
+        elseif ($this->application && $this->application->has($key))
+            return $this->application->get($key);
+        else
+            return null;
+    }
+
+    /**
+     * Set application key value
+     *
+     * @param $key
+     * @param $value
+     */
+    public function setApplication($key, $value)
+    {
+        if ($this->hasApplication()) {
+            $application = $this->application;
+            $application->set($key, $value);
+
+            $this->application = $application;
+        }
+    }
+
+
+    /**********************************************************
+     *
+     *                          USER
+     *
+     **********************************************************/
+
+    /**
+     * @param array $user
+     */
+    public function registerUser(array $user)
+    {
+        $this->user = new Collection($user);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function hasUser(): bool
+    {
+        return !!$this->user;
+    }
+
+    /**
+     * Return user collection or given key value
+     *
+     * @param mixed|null $key
+     * @return Collection|mixed|null
+     */
+    public function getUser($key = null)
+    {
+        if (!$key)
+            return $this->user;
+        elseif ($this->user && $this->user->has($key))
+            return $this->user->get($key);
+        else
+            return null;
+    }
+
+    /**
+     * Set user key value
+     *
+     * @param $key
+     * @param $value
+     */
+    public function setUser($key, $value)
+    {
+        if ($this->user) {
+            $user = $this->user;
+            $user->set($key, $value);
+
+            $this->user = $user;
+        }
+    }
+
+
+    /*******************************************************
+     *
+     *                         ROLE
+     *
+     *******************************************************/
+
+    /**
+     * @return boolean
+     */
+    public function hasUserRole(): bool
+    {
+        return !!$this->userRole;
+    }
+
+    /**
+     * @param string $userRole
+     */
+    public function setUserRole(string $userRole)
+    {
+        $this->userRole = $userRole;
+    }
+
+    /**
+     * @return String|null
+     */
+    public function getUserRole(): ?string
+    {
+        return $this->userRole;
+    }
+
+
+    /**********************************************************
+     *
+     *                     GETTERS / SETTERS
+     *
+     **********************************************************/
+
+    /**
+     * @param string $applicationSlug
+     */
+    public function setApplicationSlug(string $applicationSlug)
+    {
+        $this->applicationSlug = $applicationSlug;
+    }
+
+    /**
+     * @param string $applicationNamespace
+     */
+    public function setApplicationNamespace(string $applicationNamespace)
+    {
+        $this->applicationNamespace = $applicationNamespace;
+    }
+
+    /**
+     * @param string $applicationPath
+     */
+    public function setApplicationPath(string $applicationPath)
+    {
+        $this->applicationPath = $applicationPath;
     }
 
     /**
@@ -219,7 +346,7 @@ final class Application extends \Phalcon\Mvc\Application
      */
     public function getApplicationNamespace(): ?string
     {
-        return $this->applicationNamespace;
+        return $this->applicationNamespace ?: Str::camelize($this->applicationSlug);
     }
 
     /**
@@ -227,7 +354,7 @@ final class Application extends \Phalcon\Mvc\Application
      */
     public function getApplicationPath(): ?string
     {
-        return $this->applicationPath;
+        return $this->applicationPath ?: ($this->applicationBasePath.'/'.$this->applicationSlug);
     }
 
     /**

@@ -8,7 +8,11 @@ use Exception;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
-
+/**
+ * Class ApplicationController
+ *
+ * @package Common\Modules\Auth\Controllers
+ */
 class ApplicationController extends ControllerBase
 {
 
@@ -17,11 +21,12 @@ class ApplicationController extends ControllerBase
      */
     public function indexAction()
     {
-        if ($this->request->isGet() && $this->sessionManager->hasApplication()) {
+        // Remove application already registered in session
+        if ($this->request->isGet() && $this->di->has('session') && $this->session->exists()) {
             $this->sessionManager->destroyApplicationSession();
         }
 
-        $id_user = $this->sessionManager->getUser('id');
+        $id_user = $this->application->getUser('id');
 
         $this->view->setVar('application_list',
             $this->acl->isSuperAdmin() ? Application::find() : Application::getUserApplicationList($id_user)
@@ -39,7 +44,9 @@ class ApplicationController extends ControllerBase
             throw new AuthException('Application Not Found');
         }
 
-        $this->sessionManager->setupApplicationSession($application);
+        if ($this->di->has('session') && $this->session->exists()) {
+            $this->sessionManager->setupApplicationSession($application);
+        }
 
         $this->response->redirect('');
     }

@@ -4,7 +4,7 @@ namespace Middlewares;
 
 use Acl\AclComponent;
 use Component\Acl;
-use Component\SessionManager;
+use Component\Application;
 use Error\AuthException;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
@@ -13,7 +13,7 @@ use Phalcon\Di\Injectable;
 /**
  * Class Auth
  *
- * @property SessionManager sessionManager
+ * @property Application application
  * @property Acl acl
  * @package Middleware
  */
@@ -43,11 +43,11 @@ class Auth extends Injectable
             return true;
         }
         // For the auth module, we allow a registered user
-        else if ($moduleName === 'auth' && $this->sessionManager->hasUser()) {
+        else if ($moduleName === 'auth' && $this->application->hasUser()) {
             return true;
         }
         // Verify user and application otherwise
-        else if ($this->sessionManager->hasUser() && $this->sessionManager->hasApplication()) {
+        else if ($this->application->hasUser() && $this->application->hasApplication()) {
             return true;
         }
 

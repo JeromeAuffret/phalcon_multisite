@@ -12,16 +12,23 @@ use Models\Application;
  */
 class ControllerBase extends BaseController
 {
+    /**
+     * @var integer $id_application
+     */
     protected $id_application;
 
-    /* @var Application $application */
-    protected $application;
+    /**
+     * @var Application $applicationObject
+     */
+    protected $applicationObject;
 
-
+    /**
+     *
+     */
     public function initialize()
     {
-        $this->application = Application::findFirst(
-            $this->sessionManager->getApplication('id')
+        $this->applicationObject = Application::findFirst(
+            $this->application->getApplication('id')
         );
     }
 
