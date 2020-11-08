@@ -50,7 +50,7 @@ class Module extends ModuleProvider
         // Only accept connected user
         $acl->allow('*', 'auth_application', ['index', 'switchApplication'],
             function (AclUserRole $AclUserRole, AclComponent $AclResource) {
-                return $AclUserRole->getIdUser();
+                return !!$AclUserRole->getIdUser();
             }
         );
     }
