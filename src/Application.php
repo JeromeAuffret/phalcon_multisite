@@ -40,6 +40,7 @@ class Application extends ApplicationProvider
     public function registerEvents(DiInterface $container)
     {
         $eventsManager = $container->get('eventsManager');
+
         $eventsManager->attach("dispatch", new AclMiddleware);
         $eventsManager->attach("dispatch", new AuthMiddleware);
     }

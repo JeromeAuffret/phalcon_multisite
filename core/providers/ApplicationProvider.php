@@ -35,11 +35,12 @@ abstract class ApplicationProvider implements ModuleDefinitionInterface
      */
     public function registerAutoloaders(DiInterface $container = null)
     {
+        $commonPath = $container->get('application')->getCommonPath();
+
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Common\Controllers' => BASE_PATH . '/src/controllers',
-                'Common\Models'      => BASE_PATH . '/src/models',
-                'Common\Forms'       => BASE_PATH . '/src/forms'
+                'Common\Controllers' => $commonPath . '/controllers',
+                'Common\Models'      => $commonPath . '/models'
             ])
             ->register();
     }

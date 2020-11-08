@@ -122,7 +122,7 @@ final class Application extends \Phalcon\Mvc\Application
     }
 
     /**
-     * PSR-4 compliant autoloader for application folder
+     * PSR-4 compliant autoloader for module folder
      * Initialize ModuleProvider for each modules defined in configuration
      *
      * TODO this use the default module configuration use by phalcon. This could be improve to just use moduleName
@@ -130,11 +130,20 @@ final class Application extends \Phalcon\Mvc\Application
     public function registerModulesProvider()
     {
         $config = $this->container->get('config');
-        if ($config->get('applicationType') !== 'modules') return;
 
+        // Do not load provider in simple application context
+        if ($config->get('applicationType') === 'simple') return;
+
+        // Load application or common modules configuration
+        if ($this->hasApplication()) {
+            $config->mergeConfigFile($this->getApplicationPath().'/config/modules.php', 'modules');
+        } else {
+            $config->mergeConfigFile($this->getCommonPath().'/config/modules.php', 'modules');
+        }
+
+        // Initialize moduleProvider for each module
         foreach ($config->get('modules') as $moduleName => $module)
         {
-            // TODO Adapt regex to use moduleClass variable
             $moduleNamespace = preg_replace('/\\\\'.$this->moduleClass.'$/', '', $module->get('className'));
             $modulePath = preg_replace('/\/'.$this->moduleClass.'.php$/', '', $module->get('path'));
 

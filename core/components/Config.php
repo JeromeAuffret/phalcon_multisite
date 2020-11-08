@@ -22,7 +22,6 @@ final class Config extends \Phalcon\Config
 
         $this->mergeConfigFile($commonPath.'/config/main.php');
         $this->mergeConfigFile($commonPath.'/config/config.php');
-        $this->mergeConfigFile($commonPath.'/config/modules.php', 'modules');
     }
 
     /**
@@ -36,7 +35,6 @@ final class Config extends \Phalcon\Config
 
         $this->mergeConfigFile($applicationPath.'/config/main.php');
         $this->mergeConfigFile($applicationPath.'/config/config.php');
-        $this->mergeConfigFile($applicationPath.'/config/modules.php', 'modules');
     }
 
     /**

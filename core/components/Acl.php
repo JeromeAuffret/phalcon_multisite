@@ -137,6 +137,23 @@ final class Acl extends Injectable implements AdapterInterface
 
     /*************************************************************
      *
+     *                          REGISTER
+     *
+     *************************************************************/
+
+    /**
+     * @param string $filePath
+     */
+    public function registerAclFromFile(string $filePath)
+    {
+        if (file_exists($filePath)) {
+            include_once $filePath;
+        }
+    }
+
+
+    /*************************************************************
+     *
      *                     ADAPTER INTERFACE
      *
      *************************************************************/
