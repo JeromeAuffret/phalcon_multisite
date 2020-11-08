@@ -19,8 +19,12 @@ use Phalcon\Di\Injectable;
  */
 final class Acl extends Injectable implements AdapterInterface
 {
-    /* @var AbstractAdapter $adapter */
+
+    /**
+     * @var AbstractAdapter $adapter
+     */
     private $adapter;
+
 
     /**
      * @param $adapter
@@ -37,6 +41,7 @@ final class Acl extends Injectable implements AdapterInterface
     {
         return $this->adapter;
     }
+
 
     /**
      * Verify if the current profile is allowed to access a resource from a given module
@@ -146,9 +151,7 @@ final class Acl extends Injectable implements AdapterInterface
      */
     public function registerAclFromFile(string $filePath)
     {
-        if (file_exists($filePath)) {
-            include_once $filePath;
-        }
+        if (file_exists($filePath)) include_once $filePath;
     }
 
 

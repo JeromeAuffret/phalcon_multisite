@@ -34,6 +34,16 @@ class Module extends ModuleProvider
      *
      * @param DiInterface $container
      */
+    public function registerRouter(DiInterface $container)
+    {
+        $container->get('router')->registerRouterFromFile(__DIR__.'/config/routes.php');
+    }
+
+    /**
+     * Register acl rules related to the module
+     *
+     * @param DiInterface $container
+     */
     public function registerAcl(DiInterface $container)
     {
         $container->get('acl')->registerAclFromFile(__DIR__.'/config/acl.php');
