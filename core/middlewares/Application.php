@@ -4,7 +4,6 @@ namespace Middleware;
 
 use Component\Application as ApplicationComponent;
 use Component\Config;
-use Component\SessionManager;
 use Exception;
 use Models\Application as ApplicationModel;
 use Phalcon\Events\Event;
@@ -15,7 +14,6 @@ use Phalcon\Di\Injectable;
  *
  * @property ApplicationComponent application
  * @property Config config
- * @property SessionManager sessionManager
  * @package Middleware
  */
 class Application extends Injectable
@@ -80,23 +78,23 @@ class Application extends Injectable
         if ($this->di->has('session') && $this->session->exists())
         {
             // Register application information in service if exist in session
-            if ($this->sessionManager->hasApplication()) {
+            if ($this->session->has('application')) {
                 $this->application->registerApplication(
-                    $this->sessionManager->getApplication()->toArray()
+                    $this->session->get('application')->toArray()
                 );
             }
 
             // Register user information in service if exist in session
-            if ($this->sessionManager->hasUser()) {
+            if ($this->session->has('user')) {
                 $this->application->registerUser(
-                    $this->sessionManager->getUser()->toArray()
+                    $this->session->get('user')->toArray()
                 );
             }
 
             // Register userRole information in service if exist in session
-            if ($this->sessionManager->hasUserRole()) {
+            if ($this->session->has('user_role')) {
                 $this->application->setUserRole(
-                    $this->sessionManager->getUserRole()
+                    $this->session->get('user_role')
                 );
             }
         }

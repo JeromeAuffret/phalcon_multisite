@@ -5,6 +5,8 @@ namespace Common\Modules\Auth\Controllers;
 use Models\Application;
 use Error\AuthException;
 use Exception;
+use Models\Role;
+use Phalcon\Collection;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
@@ -23,7 +25,7 @@ class ApplicationController extends ControllerBase
     {
         // Remove application already registered in session
         if ($this->request->isGet() && $this->di->has('session') && $this->session->exists()) {
-            $this->sessionManager->destroyApplicationSession();
+            $this->session->remove('application');
         }
 
         $id_user = $this->application->getUser('id');
@@ -45,7 +47,12 @@ class ApplicationController extends ControllerBase
         }
 
         if ($this->di->has('session') && $this->session->exists()) {
-            $this->sessionManager->setupApplicationSession($application);
+            $this->session->set('application', new Collection($application->toArray()));
+
+            /** @var Role $roleModel */
+            $roleModel = $this->dispatcher->dispatchNamespace(Role::class);
+            $role = $roleModel::getUserRole($this->session->get('user')->get('id'), $this->session->get('application')->get('id'));
+            $this->session->set('user_role', $role ? $role->getSlug() : 'guest');
         }
 
         $this->response->redirect('');

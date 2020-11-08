@@ -48,7 +48,7 @@ final class Application extends \Phalcon\Mvc\Application
     private $moduleBaseNamespace = 'Modules';
 
     /**
-     * @var string $applicationClass
+     * @var string $applicationClass-
      */
     private $moduleBaseDir = 'modules';
 
@@ -173,7 +173,7 @@ final class Application extends \Phalcon\Mvc\Application
      */
     public function hasApplication(): bool
     {
-        return !!$this->applicationSlug;
+        return !!$this->application;
     }
 
     /**

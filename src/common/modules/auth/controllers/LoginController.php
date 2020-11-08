@@ -5,6 +5,7 @@ namespace Common\Modules\Auth\Controllers;
 use Models\User;
 use Error\AuthException;
 use Exception;
+use Phalcon\Collection;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\View;
@@ -42,7 +43,7 @@ class LoginController extends ControllerBase
             }
 
             if ($this->di->has('session') && $this->session->exists()) {
-                $this->sessionManager->setupUserSession($user);
+                $this->session->set('user', new Collection($user->toArray()));
             }
 
             $this->response->redirect('auth/application');

@@ -2,7 +2,6 @@
 
 namespace Service;
 
-use Component\SessionManager;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
 use Phalcon\Session\Adapter\Stream;
@@ -32,11 +31,6 @@ class Session implements ServiceProviderInterface
                 ->start();
 
             return $manager;
-        });
-
-        $container->setShared('sessionManager', function ()
-        {
-            return new SessionManager();
         });
     }
 

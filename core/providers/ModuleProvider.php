@@ -55,7 +55,7 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
      *
      * Events are registered in afterModuleStart event ( ref : Application Middleware )
      *
-     * `registerAutoloaders and registerServices are call internally by phalcon on registerModules`
+     * registerAutoloaders and registerServices are call internally by phalcon on registerModules
      *
      * @param DiInterface|null $container
      * @param string|null $moduleName
