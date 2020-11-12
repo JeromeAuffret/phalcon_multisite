@@ -1,6 +1,6 @@
 <?php
 
-namespace Component;
+namespace Mvc;
 
 /**
  * Class Router

@@ -1,9 +1,12 @@
 <?php
 
-namespace Component;
+namespace Mvc;
 
 use Phalcon\Collection;
 use Phalcon\Helper\Str;
+use Service\Acl;
+use Service\Config;
+use Service\Database;
 
 /**
  * Class Application
@@ -100,9 +103,9 @@ final class Application extends \Phalcon\Mvc\Application
             ->register();
 
         $applicationProvider = (!empty($this->commonNamespace) ? $this->commonNamespace.'\\' : '') . $this->applicationClass;
-        $applicationProvider = new $applicationProvider;
+        $applicationProvider = new $applicationProvider($this->container);
 
-        $applicationProvider->initialize($this->container);
+        $applicationProvider->initialize();
     }
 
     /**
@@ -116,9 +119,9 @@ final class Application extends \Phalcon\Mvc\Application
             ->register();
 
         $applicationProvider = $this->applicationNamespace.'\\'.$this->applicationClass;
-        $applicationProvider = new $applicationProvider;
+        $applicationProvider = new $applicationProvider($this->container);
 
-        $applicationProvider->initialize($this->container);
+        $applicationProvider->initialize();
     }
 
     /**
@@ -151,10 +154,10 @@ final class Application extends \Phalcon\Mvc\Application
                 ->registerNamespaces([$moduleNamespace => $modulePath])
                 ->register();
 
-            $moduleProvider = $module->get('className');
-            $moduleProvider = new $moduleProvider;
+            $moduleProviderNamespace = $module->get('className');
+            $moduleProvider = new $moduleProviderNamespace($this->container, $moduleName);
 
-            $moduleProvider->initialize($this->container, $moduleName);
+            $moduleProvider->initialize();
         }
     }
 
@@ -313,25 +316,27 @@ final class Application extends \Phalcon\Mvc\Application
     /**
      * @param string $applicationSlug
      */
-    public function setApplicationSlug(string $applicationSlug)
+    private function setApplicationSlug(string $applicationSlug)
     {
         $this->applicationSlug = $applicationSlug;
     }
 
     /**
+     * @param string $applicationPath
+     */
+    private function setApplicationPath(string $applicationPath)
+    {
+        $this->applicationPath = $applicationPath;
+    }
+
+    /**
+     * Change the default namespace used by the application
+     *
      * @param string $applicationNamespace
      */
     public function setApplicationNamespace(string $applicationNamespace)
     {
         $this->applicationNamespace = $applicationNamespace;
-    }
-
-    /**
-     * @param string $applicationPath
-     */
-    public function setApplicationPath(string $applicationPath)
-    {
-        $this->applicationPath = $applicationPath;
     }
 
     /**

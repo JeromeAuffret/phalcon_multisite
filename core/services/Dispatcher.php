@@ -6,7 +6,7 @@ use Middleware\Dispatch as DispatchMiddleware;
 use Middleware\Error as ErrorMiddleware;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
-use Component\Dispatcher as DispatcherComponent;
+use Mvc\Dispatcher as DispatcherMvc;
 
 /**
  * Class Url
@@ -24,7 +24,7 @@ class Dispatcher implements ServiceProviderInterface
     public function register(DiInterface $container): void
     {
         $container->setShared('dispatcher', function () use ($container) {
-            $dispatcher =  new DispatcherComponent();
+            $dispatcher =  new DispatcherMvc();
 
             // Register core events in dispatcher
             $eventManager = $container->get('eventsManager');

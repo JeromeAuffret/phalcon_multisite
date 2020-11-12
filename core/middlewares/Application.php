@@ -2,17 +2,17 @@
 
 namespace Middleware;
 
-use Component\Application as ApplicationComponent;
 use Component\Config;
+use Common\Models\Application as ApplicationModel;
 use Exception;
-use Models\Application as ApplicationModel;
 use Phalcon\Events\Event;
 use Phalcon\Di\Injectable;
+use Mvc\Application as ApplicationMvc;
 
 /**
  * Class Dispatch
  *
- * @property ApplicationComponent application
+ * @property ApplicationMvc application
  * @property Config config
  * @package Middleware
  */
@@ -25,11 +25,11 @@ class Application extends Injectable
      * By default, register common's provider
      *
      * @param Event                $event
-     * @param ApplicationComponent $application
+     * @param ApplicationMvc $application
      * @return void
      * @throws Exception
      */
-    public function boot(Event $event, ApplicationComponent $application)
+    public function boot(Event $event, ApplicationMvc $application)
     {
         $this->dispatchApplicationBySession();
         $this->dispatchApplicationByHost();
@@ -46,11 +46,11 @@ class Application extends Injectable
      * Register specific module events from moduleProvider
      *
      * @param Event $event
-     * @param ApplicationComponent $application
+     * @param ApplicationMvc $application
      * @return void
      * @throws Exception
      */
-    public function afterStartModule(Event $event, ApplicationComponent $application)
+    public function afterStartModule(Event $event, ApplicationMvc $application)
     {
         $moduleName = $this->router->getModuleName();
         $module = $application->getModule($moduleName);

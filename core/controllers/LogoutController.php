@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Controllers;
+namespace Controllers;
 
 use Phalcon\Mvc\Controller;
 
@@ -9,7 +9,7 @@ use Phalcon\Mvc\Controller;
  *
  * @package Controllers
  */
-class LogoutController extends Controller
+final class LogoutController extends Controller
 {
     
     /**

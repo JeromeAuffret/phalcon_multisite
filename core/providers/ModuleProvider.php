@@ -49,7 +49,6 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
     protected $defaultAction;
 
     /**
-     * Initialize module providers.
      * Register a module in application service
      * Register specific namespaces and services for a module
      *
@@ -60,8 +59,11 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
      * @param DiInterface|null $container
      * @param string|null $moduleName
      */
-    public function initialize(DiInterface $container, string $moduleName)
+    public function __construct(?DiInterface $container = null, ?string $moduleName = null)
     {
+        if (!($container && $moduleName)) return;
+
+        $this->container = $container;
         $this->moduleName = $moduleName;
 
         $config = $container->get('config');
@@ -87,6 +89,11 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
         $this->registerRouter($container);
         $this->registerAcl($container);
     }
+
+    /**
+     * Initialize module providers.
+     */
+    public function initialize() {}
 
     /**
      * Registers an autoloader related to the module

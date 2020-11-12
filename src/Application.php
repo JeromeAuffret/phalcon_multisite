@@ -16,6 +16,22 @@ class Application extends ApplicationProvider
 {
 
     /**
+     * Registers an autoloader related to the application
+     *
+     * @param DiInterface|null $container
+     */
+    public function registerAutoloaders(DiInterface $container = null)
+    {
+        (new \Phalcon\Loader())
+            ->registerNamespaces([
+                'Common\Controllers' => __DIR__ . '/controllers',
+                'Common\Models'      => __DIR__ . '/models',
+                'Common\Forms'       => __DIR__ . '/forms',
+            ])
+            ->register();
+    }
+
+    /**
      * Registers services related to the application
      *
      * @param DiInterface $container

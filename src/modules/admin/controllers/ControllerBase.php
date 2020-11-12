@@ -3,7 +3,7 @@
 namespace Common\Modules\Admin\Controllers;
 
 use Common\Controllers\BaseController;
-use Models\Application;
+use Common\DispatcherMvc;
 
 /**
  * Class ControllerBase

@@ -2,11 +2,9 @@
 
 namespace Handler;
 
-use Component\Application;
 use Exception;
 use Middleware\Application as ApplicationMiddleware;
 use Phalcon\Di\FactoryDefault;
-
 use Service\Acl as AclService;
 use Service\Application as ApplicationService;
 use Service\Config as ConfigService;
@@ -22,13 +20,8 @@ use Service\View as ViewService;
  *
  * @package Handler
  */
-class ApplicationHandler
+final class ApplicationHandler
 {
-
-    /**
-     * @var Application
-     */
-    protected $application;
 
     /**
      * @var FactoryDefault
@@ -51,9 +44,6 @@ class ApplicationHandler
         // Register main services in DI container
         $this->registerCoreServices();
 
-        // Get application service
-        $this->application = $this->container->get('application');
-
         // Bind event to mvc application
         $this->registerApplicationEvents();
     }
@@ -66,7 +56,7 @@ class ApplicationHandler
      */
     public function handle(): string
     {
-        return (string) $this->application->handle(
+        return (string) $this->container->get('application')->handle(
             $this->container->get('config')->get('requestUri')
         )
             ->getContent();
@@ -80,13 +70,15 @@ class ApplicationHandler
         // Register core namespaces
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Acl'        => BASE_PATH . '/core/acl',
-                'Component'  => BASE_PATH . '/core/components',
-                'Error'      => BASE_PATH . '/core/errors',
-                'Middleware' => BASE_PATH . '/core/middlewares',
-                'Provider'   => BASE_PATH . '/core/providers',
-                'Service'    => BASE_PATH . '/core/services',
-                'Libraries'  => BASE_PATH . '/libraries',
+                'Acl'         => BASE_PATH . '/core/acl',
+                'Component'   => BASE_PATH . '/core/components',
+                'Controllers' => BASE_PATH . '/core/controllers',
+                'Error'       => BASE_PATH . '/core/errors',
+                'Middleware'  => BASE_PATH . '/core/middlewares',
+                'Provider'    => BASE_PATH . '/core/providers',
+                'Service'     => BASE_PATH . '/core/services',
+                'Mvc'         => BASE_PATH . '/core/mvc',
+                'Libraries'   => BASE_PATH . '/libraries',
             ])
             ->register();
     }
@@ -133,7 +125,7 @@ class ApplicationHandler
 
         $eventsManager->attach('application', new ApplicationMiddleware);
 
-        $this->application->setEventsManager($eventsManager);
+        $this->container->get('application')->setEventsManager($eventsManager);
     }
 
 }

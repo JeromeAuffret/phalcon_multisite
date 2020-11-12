@@ -1,8 +1,9 @@
 <?php
 
-namespace Component;
+namespace Mvc;
 
 use Phalcon\Helper\Str;
+use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
 use ReflectionException;
 
 /**
@@ -16,27 +17,18 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
     /**
      * Register correct controller namespace in dispatcher
      * Override common class if exist in application folder
-     *
-     * @throws ReflectionException
      */
     public function dispatchControllerNamespace()
     {
         $controllerClass = $this->getControllerClass();
-
-        // Error controllers is not overridable
-        if (substr($controllerClass, -strlen('ErrorController')) === 'ErrorController') {
-            $this->setNamespaceName('Common\Controllers');
-            return;
-        }
-
-        // Logout controllers is not overridable
-        if (substr($controllerClass, -strlen('LogoutController')) === 'LogoutController') {
-            $this->setNamespaceName('Common\Controllers');
-            return;
-        }
-
         $controllerClass = $this->dispatchNamespace($controllerClass);
-        $this->setNamespaceName((new \ReflectionClass($controllerClass))->getNamespaceName());
+
+        try {
+            $this->setNamespaceName((new \ReflectionClass($controllerClass))->getNamespaceName());
+        }
+        catch (ReflectionException $e) {
+            new DispatchException('Not found', DispatchException::EXCEPTION_HANDLER_NOT_FOUND, $e);
+        }
     }
 
     /**
@@ -44,7 +36,6 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
      *
      * @param string $classNamespace
      * @return string
-     * @throws ReflectionException
      */
     public function dispatchNamespace(string $classNamespace)
     {
@@ -59,17 +50,23 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
         // If namespace is part of common, we check if override exist in application folder
         if (substr($classNamespace, 0, strlen($commonNamespace)) === $commonNamespace)
         {
-            $classPath = (new \ReflectionClass($classNamespace))->getFileName();
-            $overridePath = str_replace($application->getCommonPath(), $application->getApplicationPath(), $classPath);
+            try {
+                $classPath = (new \ReflectionClass($classNamespace))->getFileName();
+                $overridePath = str_replace($application->getCommonPath(), $application->getApplicationPath(), $classPath);
 
-            if (file_exists($overridePath))
-            {
-                $classNamespace = str_replace($commonNamespace, $application->getApplicationNamespace(), $classNamespace);
+                if (file_exists($overridePath))
+                {
+                    $classNamespace = str_replace($commonNamespace, $application->getApplicationNamespace(), $classNamespace);
 
-                (new \Phalcon\Loader())
-                    ->registerClasses([$classNamespace => $overridePath])
-                    ->register();
+                    (new \Phalcon\Loader())
+                        ->registerClasses([$classNamespace => $overridePath])
+                        ->register();
+                }
+            // We return default namespace if
+            } catch (ReflectionException $e) {
+                return $classNamespace;
             }
+
         }
 
         return $classNamespace;

@@ -2,7 +2,7 @@
 
 namespace Service;
 
-use Component\Application as ApplicationComponent;
+use Mvc\Application as ApplicationMvc;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
 
@@ -22,7 +22,7 @@ class Application implements ServiceProviderInterface
     public function register(DiInterface $container): void
     {
         $container->setShared('application', function () use ($container) {
-            return new ApplicationComponent($container);
+            return new ApplicationMvc($container);
         });
     }
 

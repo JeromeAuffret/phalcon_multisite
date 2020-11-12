@@ -14,36 +14,37 @@ abstract class ApplicationProvider implements ModuleDefinitionInterface
 {
 
     /**
-     * Initialize application providers.
+     * @var DiInterface $container
+     */
+    protected $container;
+
+    /**
      * This register specific namespaces and services for an application.
      *
-     * @param DiInterface|null $container
+     * @param DiInterface $container
      */
-    public function initialize(DiInterface $container)
+    public function __construct(DiInterface $container)
     {
-        $this->registerAutoloaders($container);
-        $this->registerServices($container);
-        $this->registerRouter($container);
-        $this->registerAcl($container);
-        $this->registerEvents($container);
+        $this->container = $container;
+
+        $this->registerAutoloaders($this->container);
+        $this->registerServices($this->container);
+        $this->registerRouter($this->container);
+        $this->registerAcl($this->container);
+        $this->registerEvents($this->container);
     }
+
+    /**
+     * Initialize application providers.
+     */
+    public function initialize() {}
 
     /**
      * Registers an autoloader related to the application
      *
      * @param DiInterface|null $container
      */
-    public function registerAutoloaders(DiInterface $container = null)
-    {
-        $commonPath = $container->get('application')->getCommonPath();
-
-        (new \Phalcon\Loader())
-            ->registerNamespaces([
-                'Common\Controllers' => $commonPath . '/controllers',
-                'Common\Models'      => $commonPath . '/models'
-            ])
-            ->register();
-    }
+    public function registerAutoloaders(DiInterface $container = null) {}
 
     /**
      * Registers services related to the application

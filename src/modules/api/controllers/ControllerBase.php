@@ -4,7 +4,7 @@ namespace Common\Modules\Api\Controllers;
 
 use Common\Controllers\BaseController;
 use Exception;
-use Models\BaseModel;
+use Common\Models\BaseModel;
 use Phalcon\Helper\Str;
 use Phalcon\Mvc\ModelInterface;
 

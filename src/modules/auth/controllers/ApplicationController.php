@@ -2,10 +2,10 @@
 
 namespace Common\Modules\Auth\Controllers;
 
-use Models\Application;
 use Error\AuthException;
 use Exception;
-use Models\Role;
+use Common\Models\Role;
+use Common\Models\Application;
 use Phalcon\Collection;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;

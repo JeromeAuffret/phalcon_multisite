@@ -1,8 +1,8 @@
 <?php
 
-namespace Common\Controllers;
+namespace Controllers;
 
-use Component\Application;
+use Mvc\Application;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
 

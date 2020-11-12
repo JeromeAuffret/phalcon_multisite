@@ -2,7 +2,7 @@
 
 namespace Service;
 
-use Component\Router as RouterComponent;
+use Mvc\Router as RouterMvc;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
 
@@ -22,7 +22,7 @@ class Router implements ServiceProviderInterface
     public function register(DiInterface $container): void
     {
         $container->setShared('router', function () use ($container) {
-            $router =  new RouterComponent();
+            $router =  new RouterMvc();
 
             $router->setDI($container);
             $router->initDefaults();

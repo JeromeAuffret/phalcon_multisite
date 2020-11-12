@@ -7,7 +7,7 @@ namespace Handler;
  *
  * @package Handler
  */
-class ConsoleHandler
+final class ConsoleHandler
 {
 
 }

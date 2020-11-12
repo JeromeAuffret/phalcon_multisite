@@ -2,6 +2,7 @@
 
 namespace Demo2;
 
+use Common\Application as CommonProvider;
 use Phalcon\Di\DiInterface;
 use Provider\ApplicationProvider;
 
@@ -10,7 +11,7 @@ use Provider\ApplicationProvider;
  *
  * @package Demo2
  */
-class Application extends ApplicationProvider
+class Application extends CommonProvider
 {
 
     /**
@@ -27,17 +28,6 @@ class Application extends ApplicationProvider
                 "Demo2\\Controllers" => __DIR__.'/controllers'
             ])
             ->register();
-    }
-
-    /**
-     * Registers services related to the application
-     *
-     * @param DiInterface $container
-     */
-    public function registerServices(DiInterface $container)
-    {
-        // Register Application Config
-        $container->get('config')->registerApplicationConfig();
     }
 
 }

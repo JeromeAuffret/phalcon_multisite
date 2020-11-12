@@ -2,7 +2,7 @@
 
 namespace Common\Modules\Auth\Controllers;
 
-use Models\User;
+use Common\Models\User;
 use Error\AuthException;
 use Exception;
 use Phalcon\Collection;
