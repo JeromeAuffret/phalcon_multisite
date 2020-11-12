@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Modules\Api;
+namespace Base\Modules\Api;
 
 use Phalcon\Di\DiInterface;
 use Phalcon\Helper\Str;
@@ -23,9 +23,9 @@ class Module extends ModuleProvider
     {
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Common\Modules\Api\Controllers'      => __DIR__ . '/controllers/',
-                'Common\Modules\Api\Controllers\Data' => __DIR__ . '/controllers/data/',
-                'Common\Modules\Api\Controllers\Form' => __DIR__ . '/controllers/form/',
+                'Base\Modules\Api\Controllers'      => __DIR__ . '/controllers/',
+                'Base\Modules\Api\Controllers\Data' => __DIR__ . '/controllers/data/',
+                'Base\Modules\Api\Controllers\Form' => __DIR__ . '/controllers/form/',
             ])
             ->register();
     }
@@ -93,7 +93,7 @@ class Module extends ModuleProvider
         $referenceControllerFile = Str::camelize($referenceName).'Controller.php';
 
         $appControllerModulePath = $application->getApplicationModulePath($moduleName).'/controllers/'.$controllerName;
-        $commonControllerModulePath = $application->getCommonModulePath($moduleName).'/controllers/'.$controllerName;
+        $baseControllerModulePath = $application->getBaseModulePath($moduleName).'/controllers/'.$controllerName;
 
         if ($controllerName === 'error') {
             $dispatcher->setNamespaceName('Controllers');
@@ -105,13 +105,20 @@ class Module extends ModuleProvider
             $dispatcher->setNamespaceName($namespace);
             $dispatcher->setControllerName($referenceName);
         }
-        else if (file_exists($commonControllerModulePath.'/'.$referenceControllerFile)) {
-            $namespace = $application->getCommonModulePath($moduleName).'\Controllers\\'.$controllerName;
+        else if (file_exists($baseControllerModulePath.'/'.$referenceControllerFile)) {
+            $namespace = $application->getBaseModulePath($moduleName).'\Controllers\\'.$controllerName;
 
-            (new \Phalcon\Loader())->registerNamespaces([$namespace => $commonControllerModulePath])->register();
+            (new \Phalcon\Loader())->registerNamespaces([$namespace => $baseControllerModulePath])->register();
             $dispatcher->setNamespaceName($namespace);
             $dispatcher->setControllerName($referenceName);
         }
     }
+
+    /**
+     * Registers services related to the module
+     *
+     * @param DiInterface $container
+     */
+    public function registerServices(DiInterface $container) {}
 
 }

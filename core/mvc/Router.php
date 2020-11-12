@@ -18,7 +18,7 @@ class Router extends \Phalcon\Mvc\Router
         $config = $this->getDI()->get('config');
         $application = $this->getDI()->get('application');
 
-        $defaultNamespace = $application->hasApplication() ? $application->getApplicationNamespace() : $application->getCommonNamespace();
+        $defaultNamespace = $application->hasApplication() ? $application->getApplicationNamespace() : $application->getBaseNamespace();
 
         $this->setDefaultNamespace($defaultNamespace.'\\Controllers');
         $this->setDefaultController($config->defaultController);
@@ -57,6 +57,41 @@ class Router extends \Phalcon\Mvc\Router
     public function registerRouterFromFile(string $filePath)
     {
         if (file_exists($filePath)) include_once $filePath;
+    }
+
+    /**
+     * @param string $moduleName
+     * @param string $controllerNamespace
+     * @param string $controllerName
+     * @param string $defaultController
+     * @param string $defaultAction
+     */
+    public function registerModuleRoutes(string $moduleName, string $controllerNamespace, string $controllerName, string $defaultController, string $defaultAction)
+    {
+        // Register a generic routing for modules
+        $this->add('/'.$moduleName.'/:params', [
+            'namespace' => $controllerNamespace,
+            'module' => $moduleName,
+            'controller' => $controllerName,
+            'action' => $defaultAction,
+            'params' => 1
+        ]);
+
+        $this->add('/'.$moduleName.'/:controller/:params', [
+            'namespace' => $controllerNamespace,
+            'module' => $moduleName,
+            'controller' => 1,
+            'action' => $defaultAction,
+            'params' => 2
+        ]);
+
+        $this->add('/'.$moduleName.'/:controller/:action/:params', [
+            'namespace' => $controllerNamespace,
+            'module' => $moduleName,
+            'controller' => 1,
+            'action' => 2,
+            'params' => 3
+        ]);
     }
 
 }

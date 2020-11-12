@@ -1,11 +1,11 @@
 <?php
 
-namespace Common\Modules\Auth\Controllers;
+namespace Base\Modules\Auth\Controllers;
 
 use Error\AuthException;
 use Exception;
-use Common\Models\Role;
-use Common\Models\Application;
+use Base\Models\Role;
+use Base\Models\Application;
 use Phalcon\Collection;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;

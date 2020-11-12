@@ -1,14 +1,14 @@
 <?php
 
-namespace Common\Modules\Admin\Controllers;
+namespace Base\Modules\Admin\Controllers;
 
-use Common\Controllers\BaseController;
-use Common\DispatcherMvc;
+use Base\Controllers\BaseController;
+use Base\DispatcherMvc;
 
 /**
  * Class ControllerBase
  *
- * @package Modules\Admin\Controllers
+ * @package Base\Modules\Admin\Controllers
  */
 class ControllerBase extends BaseController
 {

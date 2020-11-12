@@ -85,33 +85,33 @@ class Dispatch extends Injectable
      ************************************************************/
 
     /**
-     * Dispatch views between common/application folders
+     * Dispatch views between base/application folders
      */
     public function dispatchViews()
     {
         $application = $this->getDI()->get('application');
         $moduleName = $this->router->getModuleName();
 
-        $commonViewPath = $application->getCommonPath().'/views/';
-        $commonModuleViewPath = $application->getCommonModulePath($moduleName).'/views';
+        $baseViewPath = $application->getBasePath().'/views/';
+        $baseModuleViewPath = $application->getBaseModulePath($moduleName).'/views';
 
         $appViewPath = $application->getApplicationPath().'/views';
         $appModuleViewPath = $application->getApplicationModulePath($moduleName).'/views';
 
-        $this->dispatchMainView($commonViewPath, $commonModuleViewPath, $appViewPath, $appModuleViewPath);
-        $this->dispatchLayoutDir($commonViewPath, $commonModuleViewPath, $appViewPath, $appModuleViewPath);
-        $this->dispatchViewsDir($commonViewPath, $commonModuleViewPath, $appViewPath, $appModuleViewPath);
+        $this->dispatchMainView($baseViewPath, $baseModuleViewPath, $appViewPath, $appModuleViewPath);
+        $this->dispatchLayoutDir($baseViewPath, $baseModuleViewPath, $appViewPath, $appModuleViewPath);
+        $this->dispatchViewsDir($baseViewPath, $baseModuleViewPath, $appViewPath, $appModuleViewPath);
     }
 
     /**
      * Set default view main
      *
-     * @param $commonViewPath
-     * @param $commonModuleViewPath
+     * @param $baseViewPath
+     * @param $baseModuleViewPath
      * @param $appViewPath
      * @param $appModuleViewPath
      */
-    public function dispatchMainView($commonViewPath, $commonModuleViewPath, $appViewPath, $appModuleViewPath)
+    public function dispatchMainView($baseViewPath, $baseModuleViewPath, $appViewPath, $appModuleViewPath)
     {
         if (file_exists($appModuleViewPath.'/'.$this->view->getMainView().'.phtml')) {
             $this->view->setMainView($appModuleViewPath.'/'.$this->view->getMainView());
@@ -119,23 +119,23 @@ class Dispatch extends Injectable
         elseif (file_exists($appViewPath.'/'.$this->view->getMainView().'.phtml')) {
             $this->view->setMainView($appViewPath.'/'.$this->view->getMainView());
         }
-        elseif (file_exists($commonModuleViewPath.'/'.$this->view->getMainView().'.phtml')) {
-            $this->view->setMainView($commonModuleViewPath.'/'.$this->view->getMainView());
+        elseif (file_exists($baseModuleViewPath.'/'.$this->view->getMainView().'.phtml')) {
+            $this->view->setMainView($baseModuleViewPath.'/'.$this->view->getMainView());
         }
-        elseif (file_exists($commonViewPath.'/'.$this->view->getMainView().'.phtml')) {
-            $this->view->setMainView($commonViewPath.'/'.$this->view->getMainView());
+        elseif (file_exists($baseViewPath.'/'.$this->view->getMainView().'.phtml')) {
+            $this->view->setMainView($baseViewPath.'/'.$this->view->getMainView());
         }
     }
 
     /**
      * Set default layouts directory
      *
-     * @param $commonViewPath
-     * @param $commonModuleViewPath
+     * @param $baseViewPath
+     * @param $baseModuleViewPath
      * @param $appViewPath
      * @param $appModuleViewPath
      */
-    public function dispatchLayoutDir($commonViewPath, $commonModuleViewPath, $appViewPath, $appModuleViewPath)
+    public function dispatchLayoutDir($baseViewPath, $baseModuleViewPath, $appViewPath, $appModuleViewPath)
     {
         if (!$this->view->getLayout()) {
             $this->view->setLayout('main');
@@ -147,23 +147,23 @@ class Dispatch extends Injectable
         elseif (file_exists($appViewPath.'/layouts/'.$this->view->getLayout().'.phtml')) {
             $this->view->setLayoutsDir($appViewPath.'/layouts/');
         }
-        elseif (file_exists($commonModuleViewPath.'/layouts/'.$this->view->getLayout().'.phtml')) {
-            $this->view->setLayoutsDir($commonModuleViewPath.'/layouts/');
+        elseif (file_exists($baseModuleViewPath.'/layouts/'.$this->view->getLayout().'.phtml')) {
+            $this->view->setLayoutsDir($baseModuleViewPath.'/layouts/');
         }
-        elseif (file_exists($commonViewPath.'/layouts/'.$this->view->getLayout().'.phtml')) {
-            $this->view->setLayoutsDir($commonViewPath.'/layouts/');
+        elseif (file_exists($baseViewPath.'/layouts/'.$this->view->getLayout().'.phtml')) {
+            $this->view->setLayoutsDir($baseViewPath.'/layouts/');
         }
     }
 
     /**
      * Set default views directory
      *
-     * @param $commonViewPath
-     * @param $commonModuleViewPath
+     * @param $baseViewPath
+     * @param $baseModuleViewPath
      * @param $appViewPath
      * @param $appModuleViewPath
      */
-    public function dispatchViewsDir($commonViewPath, $commonModuleViewPath, $appViewPath, $appModuleViewPath)
+    public function dispatchViewsDir($baseViewPath, $baseModuleViewPath, $appViewPath, $appModuleViewPath)
     {
         $controllerName = $this->dispatcher->getControllerName();
         $actionName = $this->dispatcher->getActionName();
@@ -174,11 +174,11 @@ class Dispatch extends Injectable
         elseif (file_exists($appViewPath.'/'.$controllerName.'/'.$actionName.'.phtml')) {
             $this->view->setViewsDir($appViewPath);
         }
-        elseif (file_exists($commonModuleViewPath.'/'.$controllerName.'/'.$actionName.'.phtml')) {
-            $this->view->setViewsDir($commonModuleViewPath);
+        elseif (file_exists($baseModuleViewPath.'/'.$controllerName.'/'.$actionName.'.phtml')) {
+            $this->view->setViewsDir($baseModuleViewPath);
         }
-        elseif (file_exists($commonViewPath.'/'.$controllerName.'/'.$actionName.'.phtml')) {
-            $this->view->setViewsDir($commonViewPath);
+        elseif (file_exists($baseViewPath.'/'.$controllerName.'/'.$actionName.'.phtml')) {
+            $this->view->setViewsDir($baseViewPath);
         }
     }
 

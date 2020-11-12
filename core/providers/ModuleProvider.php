@@ -28,6 +28,12 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
      * @var string
      */
     protected $moduleNamespace;
+
+    /**
+     * @var string
+     */
+    protected $modulePath;
+
     /**
      * @var string
      */
@@ -72,84 +78,52 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
 
         $this->moduleDefinition = $config->get('modules')->get($moduleName);
         $this->moduleNamespace = preg_replace('/\\\Module$/', '', $this->moduleDefinition->get('className'));
+        $this->modulePath = $modulePath = preg_replace('/\/Module.php$/', '', $this->moduleDefinition->get('path'));;
         $this->controllerNamespace = $this->moduleNamespace.'\\Controllers';
         $this->defaultController = $this->moduleDefinition->get('defaultController') ?? $config->get('defaultController');
         $this->defaultAction = $this->moduleDefinition->get('defaultAction') ?? $config->get('defaultController');
 
         $application->registerModules([
-            $moduleName => [
+            $this->moduleName => [
                 'className' => $this->moduleDefinition->get('className'),
                 'path' => $this->moduleDefinition->get('path')
             ],
         ], true);
 
         // Register router defaults for the given module
-        $router->initModuleDefaults($moduleName, $this->controllerNamespace, $this->defaultController, $this->defaultAction);
+        $router->initModuleDefaults($this->moduleName, $this->controllerNamespace, $this->defaultController, $this->defaultAction);
 
-        $this->registerRouter($container);
-        $this->registerAcl($container);
+        $this->registerRouter($this->container);
+        $this->registerAcl($this->container);
     }
-
-    /**
-     * Initialize module providers.
-     */
-    public function initialize() {}
 
     /**
      * Registers an autoloader related to the module
      *
      * @param DiInterface|null $container
      */
-    public function registerAutoloaders(DiInterface $container = null) {}
+    abstract public function registerAutoloaders(DiInterface $container = null);
 
     /**
      * Registers services related to the module
      *
      * @param DiInterface $container
      */
-    public function registerServices(DiInterface $container) {}
+    abstract public function registerServices(DiInterface $container);
 
     /**
      * Register router related to the module
      *
      * @param DiInterface $container
      */
-    public function registerRouter(DiInterface $container)
-    {
-        $router = $container->get('router');
-
-        // Register a generic routing for modules
-        $router->add('/'.$this->moduleName.'/:params', [
-            'namespace' => $this->controllerNamespace,
-            'module' => $this->moduleName,
-            'controller' => $this->defaultController,
-            'action' => $this->defaultAction,
-            'params' => 1
-        ]);
-
-        $router->add('/'.$this->moduleName.'/:controller/:params', [
-            'namespace' => $this->controllerNamespace,
-            'module' => $this->moduleName,
-            'controller' => 1,
-            'action' => $this->defaultAction,
-            'params' => 2
-        ]);
-
-        $router->add('/'.$this->moduleName.'/:controller/:action/:params', [
-            'namespace' => $this->controllerNamespace,
-            'module' => $this->moduleName,
-            'controller' => 1,
-            'action' => 2,
-            'params' => 3
-        ]);
-    }
+    abstract public function registerRouter(DiInterface $container);
 
     /**
      * Register acl rules related to the module
      *
      * @param DiInterface $container
      */
-    public function registerAcl(DiInterface $container) {}
+    abstract public function registerAcl(DiInterface $container);
 
     /**
      * Register events related to the module
@@ -157,6 +131,6 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
      *
      * @param DiInterface $container
      */
-    public function registerEvents(DiInterface $container) {}
+    abstract public function registerEvents(DiInterface $container);
 
 }

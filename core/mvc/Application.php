@@ -21,17 +21,17 @@ final class Application extends \Phalcon\Mvc\Application
 {
 
     /**
-     * @var string $commonNamespace
+     * @var string $baseNamespace
      */
-    private $commonNamespace = 'Common';
+    private $baseNamespace = 'Base';
 
     /**
-     * @var string $commonPath
+     * @var string $basePath
      */
-    private $commonPath = BASE_PATH . "/src";
+    private $basePath = BASE_PATH . "/src";
 
     /**
-     * @var string $commonPath
+     * @var string $basePath
      */
     private $applicationBasePath = BASE_PATH . "/src/apps";
 
@@ -93,19 +93,17 @@ final class Application extends \Phalcon\Mvc\Application
      **********************************************************/
 
     /**
-     * PSR-4 compliant autoloader for common folder
-     * Initialize ApplicationProvider for common
+     * PSR-4 compliant autoloader for base folder
+     * Initialize ApplicationProvider for base
      */
-    public function registerCommonProvider()
+    public function registerBaseProvider()
     {
         (new \Phalcon\Loader())
-            ->registerNamespaces([$this->commonNamespace => $this->commonPath])
+            ->registerNamespaces([$this->baseNamespace => $this->basePath])
             ->register();
 
-        $applicationProvider = (!empty($this->commonNamespace) ? $this->commonNamespace.'\\' : '') . $this->applicationClass;
+        $applicationProvider = (!empty($this->baseNamespace) ? $this->baseNamespace.'\\' : '') . $this->applicationClass;
         $applicationProvider = new $applicationProvider($this->container);
-
-        $applicationProvider->initialize();
     }
 
     /**
@@ -120,8 +118,6 @@ final class Application extends \Phalcon\Mvc\Application
 
         $applicationProvider = $this->applicationNamespace.'\\'.$this->applicationClass;
         $applicationProvider = new $applicationProvider($this->container);
-
-        $applicationProvider->initialize();
     }
 
     /**
@@ -137,11 +133,11 @@ final class Application extends \Phalcon\Mvc\Application
         // Do not load provider in simple application context
         if ($config->get('applicationType') === 'simple') return;
 
-        // Load application or common modules configuration
+        // Load application or base modules configuration
         if ($this->hasApplication()) {
             $config->mergeConfigFile($this->getApplicationPath().'/config/modules.php', 'modules');
         } else {
-            $config->mergeConfigFile($this->getCommonPath().'/config/modules.php', 'modules');
+            $config->mergeConfigFile($this->getBasePath().'/config/modules.php', 'modules');
         }
 
         // Initialize moduleProvider for each module
@@ -155,9 +151,7 @@ final class Application extends \Phalcon\Mvc\Application
                 ->register();
 
             $moduleProviderNamespace = $module->get('className');
-            $moduleProvider = new $moduleProviderNamespace($this->container, $moduleName);
-
-            $moduleProvider->initialize();
+            new $moduleProviderNamespace($this->container, $moduleName);
         }
     }
 
@@ -394,37 +388,37 @@ final class Application extends \Phalcon\Mvc\Application
     /**
      * @return string
      */
-    public function getCommonNamespace(): string
+    public function getBaseNamespace(): string
     {
-        return $this->commonNamespace;
+        return $this->baseNamespace;
     }
 
     /**
      * @return string
      */
-    public function getCommonPath(): string
+    public function getBasePath(): string
     {
-        return $this->commonPath;
-    }
-
-    /**
-     * @param string|null $moduleName
-     * @return string
-     */
-    public function getCommonModulePath(?string $moduleName): ?string
-    {
-        if (!$moduleName) return null;
-        return $this->commonPath.'/'.$this->moduleBaseDir.'/'.$moduleName;
+        return $this->basePath;
     }
 
     /**
      * @param string|null $moduleName
      * @return string
      */
-    public function getCommonModuleNamespace(?string $moduleName): ?string
+    public function getBaseModulePath(?string $moduleName): ?string
     {
         if (!$moduleName) return null;
-        return (!empty($this->commonNamespace) ? $this->commonNamespace.'\\' : '') . $this->moduleBaseNamespace.'\\'.Str::camelize($moduleName);
+        return $this->basePath.'/'.$this->moduleBaseDir.'/'.$moduleName;
+    }
+
+    /**
+     * @param string|null $moduleName
+     * @return string
+     */
+    public function getBaseModuleNamespace(?string $moduleName): ?string
+    {
+        if (!$moduleName) return null;
+        return (!empty($this->baseNamespace) ? $this->baseNamespace.'\\' : '') . $this->moduleBaseNamespace.'\\'.Str::camelize($moduleName);
     }
 
 }

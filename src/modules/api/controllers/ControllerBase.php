@@ -1,10 +1,10 @@
 <?php
 
-namespace Common\Modules\Api\Controllers;
+namespace Base\Modules\Api\Controllers;
 
-use Common\Controllers\BaseController;
+use Base\Controllers\BaseController;
 use Exception;
-use Common\Models\BaseModel;
+use Base\Models\BaseModel;
 use Phalcon\Helper\Str;
 use Phalcon\Mvc\ModelInterface;
 

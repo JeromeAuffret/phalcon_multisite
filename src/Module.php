@@ -1,20 +1,20 @@
 <?php
 
-namespace Base\Modules\Auth;
+namespace Base;
 
 use Phalcon\Di\DiInterface;
 use Provider\ModuleProvider;
 
 /**
- * Class Module
+ * Class Application
  *
- * @package Modules\Auth
+ * @package Base
  */
 class Module extends ModuleProvider
 {
 
     /**
-     * Registers an autoloader related to the module
+     * Registers an autoloader related to the application
      *
      * @param DiInterface|null $container
      */
@@ -22,13 +22,27 @@ class Module extends ModuleProvider
     {
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Base\Modules\Auth\Controllers' => __DIR__ . '/controllers/'
+                $this->controllerNamespace => $this->modulePath.'/controllers'
             ])
             ->register();
     }
 
     /**
-     * Register specific routes for API module
+     * Registers services related to the application
+     *
+     * @param DiInterface $container
+     */
+    public function registerServices(DiInterface $container) {}
+
+    /**
+     * Register events related to the application
+     *
+     * @param DiInterface $container
+     */
+    public function registerEvents(DiInterface $container) {}
+
+    /**
+     * Register router related to the application
      *
      * @param DiInterface $container
      */
@@ -44,7 +58,7 @@ class Module extends ModuleProvider
     }
 
     /**
-     * Register acl rules related to the module
+     * Register acl rules related to the application
      *
      * @param DiInterface $container
      */
@@ -52,20 +66,5 @@ class Module extends ModuleProvider
     {
         $container->get('acl')->registerAclFromFile(__DIR__.'/config/acl.php');
     }
-
-    /**
-     * Registers services related to the module
-     *
-     * @param DiInterface $container
-     */
-    public function registerServices(DiInterface $container) {}
-
-    /**
-     * Register events related to the module
-     * Events are bind only in module dispatch loop
-     *
-     * @param DiInterface $container
-     */
-    public function registerEvents(DiInterface $container) {}
 
 }

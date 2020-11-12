@@ -3,7 +3,7 @@
 namespace Middleware;
 
 use Component\Config;
-use Common\Models\Application as ApplicationModel;
+use Base\Models\Application as ApplicationModel;
 use Exception;
 use Phalcon\Events\Event;
 use Phalcon\Di\Injectable;
@@ -22,7 +22,7 @@ class Application extends Injectable
     /**
      * Dispatch applications on MVC boot event
      * Try to register specific application and initialise provider
-     * By default, register common's provider
+     * By default, register base's provider
      *
      * @param Event                $event
      * @param ApplicationMvc $application
@@ -38,7 +38,7 @@ class Application extends Injectable
         if ($application->hasApplication()) {
             $application->registerApplicationProvider();
         } else {
-            $application->registerCommonProvider();
+            $application->registerBaseProvider();
         }
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Models;
+namespace Base\Models;
 
 use Phalcon\Mvc\Model\ResultInterface;
 use Phalcon\Mvc\Model\ResultSetInterface;
@@ -9,7 +9,7 @@ use Phalcon\Mvc\ModelInterface;
 /**
  * Class Application
  *
- * @package Common\Models
+ * @package Base\Models
  */
 class Application extends BaseModel
 {

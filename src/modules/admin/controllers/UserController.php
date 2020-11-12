@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Modules\Admin\Controllers;
+namespace Base\Modules\Admin\Controllers;
 
 
 class UserController extends ControllerBase

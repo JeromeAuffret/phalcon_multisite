@@ -37,7 +37,7 @@ This following directories need to have writes permissions :
 
 ## Demos
 
-At this point, only the common application can be access. \
+At this point, only the base application can be access. \
 To render a specific application, you need to identify it. \
 Applications can be identified using session and/or hosts.
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Controllers;
+namespace Base\Controllers;
 
 use Component\Acl;
 use Component\Config;

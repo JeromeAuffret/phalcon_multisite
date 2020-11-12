@@ -1,8 +1,8 @@
 <?php
 
-namespace Common\Modules\Auth\Controllers;
+namespace Base\Modules\Auth\Controllers;
 
-use Common\Models\User;
+use Base\Models\User;
 use Error\AuthException;
 use Exception;
 use Phalcon\Collection;

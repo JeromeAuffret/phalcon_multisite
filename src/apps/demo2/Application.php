@@ -2,7 +2,7 @@
 
 namespace Demo2;
 
-use Common\Application as CommonProvider;
+use Base\Application as BaseProvider;
 use Phalcon\Di\DiInterface;
 use Provider\ApplicationProvider;
 
@@ -11,7 +11,7 @@ use Provider\ApplicationProvider;
  *
  * @package Demo2
  */
-class Application extends CommonProvider
+class Application extends BaseProvider
 {
 
     /**

@@ -1,11 +1,11 @@
 <?php
 
-namespace Common\Models;
+namespace Base\Models;
 
 /**
  * Class BaseModel
  *
- * @package Common\Models
+ * @package Base\Models
  */
 class BaseModel extends \Phalcon\Mvc\Model
 {

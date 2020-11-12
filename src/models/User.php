@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Models;
+namespace Base\Models;
 
 use Phalcon\Mvc\Model\ResultInterface;
 use Phalcon\Mvc\Model\ResultSetInterface;
@@ -11,7 +11,7 @@ use Phalcon\Validation\Validator\Email as EmailValidator;
 /**
  * Class User
  *
- * @package Common\Models
+ * @package Base\Models
  */
 class User extends BaseModel
 {

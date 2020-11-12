@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Models;
+namespace Base\Models;
 
 use Phalcon\Mvc\Model\ResultInterface;
 use Phalcon\Mvc\Model\ResultSetInterface;
@@ -8,7 +8,7 @@ use Phalcon\Mvc\Model\ResultSetInterface;
 /**
  * Class UserRole
  *
- * @package Common\Models
+ * @package Base\Models
  */
 class UserRole extends BaseModel
 {

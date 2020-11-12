@@ -16,7 +16,7 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
 
     /**
      * Register correct controller namespace in dispatcher
-     * Override common class if exist in application folder
+     * Override base class if exist in application folder
      */
     public function dispatchControllerNamespace()
     {
@@ -32,7 +32,7 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
     }
 
     /**
-     * Helper method to dispatch a namespace between common and application folder
+     * Helper method to dispatch a namespace between base and application folder
      *
      * @param string $classNamespace
      * @return string
@@ -40,23 +40,23 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
     public function dispatchNamespace(string $classNamespace)
     {
         $application = $this->getDI()->get('application');
-        $commonNamespace = $application->getCommonNamespace();
+        $baseNamespace = $application->getBaseNamespace();
 
         // Prevent dispatching controller if no application is registered
         if (!$application->hasApplication()) {
             return $classNamespace;
         }
 
-        // If namespace is part of common, we check if override exist in application folder
-        if (substr($classNamespace, 0, strlen($commonNamespace)) === $commonNamespace)
+        // If namespace is part of base, we check if override exist in application folder
+        if (substr($classNamespace, 0, strlen($baseNamespace)) === $baseNamespace)
         {
             try {
                 $classPath = (new \ReflectionClass($classNamespace))->getFileName();
-                $overridePath = str_replace($application->getCommonPath(), $application->getApplicationPath(), $classPath);
+                $overridePath = str_replace($application->getBasePath(), $application->getApplicationPath(), $classPath);
 
                 if (file_exists($overridePath))
                 {
-                    $classNamespace = str_replace($commonNamespace, $application->getApplicationNamespace(), $classNamespace);
+                    $classNamespace = str_replace($baseNamespace, $application->getApplicationNamespace(), $classNamespace);
 
                     (new \Phalcon\Loader())
                         ->registerClasses([$classNamespace => $overridePath])
@@ -73,7 +73,7 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
     }
 
     /**
-     * Helper method to dispatch a namespace between common and application folder
+     * Helper method to dispatch a namespace between base and application folder
      *
      * @param string $classPath
      * @return string
@@ -81,17 +81,17 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
     public function dispatchPath(string $classPath)
     {
         $application = $this->getDI()->get('application');
-        $commonPath = $application->getCommonPath();
+        $basePath = $application->getBasePath();
 
         // Prevent dispatching controller if no application is registered
         if (!$application->hasApplication()) {
             return $classPath;
         }
 
-        // If path is part of common, we check if override exist in application folder
-        if (substr($classPath, 0, strlen($commonPath)) === $application->$commonPath())
+        // If path is part of base, we check if override exist in application folder
+        if (substr($classPath, 0, strlen($basePath)) === $application->$basePath())
         {
-            $overridePath = str_replace($commonPath, $application->getApplicationPath(), $classPath);
+            $overridePath = str_replace($basePath, $application->getApplicationPath(), $classPath);
 
             if (file_exists($overridePath))
             {
@@ -108,7 +108,7 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
     }
 
     /**
-     * Helper method to dispatch a class between common and application folder
+     * Helper method to dispatch a class between base and application folder
      *
      * @param string $className
      * @param string $baseNamespace Base namespace use to be concatenated between applicationNamespace and className
@@ -121,30 +121,30 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
 
         $basePath = $this->buildNamespacePath($baseNamespace);
         $appPath = $application->getApplicationPath().'/'.$basePath;
-        $commonPath = $application->getCommonPath().'/'.$basePath;
+        $basePath = $application->getBasePath().'/'.$basePath;
 
         $namespace = $path = null;
         if (file_exists($appPath.'/'.$className.'.php')) {
             return $application->getApplicationNamespace().'\\'.$baseNamespace.'\\'.$className;
         }
-        elseif (file_exists($commonPath.'/'.$className.'.php')) {
-            return $application->getCommonNamespace().'\\'.$baseNamespace.'\\'.$className;
+        elseif (file_exists($basePath.'/'.$className.'.php')) {
+            return $application->getBaseNamespace().'\\'.$baseNamespace.'\\'.$className;
         }
         elseif ($config->get('applicationType') === 'modules')
         {
             foreach ($config->get('modules') as $moduleName => $definition)
             {
                 $appModulePath = $application->getApplicationModulePath($moduleName).'/'.$basePath;
-                $commonModulePath = $application->getCommonModulePath($moduleName).'/'.$basePath;
+                $baseModulePath = $application->getBaseModulePath($moduleName).'/'.$basePath;
 
                 if (file_exists($appModulePath.'/'.$className.'.php')) {
                     $namespace = $application->getApplicationModuleNamespace($moduleName).'\\'.$baseNamespace.'\\'.$className;
                     $path = $appModulePath.'/'.$className.'.php';
                     break;
                 }
-                elseif (file_exists($commonModulePath.'/'.$className.'.php')) {
-                    $namespace = $application->getCommonModuleNamespace($moduleName).'\\'.$baseNamespace.'\\'.$className;
-                    $path = $commonModulePath.'/'.$className.'.php';
+                elseif (file_exists($baseModulePath.'/'.$className.'.php')) {
+                    $namespace = $application->getBaseModuleNamespace($moduleName).'\\'.$baseNamespace.'\\'.$className;
+                    $path = $baseModulePath.'/'.$className.'.php';
                     break;
                 }
             }

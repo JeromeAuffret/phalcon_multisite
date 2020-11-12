@@ -1,6 +1,6 @@
 <?php
 
-namespace Common;
+namespace Base;
 
 use Middleware\Acl as AclMiddleware;
 use Middlewares\Auth as AuthMiddleware;
@@ -10,7 +10,7 @@ use Provider\ApplicationProvider;
 /**
  * Class Application
  *
- * @package Common
+ * @package Base
  */
 class Application extends ApplicationProvider
 {
@@ -24,9 +24,9 @@ class Application extends ApplicationProvider
     {
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Common\Controllers' => __DIR__ . '/controllers',
-                'Common\Models'      => __DIR__ . '/models',
-                'Common\Forms'       => __DIR__ . '/forms',
+                'Base\Controllers' => __DIR__ . '/controllers',
+                'Base\Models'      => __DIR__ . '/models',
+                'Base\Forms'       => __DIR__ . '/forms',
             ])
             ->register();
     }
@@ -60,5 +60,19 @@ class Application extends ApplicationProvider
         $eventsManager->attach("dispatch", new AclMiddleware);
         $eventsManager->attach("dispatch", new AuthMiddleware);
     }
+
+    /**
+     * Register router related to the application
+     *
+     * @param DiInterface $container
+     */
+    public function registerRouter(DiInterface $container) {}
+
+    /**
+     * Register acl rules related to the application
+     *
+     * @param DiInterface $container
+     */
+    public function registerAcl(DiInterface $container) {}
 
 }

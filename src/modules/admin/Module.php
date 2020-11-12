@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Modules\Admin;
+namespace Base\Modules\Admin;
 
 use Phalcon\Di\DiInterface;
 use Provider\ModuleProvider;
@@ -8,7 +8,7 @@ use Provider\ModuleProvider;
 /**
  * Class Module
  *
- * @package Modules\Admin
+ * @package Base\Modules\Admin
  */
 class Module extends ModuleProvider
 {
@@ -22,9 +22,9 @@ class Module extends ModuleProvider
     {
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Common\Modules\Admin\Controllers' => __DIR__ . '/controllers/',
-                'Common\Modules\Admin\Models'      => __DIR__ . '/models/',
-                'Common\Modules\Admin\Forms'       => __DIR__ . '/forms/',
+                'Base\Modules\Admin\Controllers' => __DIR__ . '/controllers/',
+                'Base\Modules\Admin\Models'      => __DIR__ . '/models/',
+                'Base\Modules\Admin\Forms'       => __DIR__ . '/forms/',
             ])
             ->register();
     }
@@ -48,5 +48,20 @@ class Module extends ModuleProvider
     {
         $container->get('acl')->registerAclFromFile(__DIR__.'/config/acl.php');
     }
+
+    /**
+     * Registers services related to the module
+     *
+     * @param DiInterface $container
+     */
+    public function registerServices(DiInterface $container) {}
+
+    /**
+     * Register events related to the module
+     * Events are bind only in module dispatch loop
+     *
+     * @param DiInterface $container
+     */
+    public function registerEvents(DiInterface $container) {}
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Modules\Api\Controllers;
+namespace Base\Modules\Api\Controllers;
 
 use Exception;
 use Forms\BaseForm;

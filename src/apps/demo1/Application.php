@@ -2,14 +2,14 @@
 
 namespace Demo1;
 
-use Common\Application as CommonProvider;
+use Base\Application as BaseProvider;
 
 /**
  * Class Application
  *
  * @package Demo1
  */
-class Application extends CommonProvider
+class Application extends BaseProvider
 {
 
 }

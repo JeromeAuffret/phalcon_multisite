@@ -1,13 +1,13 @@
 <?php
 
-namespace Common\Forms;
+namespace Base\Forms;
 
 use Phalcon\Forms\Form;
 
 /**
  * Class BaseForm
  *
- * @package Common\Forms
+ * @package Base\Forms
  */
 class BaseForm extends Form
 {

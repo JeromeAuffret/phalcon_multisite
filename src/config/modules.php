@@ -1,11 +1,11 @@
 <?php
 
-$commonPath = \Phalcon\Di::getDefault()->get('application')->getCommonPath();
+$basePath = \Phalcon\Di::getDefault()->get('application')->getBasePath();
 
 return [
     'auth' => [
-        'className' => 'Common\Modules\Auth\Module',
-        'path' => $commonPath . '/modules/auth/Module.php',
+        'className' => 'Base\Modules\Auth\Module',
+        'path' => $basePath . '/modules/auth/Module.php',
         'defaultController' => 'login'
     ]
 ];

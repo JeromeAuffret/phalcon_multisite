@@ -1,8 +1,8 @@
 <?php
 
-namespace Common\Modules\Auth\Controllers;
+namespace Base\Modules\Auth\Controllers;
 
-use Common\Controllers\BaseController;
+use Base\Controllers\BaseController;
 
 
 class ControllerBase extends BaseController {}

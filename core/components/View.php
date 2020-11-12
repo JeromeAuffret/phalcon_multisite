@@ -27,8 +27,8 @@ final class View extends \Phalcon\Mvc\View
         $router = $di->get('router');
         $moduleName = $router->getModuleName();
 
-        $commonViewPath = $application->getCommonPath().'/views';
-        $commonModuleViewPath = $application->getCommonModulePath($moduleName).'/views';
+        $baseViewPath = $application->getBasePath().'/views';
+        $baseModuleViewPath = $application->getBaseModulePath($moduleName).'/views';
 
         $appViewPath = $application->getApplicationPath().'/views';
         $appModuleViewPath = $application->getApplicationModulePath($moduleName).'/views';
@@ -48,11 +48,11 @@ final class View extends \Phalcon\Mvc\View
         elseif (file_exists($appViewPath.$partialPattern)) {
             $this->setPartialsDir($appViewPath.'/'.$partialDir.'/');
         }
-        elseif (file_exists($commonModuleViewPath.$partialPattern)) {
-            $this->setPartialsDir($commonModuleViewPath.'/'.$partialDir.'/');
+        elseif (file_exists($baseModuleViewPath.$partialPattern)) {
+            $this->setPartialsDir($baseModuleViewPath.'/'.$partialDir.'/');
         }
-        elseif (file_exists($commonViewPath.$partialPattern)) {
-            $this->setPartialsDir($commonViewPath.'/'.$partialDir.'/');
+        elseif (file_exists($baseViewPath.$partialPattern)) {
+            $this->setPartialsDir($baseViewPath.'/'.$partialDir.'/');
         }
 
         return $this->getPartialContent($partial, $vars);
@@ -130,22 +130,22 @@ final class View extends \Phalcon\Mvc\View
         $moduleName = $dispatcher->getModuleName();
         $assetFilePath = $dispatcher->getControllerName().'/'.$dispatcher->getActionName().'.'.$type;
 
-        // Common and application assets roots paths
+        // Base and application assets roots paths
         if ($config->get('applicationType') === 'modules') {
             $appModuleAssetPath = $application->getApplicationModulePath($moduleName).'/assets/';
-            $commonModuleAssetPath = $application->getCommonModulePath($moduleName).'/assets/';
+            $baseModuleAssetPath = $application->getBaseModulePath($moduleName).'/assets/';
         } else {
             $appModuleAssetPath = $application->getApplicationPath().'/assets/';
-            $commonModuleAssetPath = $application->getCommonPath().'/assets/';
+            $baseModuleAssetPath = $application->getBasePath().'/assets/';
         }
 
-        // Load assets from app module path if exist. If not, use the common path if exist
+        // Load assets from app module path if exist. If not, use the base path if exist
         $assetPath = [];
         if (file_exists($appModuleAssetPath.$assetFilePath)) {
             array_push($assetPath,$appModuleAssetPath.$assetFilePath);
         }
-        else if (file_exists($commonModuleAssetPath.$assetFilePath)) {
-            array_push($assetPath,$commonModuleAssetPath.$assetFilePath);
+        else if (file_exists($baseModuleAssetPath.$assetFilePath)) {
+            array_push($assetPath,$baseModuleAssetPath.$assetFilePath);
         }
 
         // Then register asset file if exist
