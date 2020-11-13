@@ -12,7 +12,7 @@ use Provider\ApplicationProvider;
  *
  * @package Base
  */
-class Application extends ApplicationProvider
+abstract class Application extends ApplicationProvider
 {
 
     /**

@@ -2,15 +2,16 @@
 
 namespace Base\Modules\Admin;
 
+use Base\Module as BaseModule;
 use Phalcon\Di\DiInterface;
-use Provider\ModuleProvider;
+
 
 /**
  * Class Module
  *
  * @package Base\Modules\Admin
  */
-class Module extends ModuleProvider
+class Module extends BaseModule
 {
 
     /**
@@ -49,19 +50,6 @@ class Module extends ModuleProvider
         $container->get('acl')->registerAclFromFile(__DIR__.'/config/acl.php');
     }
 
-    /**
-     * Registers services related to the module
-     *
-     * @param DiInterface $container
-     */
-    public function registerServices(DiInterface $container) {}
 
-    /**
-     * Register events related to the module
-     * Events are bind only in module dispatch loop
-     *
-     * @param DiInterface $container
-     */
-    public function registerEvents(DiInterface $container) {}
 
 }

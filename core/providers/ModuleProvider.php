@@ -15,11 +15,6 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
 {
 
     /**
-     * @var DiInterface
-     */
-    protected $container;
-
-    /**
      * @var string
      */
     protected $moduleName;
@@ -38,6 +33,11 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
      * @var string
      */
     protected $controllerNamespace;
+
+    /**
+     * @var string
+     */
+    protected $controllerPath;
 
     /**
      * @var Collection
@@ -67,34 +67,77 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
      */
     public function __construct(?DiInterface $container = null, ?string $moduleName = null)
     {
-        if (!($container && $moduleName)) return;
+        if (!$container) return;
 
-        $this->container = $container;
+        // Setup Defaults
+        $this->setupDefault($container, $moduleName);
+
+        // Register module in mvc application
+        $this->registerModule($container);
+
+        // Register default namespaces
+        $this->registerRouterDefaults($container);
+
+        // Abstract router registration
+        $this->registerRouter($container);
+
+        // Abstract acl registration
+        $this->registerAcl($container);
+    }
+
+    /**
+     * Setup defaults variable for Provider Class
+     *
+     * @param DiInterface $container
+     * @param string $moduleName
+     */
+    private function setupDefault(DiInterface $container, string $moduleName)
+    {
         $this->moduleName = $moduleName;
 
-        $config = $container->get('config');
-        $application = $container->get('application');
-        $router = $container->get('router');
+        $this->moduleDefinition = $container->get('config')->get('modules')->get($this->moduleName);
 
-        $this->moduleDefinition = $config->get('modules')->get($moduleName);
         $this->moduleNamespace = preg_replace('/\\\Module$/', '', $this->moduleDefinition->get('className'));
         $this->modulePath = $modulePath = preg_replace('/\/Module.php$/', '', $this->moduleDefinition->get('path'));;
-        $this->controllerNamespace = $this->moduleNamespace.'\\Controllers';
-        $this->defaultController = $this->moduleDefinition->get('defaultController') ?? $config->get('defaultController');
-        $this->defaultAction = $this->moduleDefinition->get('defaultAction') ?? $config->get('defaultController');
 
+        $this->controllerNamespace = $this->moduleNamespace.'\\Controllers';
+        $this->controllerPath = $this->modulePath.'/controllers';
+
+        $this->defaultController = $this->moduleDefinition->get('defaultController') ?? $container->get('config')->get('defaultController');
+        $this->defaultAction = $this->moduleDefinition->get('defaultAction') ?? $container->get('config')->get('defaultController');
+    }
+
+    /**
+     * Register Module in Mvc Application
+     *
+     * @param DiInterface $container
+     */
+    protected function registerModule(DiInterface $container)
+    {
+        $application = $container->get('application');
         $application->registerModules([
             $this->moduleName => [
                 'className' => $this->moduleDefinition->get('className'),
                 'path' => $this->moduleDefinition->get('path')
             ],
         ], true);
+    }
 
+    /**
+     * Set default namespace in Mvc Router
+     *
+     * @param DiInterface $container
+     */
+    protected function registerRouterDefaults(DiInterface $container)
+    {
         // Register router defaults for the given module
-        $router->initModuleDefaults($this->moduleName, $this->controllerNamespace, $this->defaultController, $this->defaultAction);
+        if ($container->get('config')->get('defaultModule') === $this->moduleName) {
+            $container->get('router')->setDefaultModule($this->moduleName);
+        }
 
-        $this->registerRouter($this->container);
-        $this->registerAcl($this->container);
+        $container->get('router')->setDefaultNamespace($this->controllerNamespace);
+        $container->get('router')->setDefaultController($this->defaultController);
+        $container->get('router')->setDefaultAction($this->defaultAction);
     }
 
     /**

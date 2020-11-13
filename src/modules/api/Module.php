@@ -2,16 +2,16 @@
 
 namespace Base\Modules\Api;
 
+use Base\Module as BaseModule;
 use Phalcon\Di\DiInterface;
 use Phalcon\Helper\Str;
-use Provider\ModuleProvider;
 
 /**
  * Class Module
  *
  * @package Modules\Api
  */
-class Module extends ModuleProvider
+class Module extends BaseModule
 {
 
     /**
@@ -37,15 +37,7 @@ class Module extends ModuleProvider
      */
     public function registerRouter(DiInterface $container)
     {
-        $router = $container->get('router');
-        $router
-            ->add('/api/{reference}/:controller/:action/:params', [
-                'namespace' => $this->controllerNamespace,
-                'module' => 'api',
-                'controller' => 2,
-                'action' => 3,
-                'params' => 4
-            ]);
+        $container->get('router')->registerRouterFromFile(__DIR__.'/config/routes.php');
     }
 
     /**
@@ -59,8 +51,6 @@ class Module extends ModuleProvider
     }
 
     /**
-     * @Override
-     *
      * @param DiInterface $container
      */
     public function registerEvents(DiInterface $container)
@@ -74,8 +64,6 @@ class Module extends ModuleProvider
     }
 
     /**
-     * @Override
-     *
      * Specific controller dispatch for api module
      * Register correct controller in dispatcher
      *
@@ -113,12 +101,5 @@ class Module extends ModuleProvider
             $dispatcher->setControllerName($referenceName);
         }
     }
-
-    /**
-     * Registers services related to the module
-     *
-     * @param DiInterface $container
-     */
-    public function registerServices(DiInterface $container) {}
 
 }

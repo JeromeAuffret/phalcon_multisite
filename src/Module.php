@@ -10,7 +10,7 @@ use Provider\ModuleProvider;
  *
  * @package Base
  */
-class Module extends ModuleProvider
+abstract class Module extends ModuleProvider
 {
 
     /**
@@ -18,13 +18,39 @@ class Module extends ModuleProvider
      *
      * @param DiInterface|null $container
      */
-    public function registerAutoloaders(DiInterface $container = null)
+    abstract function registerAutoloaders(DiInterface $container = null);
+
+    /**
+     * Register router related to the application
+     * Pre Register a generic routing for module context
+     *
+     * @param DiInterface $container
+     */
+    public function registerRouter(DiInterface $container)
     {
-        (new \Phalcon\Loader())
-            ->registerNamespaces([
-                $this->controllerNamespace => $this->modulePath.'/controllers'
-            ])
-            ->register();
+        $container->get('router')->add('/'.$this->moduleName.'/:params', [
+            'namespace' => $this->controllerNamespace,
+            'module' => $this->moduleName,
+            'controller' => $this->defaultController,
+            'action' => $this->defaultAction,
+            'params' => 1
+        ]);
+
+        $container->get('router')->add('/'.$this->moduleName.'/:controller/:params', [
+            'namespace' => $this->controllerNamespace,
+            'module' => $this->moduleName,
+            'controller' => 1,
+            'action' => $this->defaultAction,
+            'params' => 2
+        ]);
+
+        $container->get('router')->add('/'.$this->moduleName.'/:controller/:action/:params', [
+            'namespace' => $this->controllerNamespace,
+            'module' => $this->moduleName,
+            'controller' => 1,
+            'action' => 2,
+            'params' => 3
+        ]);
     }
 
     /**
@@ -42,29 +68,10 @@ class Module extends ModuleProvider
     public function registerEvents(DiInterface $container) {}
 
     /**
-     * Register router related to the application
-     *
-     * @param DiInterface $container
-     */
-    public function registerRouter(DiInterface $container)
-    {
-        $container->get('router')->registerModuleRoutes(
-            $this->moduleName,
-            $this->controllerNamespace,
-            $this->defaultController,
-            $this->defaultController,
-            $this->defaultAction
-        );
-    }
-
-    /**
      * Register acl rules related to the application
      *
      * @param DiInterface $container
      */
-    public function registerAcl(DiInterface $container)
-    {
-        $container->get('acl')->registerAclFromFile(__DIR__.'/config/acl.php');
-    }
+    public function registerAcl(DiInterface $container) {}
 
 }

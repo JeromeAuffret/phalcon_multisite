@@ -103,7 +103,7 @@ final class Application extends \Phalcon\Mvc\Application
             ->register();
 
         $applicationProvider = (!empty($this->baseNamespace) ? $this->baseNamespace.'\\' : '') . $this->applicationClass;
-        $applicationProvider = new $applicationProvider($this->container);
+        new $applicationProvider($this->container);
     }
 
     /**
@@ -117,7 +117,7 @@ final class Application extends \Phalcon\Mvc\Application
             ->register();
 
         $applicationProvider = $this->applicationNamespace.'\\'.$this->applicationClass;
-        $applicationProvider = new $applicationProvider($this->container);
+        new $applicationProvider($this->container);
     }
 
     /**

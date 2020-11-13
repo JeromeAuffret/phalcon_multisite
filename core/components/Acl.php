@@ -4,6 +4,7 @@ namespace Component;
 
 use Acl\AclComponent;
 use Acl\AclUserRole;
+use Mvc\Application;
 use Phalcon\Acl\ComponentInterface;
 use Phalcon\Acl\RoleInterface;
 use Phalcon\Acl\Adapter\AbstractAdapter;
@@ -13,8 +14,8 @@ use Phalcon\Di\Injectable;
 /**
  * Class Acl
  *
- * @property Application    application
- * @property Config         config
+ * @property Application application
+ * @property Config      config
  * @package Component
  */
 final class Acl extends Injectable implements AdapterInterface
@@ -41,7 +42,6 @@ final class Acl extends Injectable implements AdapterInterface
     {
         return $this->adapter;
     }
-
 
     /**
      * Verify if the current profile is allowed to access a resource from a given module
