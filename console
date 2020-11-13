@@ -13,6 +13,8 @@ try {
     (new \Handler\ConsoleHandler())->handle();
 } 
 catch (\Exception $e) {
-    echo $e->getMessage() . '<br>';
-    echo '<pre>' . $e->getTraceAsString() . '</pre>';
+    error_log($e->getMessage());
+    error_log($e->getLine());
+    error_log($e->getFile());
+    error_log($e->getTraceAsString());
 }
