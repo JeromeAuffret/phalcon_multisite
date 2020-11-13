@@ -12,7 +12,7 @@ use Phalcon\Mvc\View;
  * @property Application application
  * @package Controllers
  */
-class ErrorController extends Controller
+final class ErrorController extends Controller
 {
 
     /**

@@ -7,7 +7,7 @@ namespace Mvc;
  *
  * @package Component
  */
-class Router extends \Phalcon\Mvc\Router
+final class Router extends \Phalcon\Mvc\Router
 {
 
     /**
