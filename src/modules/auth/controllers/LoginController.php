@@ -10,7 +10,11 @@ use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\View;
 
-
+/**
+ * Class LoginController
+ *
+ * @package Base\Modules\Auth\Controllers
+ */
 class LoginController extends ControllerBase
 {
     /**
@@ -25,7 +29,6 @@ class LoginController extends ControllerBase
 
     /**
      *  Login page
-     *  Destroy session if exist
      *
      * @return void|Response|ResponseInterface
      * @throws Exception

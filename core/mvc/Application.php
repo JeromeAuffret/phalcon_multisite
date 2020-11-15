@@ -51,7 +51,7 @@ final class Application extends \Phalcon\Mvc\Application
     private $moduleBaseNamespace = 'Modules';
 
     /**
-     * @var string $applicationClass-
+     * @var string $applicationClass
      */
     private $moduleBaseDir = 'modules';
 

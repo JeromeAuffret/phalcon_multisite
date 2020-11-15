@@ -24,7 +24,7 @@ class Dispatcher implements ServiceProviderInterface
     public function register(DiInterface $container): void
     {
         $container->setShared('dispatcher', function () use ($container) {
-            $dispatcher =  new DispatcherMvc();
+            $dispatcher = new DispatcherMvc();
 
             // Register core events in dispatcher
             $eventManager = $container->get('eventsManager');

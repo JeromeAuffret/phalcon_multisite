@@ -47,7 +47,7 @@ final class Dispatcher extends \Phalcon\Mvc\Dispatcher
             return $classNamespace;
         }
 
-        // If namespace is part of base, we check if override exist in application folder
+        // If namespace is part of base namespace, we check if override exist in application namespace
         if (substr($classNamespace, 0, strlen($baseNamespace)) === $baseNamespace)
         {
             try {

@@ -12,7 +12,7 @@ use Provider\ApplicationProvider;
  *
  * @package Base
  */
-abstract class Application extends ApplicationProvider
+final class Application extends ApplicationProvider
 {
 
     /**
@@ -46,33 +46,10 @@ abstract class Application extends ApplicationProvider
 
         // Register Application Modules
         $container->get('application')->registerModulesProvider();
+
+        // Register Events
+        $container->get('eventsManager')->attach("dispatch", new AclMiddleware);
+        $container->get('eventsManager')->attach("dispatch", new AuthMiddleware);
     }
-
-    /**
-     * Register events related to the application
-     *
-     * @param DiInterface $container
-     */
-    public function registerEvents(DiInterface $container)
-    {
-        $eventsManager = $container->get('eventsManager');
-
-        $eventsManager->attach("dispatch", new AclMiddleware);
-        $eventsManager->attach("dispatch", new AuthMiddleware);
-    }
-
-    /**
-     * Register router related to the application
-     *
-     * @param DiInterface $container
-     */
-    public function registerRouter(DiInterface $container) {}
-
-    /**
-     * Register acl rules related to the application
-     *
-     * @param DiInterface $container
-     */
-    public function registerAcl(DiInterface $container) {}
 
 }

@@ -2,15 +2,15 @@
 
 namespace Base\Modules\Auth;
 
-use Base\Module as ModuleAlias;
 use Phalcon\Di\DiInterface;
+use Provider\ModuleProvider;
 
 /**
  * Class Module
  *
  * @package Modules\Auth
  */
-class Module extends ModuleAlias
+class Module extends ModuleProvider
 {
 
     /**
@@ -28,13 +28,43 @@ class Module extends ModuleAlias
     }
 
     /**
-     * Register acl rules related to the module
+     * Registers services related to the module
      *
      * @param DiInterface $container
      */
-    public function registerAcl(DiInterface $container)
+    public function registerServices(DiInterface $container)
     {
-        $container->get('acl')->registerAclFromFile(__DIR__.'/config/acl.php');
+        $container->get('router')->add('/'.$this->moduleName.'/:params', [
+            'namespace' => $this->controllerNamespace,
+            'module' => $this->moduleName,
+            'controller' => $this->defaultController,
+            'action' => $this->defaultAction,
+            'params' => 1
+        ]);
+
+        $container->get('router')->add('/'.$this->moduleName.'/:controller/:params', [
+            'namespace' => $this->controllerNamespace,
+            'module' => $this->moduleName,
+            'controller' => 1,
+            'action' => $this->defaultAction,
+            'params' => 2
+        ]);
+
+        $container->get('router')->add('/'.$this->moduleName.'/:controller/:action/:params', [
+            'namespace' => $this->controllerNamespace,
+            'module' => $this->moduleName,
+            'controller' => 1,
+            'action' => 2,
+            'params' => 3
+        ]);
     }
+
+    /**
+     * Register events related to the module
+     * This method is call only in the after start module event
+     *
+     * @param DiInterface $container
+     */
+    public function registerEvents(DiInterface $container) {}
 
 }

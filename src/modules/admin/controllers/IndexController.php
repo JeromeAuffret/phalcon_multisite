@@ -2,7 +2,10 @@
 
 namespace Base\Modules\Admin\Controllers;
 
-
+/**
+ * Class IndexController
+ * @package Base\Modules\Admin\Controllers
+ */
 class IndexController extends ControllerBase
 {
 

@@ -69,30 +69,6 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
     {
         if (!$container) return;
 
-        // Setup Defaults
-        $this->setupDefault($container, $moduleName);
-
-        // Register module in mvc application
-        $this->registerModule($container);
-
-        // Register default namespaces
-        $this->registerRouterDefaults($container);
-
-        // Abstract router registration
-        $this->registerRouter($container);
-
-        // Abstract acl registration
-        $this->registerAcl($container);
-    }
-
-    /**
-     * Setup defaults variable for Provider Class
-     *
-     * @param DiInterface $container
-     * @param string $moduleName
-     */
-    private function setupDefault(DiInterface $container, string $moduleName)
-    {
         $this->moduleName = $moduleName;
 
         $this->moduleDefinition = $container->get('config')->get('modules')->get($this->moduleName);
@@ -105,15 +81,8 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
 
         $this->defaultController = $this->moduleDefinition->get('defaultController') ?? $container->get('config')->get('defaultController');
         $this->defaultAction = $this->moduleDefinition->get('defaultAction') ?? $container->get('config')->get('defaultController');
-    }
 
-    /**
-     * Register Module in Mvc Application
-     *
-     * @param DiInterface $container
-     */
-    protected function registerModule(DiInterface $container)
-    {
+        // Register module in mvc application
         $application = $container->get('application');
         $application->registerModules([
             $this->moduleName => [
@@ -121,15 +90,8 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
                 'path' => $this->moduleDefinition->get('path')
             ],
         ], true);
-    }
 
-    /**
-     * Set default namespace in Mvc Router
-     *
-     * @param DiInterface $container
-     */
-    protected function registerRouterDefaults(DiInterface $container)
-    {
+        // Register default namespaces
         // Register router defaults for the given module
         if ($container->get('config')->get('defaultModule') === $this->moduleName) {
             $container->get('router')->setDefaultModule($this->moduleName);
@@ -155,25 +117,11 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
     abstract public function registerServices(DiInterface $container);
 
     /**
-     * Register router related to the module
-     *
-     * @param DiInterface $container
-     */
-    abstract public function registerRouter(DiInterface $container);
-
-    /**
-     * Register acl rules related to the module
-     *
-     * @param DiInterface $container
-     */
-    abstract public function registerAcl(DiInterface $container);
-
-    /**
      * Register events related to the module
-     * Events are bind only in module dispatch loop
+     * This method is call only in the after start module event
      *
      * @param DiInterface $container
      */
-    abstract public function registerEvents(DiInterface $container);
+    abstract public  function registerEvents(DiInterface $container);
 
 }

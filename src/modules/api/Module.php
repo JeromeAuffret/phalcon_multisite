@@ -2,16 +2,16 @@
 
 namespace Base\Modules\Api;
 
-use Base\Module as BaseModule;
 use Phalcon\Di\DiInterface;
 use Phalcon\Helper\Str;
+use Provider\ModuleProvider;
 
 /**
  * Class Module
  *
  * @package Modules\Api
  */
-class Module extends BaseModule
+class Module extends ModuleProvider
 {
 
     /**
@@ -31,22 +31,13 @@ class Module extends BaseModule
     }
 
     /**
-     * Register specific routes for API module
+     * Registers services related to the module
      *
      * @param DiInterface $container
      */
-    public function registerRouter(DiInterface $container)
+    public function registerServices(DiInterface $container)
     {
         $container->get('router')->registerRouterFromFile(__DIR__.'/config/routes.php');
-    }
-
-    /**
-     * Register acl rules related to the module
-     *
-     * @param DiInterface $container
-     */
-    public function registerAcl(DiInterface $container)
-    {
         $container->get('acl')->registerAclFromFile(__DIR__.'/config/acl.php');
     }
 
@@ -65,7 +56,7 @@ class Module extends BaseModule
 
     /**
      * Specific controller dispatch for api module
-     * Register correct controller in dispatcher
+     * This method is call only in the after start module event
      *
      * @param DiInterface $container
      */

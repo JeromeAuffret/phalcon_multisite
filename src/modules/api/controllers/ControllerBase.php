@@ -8,7 +8,11 @@ use Base\Models\BaseModel;
 use Phalcon\Helper\Str;
 use Phalcon\Mvc\ModelInterface;
 
-
+/**
+ * Class ControllerBase
+ *
+ * @package Base\Modules\Api\Controllers
+ */
 class ControllerBase extends BaseController
 {
     /* @var string $reference */

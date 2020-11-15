@@ -20,11 +20,11 @@ abstract class ApplicationProvider implements ModuleDefinitionInterface
      */
     public function __construct(DiInterface $container)
     {
+        // Register Autoloader
         $this->registerAutoloaders($container);
+
+        // Register services
         $this->registerServices($container);
-        $this->registerRouter($container);
-        $this->registerAcl($container);
-        $this->registerEvents($container);
     }
 
     /**
@@ -40,26 +40,5 @@ abstract class ApplicationProvider implements ModuleDefinitionInterface
      * @param DiInterface $container
      */
     abstract public function registerServices(DiInterface $container);
-
-    /**
-     * Register router related to the application
-     *
-     * @param DiInterface $container
-     */
-    abstract public function registerRouter(DiInterface $container);
-
-    /**
-     * Register acl rules related to the application
-     *
-     * @param DiInterface $container
-     */
-    abstract public function registerAcl(DiInterface $container);
-
-    /**
-     * Register events related to the application
-     *
-     * @param DiInterface $container
-     */
-    abstract public function registerEvents(DiInterface $container);
 
 }

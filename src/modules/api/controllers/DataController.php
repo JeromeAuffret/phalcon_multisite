@@ -7,7 +7,11 @@ use Phalcon\Filter;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
-
+/**
+ * Class DataController
+ *
+ * @package Base\Modules\Api\Controllers
+ */
 class DataController extends ControllerBase
 {
     /**
