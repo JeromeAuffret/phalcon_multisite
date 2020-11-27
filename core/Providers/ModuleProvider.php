@@ -73,7 +73,6 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
         $mvc = $container->get('mvc');
         $config = $container->get('config');
         $router = $container->get('router');
-        $eventsManager = $container->get('eventsManager');
         $modulesConfig = $config->get('modules');
 
         $this->setModuleName($moduleName);
@@ -84,7 +83,7 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
         $moduleNamespace = preg_replace('/\\\Module$/', '', $moduleDefinition->get('className'));
         $this->setModuleNamespace($moduleNamespace);
 
-        $modulePath = $modulePath = preg_replace('/\/Module.php$/', '', $moduleDefinition->get('path'));;
+        $modulePath = preg_replace('/\/Module.php$/', '', $moduleDefinition->get('path'));;
         $this->setModulePath($modulePath);
 
         $controllerNamespace = $this->getModuleNamespace().'\\Controllers';
@@ -114,7 +113,6 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
             $router->setDefaultController($this->getDefaultController());
             $router->setDefaultAction($this->getDefaultAction());
         }
-
     }
 
     /**
