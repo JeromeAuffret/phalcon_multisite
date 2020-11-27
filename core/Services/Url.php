@@ -21,8 +21,7 @@ class Url implements ServiceProviderInterface
      */
     public function register(DiInterface $container): void
     {
-        $container->setShared('url', function () use ($container)
-        {
+        $container->setShared('url', function () use ($container) {
             $url = new UrlResolver();
             $url->setBaseUri(
                 $container->get('config')->get('baseUri')

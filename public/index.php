@@ -9,7 +9,7 @@ try {
     require_once BASE_PATH . '/vendor/autoload.php';
 
     // Handle mvc's application
-    echo (new \Handler\ApplicationHandler())->handle();
+    echo (new \Handlers\ApplicationHandler())->handle();
 }
 catch (\Exception $e) {
     echo $e->getMessage() . '<br>';

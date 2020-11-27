@@ -2,6 +2,8 @@
 
 namespace Core\Middlewares;
 
+use Core\Components\Application;
+use Core\Components\Config;
 use Libraries\NamespaceHelper;
 use Phalcon\Assets\Filters\Cssmin;
 use Phalcon\Assets\Filters\Jsmin;
@@ -14,9 +16,9 @@ use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
 /**
  * Class Dispatch
  *
- * @property \Core\Components\Application application
- * @property \Core\Components\Config $config
- * @property \Mvc\Dispatcher dispatcher
+ * @property Application application
+ * @property Config $config
+ * @property Dispatcher dispatcher
  * @package Middleware
  */
 class Dispatch extends Injectable
@@ -104,7 +106,7 @@ class Dispatch extends Injectable
         $application = $this->getDI()->get('application');
         $moduleName = $this->router->getModuleName();
 
-        $baseViewPath = $application->getBasePath().'/views/';
+        $baseViewPath = $application->getBasePath().'/Views/';
         $baseModuleViewPath = $application->getBaseModulePath($moduleName).'/views';
 
         $appViewPath = $application->getTenantPath().'/views';

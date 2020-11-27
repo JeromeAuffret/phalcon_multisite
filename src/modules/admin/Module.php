@@ -36,13 +36,29 @@ class Module extends ModuleProvider
      */
     public function registerServices(DiInterface $container)
     {
-        $container->get('router')->registerRouterFromFile(__DIR__.'/config/routes.php');
+        $router = $container->get('router');
+        $router->add('/admin/reference/{reference}/:params', [
+            'namespace' => $this->getModuleNamespace(),
+            'module' => 'admin',
+            'controller' => 'reference',
+            'action' => 'index',
+            'params' => 2
+        ]);
+
+        $router->add('/admin/reference/{reference}/:action/:params', [
+            'namespace' => $this->getModuleNamespace(),
+            'module' => 'admin',
+            'controller' => 'reference',
+            'action' => 2,
+            'params' => 3
+        ]);
+
         $container->get('acl')->registerAclFromFile(__DIR__.'/config/acl.php');
     }
 
     /**
      * Register events related to the module
-     * This method is call only in the after start module event
+     * This method is call only in the module's afterStart event
      *
      * @param DiInterface $container
      */

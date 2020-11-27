@@ -18,42 +18,42 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
     /**
      * @var string
      */
-    protected $moduleName;
+    public $moduleName;
 
     /**
      * @var string
      */
-    protected $moduleNamespace;
+    public $moduleNamespace;
 
     /**
      * @var string
      */
-    protected $modulePath;
+    public $modulePath;
 
     /**
      * @var string
      */
-    protected $controllerNamespace;
+    public $controllerNamespace;
 
     /**
      * @var string
      */
-    protected $controllerPath;
+    public $controllerPath;
 
     /**
      * @var Collection
      */
-    protected $moduleDefinition;
+    public $moduleDefinition;
 
     /**
      * @var string
      */
-    protected $defaultController;
+    public $defaultController;
 
     /**
      * @var string
      */
-    protected $defaultAction;
+    public $defaultAction;
 
     /**
      * Register a module in application service
@@ -70,12 +70,15 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
     {
         if (!($container && $moduleName)) return;
 
+        $mvc = $container->get('mvc');
         $config = $container->get('config');
         $router = $container->get('router');
+        $eventsManager = $container->get('eventsManager');
+        $modulesConfig = $config->get('modules');
 
         $this->setModuleName($moduleName);
 
-        $moduleDefinition = $container->get('config')->get('modules')->get($this->getModuleName());
+        $moduleDefinition = $modulesConfig->get($this->getModuleName());
         $this->setModuleDefinition($moduleDefinition);
 
         $moduleNamespace = preg_replace('/\\\Module$/', '', $moduleDefinition->get('className'));
@@ -97,7 +100,6 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
         $this->setDefaultAction($defaultAction);
 
         // Register module in mvc application
-        $mvc = $container->get('mvc');
         $mvc->registerModules([
             $this->moduleName => [
                 'className' => $this->getModuleDefinition()->get('className'),
@@ -107,12 +109,12 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
 
         // Register router defaults
         if ($config->get('defaultModule') === $this->getModuleName()) {
-            $router->setDefaultModule($this->getModuleName());
+            $router->setDefaultModule($config->get('defaultModule'));
+            $router->setDefaultNamespace($this->getControllerNamespace());
+            $router->setDefaultController($this->getDefaultController());
+            $router->setDefaultAction($this->getDefaultAction());
         }
 
-        $router->setDefaultNamespace($this->getControllerNamespace());
-        $router->setDefaultController($this->getDefaultController());
-        $router->setDefaultAction($this->getDefaultAction());
     }
 
     /**
@@ -131,7 +133,7 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
 
     /**
      * Register events related to the module
-     * This method is call only in the after start module event
+     * This method is call only in the module's afterStart event
      *
      * @param DiInterface $container
      */
@@ -187,7 +189,7 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
     /**
      * @return string
      */
-    public function getControllerNamespace(): string
+    public function getControllerNamespace(): ?string
     {
         return $this->controllerNamespace;
     }
@@ -264,6 +266,36 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
     public function setDefaultAction(string $defaultAction = null): void
     {
         $this->defaultAction = $defaultAction;
+    }
+
+    /**
+     * @param DiInterface $container
+     */
+    public function registerDefaultRoutes(DiInterface $container)
+    {
+        $container->get('router')->add('/'.$this->getModuleName().'/:params', [
+            'namespace' => $this->getControllerNamespace(),
+            'module' => $this->getModuleName(),
+            'controller' => $this->getDefaultController(),
+            'action' => $this->getDefaultAction(),
+            'params' => 1
+        ]);
+
+        $container->get('router')->add('/'.$this->getModuleName().'/:controller/:params', [
+            'namespace' => $this->getControllerNamespace(),
+            'module' => $this->getModuleName(),
+            'controller' => 1,
+            'action' => $this->getDefaultAction(),
+            'params' => 2
+        ]);
+
+        $container->get('router')->add('/'.$this->getModuleName().'/:controller/:action/:params', [
+            'namespace' => $this->getControllerNamespace(),
+            'module' => $this->getModuleName(),
+            'controller' => 1,
+            'action' => 2,
+            'params' => 3
+        ]);
     }
 
 }

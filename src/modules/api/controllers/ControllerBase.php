@@ -7,6 +7,7 @@ use Exception;
 use Base\Models\BaseModel;
 use Phalcon\Helper\Str;
 use Phalcon\Mvc\ModelInterface;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * Class ControllerBase
@@ -85,7 +86,7 @@ class ControllerBase extends BaseController
         if ($this->modelNamespace)
         {
             if ($this->primaryValue) {
-                $this->model = $this->modelNamespace::findFirst($this->primaryKey.' = '.$this->primaryValue);
+                $this->model = $this->modelNamespace::findFirst(intval($this->primaryValue));
             } else {
                 $this->model = new $this->modelNamespace();
             }

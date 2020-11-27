@@ -64,7 +64,6 @@ class Mvc extends Injectable
 
         // Register module events only in module context
         $moduleClass->registerEvents($this->getDI());
-
     }
 
 

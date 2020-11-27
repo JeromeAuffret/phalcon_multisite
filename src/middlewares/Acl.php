@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Middlewares;
+namespace Base\Middlewares;
 
 use Core\Components\Acl as AclComponent;
 use Core\Errors\AclException;

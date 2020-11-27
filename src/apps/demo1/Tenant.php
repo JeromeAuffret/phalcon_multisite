@@ -2,8 +2,8 @@
 
 namespace Demo1;
 
-use Core\Middlewares\Acl as AclMiddleware;
-use Core\Middlewares\Auth as AuthMiddleware;
+use Base\Middlewares\Acl;
+use Base\Middlewares\Auth;
 use Phalcon\Di\DiInterface;
 use Core\Providers\TenantProvider;
 
@@ -48,8 +48,8 @@ class Tenant extends TenantProvider
         $container->get('application')->registerModulesProvider();
 
         // Events
-        $container->get('eventsManager')->attach("dispatch", new AclMiddleware);
-        $container->get('eventsManager')->attach("dispatch", new AuthMiddleware);
+        $container->get('eventsManager')->attach("dispatch", new Acl);
+        $container->get('eventsManager')->attach("dispatch", new Auth);
     }
 
 }

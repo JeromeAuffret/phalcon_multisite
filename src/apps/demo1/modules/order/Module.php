@@ -43,7 +43,7 @@ class Module extends ModuleProvider
 
     /**
      * Register events related to the module
-     * This method is call only in the after start module event
+     * This method is call only in the module's afterStart event
      *
      * @param DiInterface $container
      */
@@ -77,29 +77,7 @@ class Module extends ModuleProvider
      */
     private function registerRouter(DiInterface $container)
     {
-        $container->get('router')->add('/'.$this->moduleName.'/:params', [
-            'namespace' => $this->controllerNamespace,
-            'module' => $this->moduleName,
-            'controller' => $this->defaultController,
-            'action' => $this->defaultAction,
-            'params' => 1
-        ]);
-
-        $container->get('router')->add('/'.$this->moduleName.'/:controller/:params', [
-            'namespace' => $this->controllerNamespace,
-            'module' => $this->moduleName,
-            'controller' => 1,
-            'action' => $this->defaultAction,
-            'params' => 2
-        ]);
-
-        $container->get('router')->add('/'.$this->moduleName.'/:controller/:action/:params', [
-            'namespace' => $this->controllerNamespace,
-            'module' => $this->moduleName,
-            'controller' => 1,
-            'action' => 2,
-            'params' => 3
-        ]);
+        $this->registerDefaultRoutes($container);
     }
 
 }

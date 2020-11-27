@@ -2,8 +2,8 @@
 
 namespace Base;
 
-use Core\Middlewares\Acl;
-use Core\Middlewares\Auth;
+use Base\Middlewares\Acl;
+use Base\Middlewares\Auth;
 use Core\Providers\TenantProvider;
 use Phalcon\Di\DiInterface;
 
@@ -24,9 +24,10 @@ final class Tenant extends TenantProvider
     {
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Base\Controllers' => __DIR__ . '/controllers',
-                'Base\Models'      => __DIR__ . '/models',
-                'Base\Forms'       => __DIR__ . '/forms',
+                'Base\Controllers'  => __DIR__ . '/controllers',
+                'Base\Models'       => __DIR__ . '/models',
+                'Base\Forms'        => __DIR__ . '/forms',
+                'Base\Middlewares'  => __DIR__ . '/middlewares'
             ])
             ->register();
     }

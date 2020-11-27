@@ -22,8 +22,7 @@ class Session implements ServiceProviderInterface
      */
     public function register(DiInterface $container): void
     {
-        $container->setShared('session', function ()
-        {
+        $container->setShared('session', function () {
             $manager = new Manager();
             $manager
                 ->setAdapter(new Stream([

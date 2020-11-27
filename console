@@ -10,7 +10,7 @@ try {
     require_once BASE_PATH . '/vendor/autoload.php';
 
     // Handle console's application
-    (new \Handler\ConsoleHandler())->handle();
+    (new \Handlers\ConsoleHandler())->handle();
 }
 catch (Exception $e) {
     echo $e->getMessage() . PHP_EOL;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Handler;
+namespace Handlers;
 
 use Exception;
 use Phalcon\Cli\Console;

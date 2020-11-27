@@ -37,7 +37,16 @@ class Module extends ModuleProvider
      */
     public function registerServices(DiInterface $container)
     {
-        $container->get('router')->registerRouterFromFile(__DIR__.'/config/routes.php');
+        $router = $container->get('router');
+        $router
+            ->add('/api/{reference}/:controller/:action/:params', [
+                'namespace' => $this->getModuleNamespace(),
+                'module' => $this->getModuleName(),
+                'controller' => 2,
+                'action' => 3,
+                'params' => 4
+            ]);
+
         $container->get('acl')->registerAclFromFile(__DIR__.'/config/acl.php');
     }
 
@@ -56,7 +65,6 @@ class Module extends ModuleProvider
 
     /**
      * Specific controller dispatch for api module
-     * This method is call only in the after start module event
      *
      * @param DiInterface $container
      */

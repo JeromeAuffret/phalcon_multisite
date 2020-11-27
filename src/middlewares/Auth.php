@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Middlewares;
+namespace Base\Middlewares;
 
 use Core\Acl\AclComponent;
 use Core\Components\Acl;

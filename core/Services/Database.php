@@ -21,8 +21,7 @@ class Database implements ServiceProviderInterface
      */
     public function register(DiInterface $container): void
     {
-        $container->setShared('database', function () use ($container)
-        {
+        $container->setShared('database', function () use ($container) {
             $database = new DatabaseComponent();
             $database->registerMainDb($container);
 

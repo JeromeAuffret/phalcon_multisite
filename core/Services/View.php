@@ -21,8 +21,7 @@ class View implements ServiceProviderInterface
      */
     public function register(DiInterface $container): void
     {
-        $container->setShared('view', function () use ($container)
-        {
+        $container->setShared('view', function () use ($container) {
             $application = $container->get('application');
 
             $view = new ViewComponent();
