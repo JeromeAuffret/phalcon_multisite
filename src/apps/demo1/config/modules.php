@@ -1,7 +1,7 @@
 <?php
 
 $basePath = \Phalcon\Di::getDefault()->get('application')->getBasePath();
-$applicationPth = \Phalcon\Di::getDefault()->get('application')->getApplicationPath();
+$applicationPth = \Phalcon\Di::getDefault()->get('application')->getTenantPath();
 
 return [
     'admin' => [

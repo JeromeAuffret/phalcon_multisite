@@ -6,10 +6,10 @@ use Exception;
 use Phalcon\Cli\Console;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Loader;
-use Service\Config as ConfigService;
-use Service\Database as DbService;
-use Service\Dispatcher as DispatcherService;
-use Service\Router as RouterService;
+use Core\Services\Config as ConfigService;
+use Core\Services\Database as DbService;
+use Core\Services\Dispatcher as DispatcherService;
+use Core\Services\Router as RouterService;
 
 /**
  * Class ConsoleHandler
@@ -36,7 +36,7 @@ final class ConsoleHandler
         // Register core namespaces
         $this->registerConsoleNamespaces();
 
-        // Register main services in DI container
+        // Register main Services in DI container
         $this->registerConsoleServices();
 
         // Bind event to mvc application
@@ -75,11 +75,11 @@ final class ConsoleHandler
         // Register core namespaces
         (new Loader())
             ->registerNamespaces([
-                'Component'   => BASE_PATH . '/core/components',
+                'Component'   => BASE_PATH . '/core/Components',
                 'Error'       => BASE_PATH . '/core/errors',
                 'Middleware'  => BASE_PATH . '/core/middlewares',
                 'Provider'    => BASE_PATH . '/core/providers',
-                'Service'     => BASE_PATH . '/core/services',
+                'Service'     => BASE_PATH . '/core/Services',
                 'Mvc'         => BASE_PATH . '/core/mvc',
                 'Libraries'   => BASE_PATH . '/libraries',
             ])
@@ -87,7 +87,7 @@ final class ConsoleHandler
     }
 
     /**
-     * Register core services
+     * Register core Services
      */
     public function registerConsoleServices()
     {

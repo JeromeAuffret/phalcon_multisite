@@ -1,7 +1,7 @@
 <?php
 
-use Acl\AclComponent;
-use Acl\AclUserRole;
+use Core\Acl\AclComponent;
+use Core\Acl\AclUserRole;
 
 $this->addRole('guest');
 

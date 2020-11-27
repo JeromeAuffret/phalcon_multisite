@@ -7,7 +7,7 @@ use Phalcon\Mvc\Model\ResultSetInterface;
 use Phalcon\Mvc\ModelInterface;
 
 /**
- * Class Application
+ * Class Tenant
  *
  * @package Base\Models
  */
@@ -184,8 +184,8 @@ class Application extends BaseModel
     public static function getUserApplicationList(int $id_user)
     {
         return (new self)->modelsManager->createBuilder()
-            ->addFrom(self::class, 'Application')
-            ->innerJoin(Role::class, 'Role.id_application = Application.id', 'Role')
+            ->addFrom(self::class, 'Tenant')
+            ->innerJoin(Role::class, 'Role.id_application = Tenant.id', 'Role')
             ->innerJoin(UserRole::class, 'UserRole.id_role = Role.id', 'UserRole')
             ->where('UserRole.id_user = ?0', [ $id_user ])
             ->getQuery()

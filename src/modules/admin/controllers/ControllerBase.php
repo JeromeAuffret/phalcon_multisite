@@ -3,7 +3,7 @@
 namespace Base\Modules\Admin\Controllers;
 
 use Base\Controllers\BaseController;
-use Base\DispatcherMvc;
+use Base\Models\Application;
 
 /**
  * Class ControllerBase
@@ -28,7 +28,7 @@ class ControllerBase extends BaseController
     public function initialize()
     {
         $this->applicationObject = Application::findFirst(
-            $this->application->getApplication('id')
+            $this->application->getTenant('id')
         );
     }
 

@@ -2,10 +2,11 @@
 
 namespace Base\Modules\Auth\Controllers;
 
-use Error\AuthException;
+use Core\Errors\AuthException;
 use Exception;
 use Base\Models\Role;
 use Base\Models\Application;
+use Libraries\NamespaceHelper;
 use Phalcon\Collection;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
@@ -43,14 +44,14 @@ class ApplicationController extends ControllerBase
     public function switchApplicationAction(int $id_application)
     {
         if (!$application = Application::findFirst($id_application)) {
-            throw new AuthException('Application Not Found');
+            throw new AuthException('Tenant Not Found');
         }
 
         if ($this->di->has('session') && $this->session->exists()) {
             $this->session->set('application', new Collection($application->toArray()));
 
             /** @var Role $roleModel */
-            $roleModel = $this->dispatcher->dispatchNamespace(Role::class);
+            $roleModel = NamespaceHelper::dispatchNamespace(Role::class);
             $role = $roleModel::getUserRole($this->session->get('user')->get('id'), $this->session->get('application')->get('id'));
             $this->session->set('user_role', $role ? $role->getSlug() : 'guest');
         }

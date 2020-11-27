@@ -2,13 +2,13 @@
 
 namespace Base\Controllers;
 
-use Component\Acl;
-use Component\Config;
-use Mvc\Dispatcher as DispatcherMvc;
-use Component\View;
+use Core\Components\Application;
+use Core\Components\Acl;
+use Core\Components\Config;
+use Core\Components\View;
 use Phalcon\Db\Adapter\AdapterInterface;
+use Phalcon\Mvc\Dispatcher as DispatcherMvc;
 use Phalcon\Mvc\Controller;
-use Mvc\Application;
 
 /**
  * Class BaseController

@@ -4,7 +4,7 @@ namespace Base\Modules\Api;
 
 use Phalcon\Di\DiInterface;
 use Phalcon\Helper\Str;
-use Provider\ModuleProvider;
+use Core\Providers\ModuleProvider;
 
 /**
  * Class Module
@@ -31,7 +31,7 @@ class Module extends ModuleProvider
     }
 
     /**
-     * Registers services related to the module
+     * Registers Services related to the module
      *
      * @param DiInterface $container
      */
@@ -71,14 +71,14 @@ class Module extends ModuleProvider
         $referenceName = $router->getParams()['reference'];
         $referenceControllerFile = Str::camelize($referenceName).'Controller.php';
 
-        $appControllerModulePath = $application->getApplicationModulePath($moduleName).'/controllers/'.$controllerName;
+        $appControllerModulePath = $application->getTenantModulePath($moduleName).'/controllers/'.$controllerName;
         $baseControllerModulePath = $application->getBaseModulePath($moduleName).'/controllers/'.$controllerName;
 
         if ($controllerName === 'error') {
-            $dispatcher->setNamespaceName('Controllers');
+            $dispatcher->setNamespaceName('Core\Controllers');
         }
         else if ($application && file_exists($appControllerModulePath.'/'.$referenceControllerFile)) {
-            $namespace = $application->getApplicationModulePath($moduleName).'\Controllers\\'.$controllerName;
+            $namespace = $application->getTenantModulePath($moduleName).'\Controllers\\'.$controllerName;
 
             (new \Phalcon\Loader())->registerNamespaces([$namespace => $appControllerModulePath])->register();
             $dispatcher->setNamespaceName($namespace);

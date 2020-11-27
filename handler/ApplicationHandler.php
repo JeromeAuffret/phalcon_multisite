@@ -3,17 +3,20 @@
 namespace Handler;
 
 use Exception;
-use Middleware\Application as ApplicationMiddleware;
 use Phalcon\Di\FactoryDefault;
-use Service\Acl as AclService;
-use Service\Application as ApplicationService;
-use Service\Config as ConfigService;
-use Service\Database as DbService;
-use Service\Dispatcher as DispatcherService;
-use Service\Router as RouterService;
-use Service\Session as SessionService;
-use Service\Url as UrlService;
-use Service\View as ViewService;
+use Phalcon\Mvc\Application;
+
+use Core\Middlewares\Mvc as MvcMiddleware;
+use Core\Services\Acl as AclService;
+use Core\Services\Application as ApplicationService;
+use Core\Services\Config as ConfigService;
+use Core\Services\Database as DbService;
+use Core\Services\Dispatcher as DispatcherService;
+use Core\Services\Mvc as MvcService;
+use Core\Services\Router as RouterService;
+use Core\Services\Session as SessionService;
+use Core\Services\Url as UrlService;
+use Core\Services\View as ViewService;
 
 /**
  * Class ApplicationHandler
@@ -26,7 +29,12 @@ final class ApplicationHandler
     /**
      * @var FactoryDefault
      */
-    protected $container;
+    private $container;
+
+    /**
+     * @var Application
+     */
+    private $application;
 
     /**
      * Setup MVC application
@@ -38,14 +46,12 @@ final class ApplicationHandler
         // Start Di container
         $this->container = new FactoryDefault();
 
-        // Register core namespaces
+        // Start Di container
+        $this->application = new Application();
+
         $this->registerCoreNamespaces();
-
-        // Register main services in DI container
         $this->registerCoreServices();
-
-        // Bind event to mvc application
-        $this->registerApplicationEvents();
+        $this->registerCoreEvents();
     }
 
     /**
@@ -56,38 +62,34 @@ final class ApplicationHandler
      */
     public function handle(): string
     {
-        return (string) $this->container->get('application')->handle(
-            $this->container->get('config')->get('requestUri')
-        )
-            ->getContent();
+        $requestUri = $this->container->get('config')->get('requestUri');
+
+        return (string) $this->container->get('mvc')->handle($requestUri)->getContent();
     }
 
     /**
      * Register core namespaces
      */
-    public function registerCoreNamespaces()
+    private function registerCoreNamespaces()
     {
-        // Register core namespaces
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Acl'         => BASE_PATH . '/core/acl',
-                'Component'   => BASE_PATH . '/core/components',
-                'Controllers' => BASE_PATH . '/core/controllers',
-                'Error'       => BASE_PATH . '/core/errors',
-                'Middleware'  => BASE_PATH . '/core/middlewares',
-                'Provider'    => BASE_PATH . '/core/providers',
-                'Service'     => BASE_PATH . '/core/services',
-                'Mvc'         => BASE_PATH . '/core/mvc',
+                'Core'        => BASE_PATH . '/core',
                 'Libraries'   => BASE_PATH . '/libraries',
             ])
             ->register();
+
+        return $this;
     }
 
     /**
-     * Register core services
+     * Register core Services
      */
-    public function registerCoreServices()
+    private function registerCoreServices()
     {
+        (new MvcService())
+            ->register($this->container);
+
         (new ApplicationService)
             ->register($this->container);
 
@@ -114,18 +116,21 @@ final class ApplicationHandler
 
         (new RouterService)
             ->register($this->container);
+
+        return $this;
     }
 
     /**
      * Register application events
      */
-    public function registerApplicationEvents()
+    private function registerCoreEvents()
     {
         $eventsManager = $this->container->get('eventsManager');
+        $eventsManager->attach('application', new MvcMiddleware);
 
-        $eventsManager->attach('application', new ApplicationMiddleware);
+        $this->container->get('mvc')->setEventsManager($eventsManager);
 
-        $this->container->get('application')->setEventsManager($eventsManager);
+        return $this;
     }
 
 }

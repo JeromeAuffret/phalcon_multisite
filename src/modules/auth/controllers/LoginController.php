@@ -3,7 +3,7 @@
 namespace Base\Modules\Auth\Controllers;
 
 use Base\Models\User;
-use Error\AuthException;
+use Core\Errors\AuthException;
 use Exception;
 use Phalcon\Collection;
 use Phalcon\Http\Response;

@@ -1,7 +1,7 @@
 {
-    "name": "jeerome-auffret/phalcon-multisite",
+    "name": "jeerome-auffret/gite-reservation",
     "type": "library",
-    "description": "Sample for a multisite architecture based on Phalcon Framework",
+    "description": "Sample for a gite reservation",
     "keywords": [
         "phalcon", "mutlisite", "phalcon multisite", "modules"
     ],
@@ -24,10 +24,5 @@
         "phalcon/ide-stubs": "^4.0",
         "phpunit/phpunit": "^8.5",
         "phalcon/devtools": "^4.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Handler\\": "handler/"
-        }
     }
 }

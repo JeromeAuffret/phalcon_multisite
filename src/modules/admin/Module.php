@@ -3,7 +3,7 @@
 namespace Base\Modules\Admin;
 
 use Phalcon\Di\DiInterface;
-use Provider\ModuleProvider;
+use Core\Providers\ModuleProvider;
 
 /**
  * Class Module
@@ -30,7 +30,7 @@ class Module extends ModuleProvider
     }
 
     /**
-     * Registers services related to the module
+     * Registers Services related to the module
      *
      * @param DiInterface $container
      */

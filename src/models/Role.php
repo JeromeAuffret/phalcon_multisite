@@ -145,7 +145,7 @@ class Role extends BaseModel
         $this->setSource("role");
 
         $this->hasMany('id', UserRole::class, 'id_role', ['alias' => 'UserRole']);
-        $this->hasOne('id_application', Application::class, 'id', ['alias' => 'Application']);
+        $this->hasOne('id_application', Application::class, 'id', ['alias' => 'Tenant']);
     }
 
     /**
