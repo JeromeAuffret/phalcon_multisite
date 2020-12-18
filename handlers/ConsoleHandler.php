@@ -2,14 +2,15 @@
 
 namespace Handlers;
 
+use Core\Services\Application as ApplicationService;
 use Exception;
 use Phalcon\Cli\Console;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Loader;
 use Core\Services\Config as ConfigService;
 use Core\Services\Database as DbService;
-use Core\Services\Dispatcher as DispatcherService;
-use Core\Services\Router as RouterService;
+use Core\Services\DispatcherCli as DispatcherService;
+use Core\Services\RouterCli as RouterService;
 
 /**
  * Class ConsoleHandler
@@ -24,14 +25,22 @@ final class ConsoleHandler
     protected $container;
 
     /**
+     * @var
+     */
+    protected $arguments;
+
+    /**
      * Setup Console application
      *
-     * @throws Exception
+     * @param $arguments
      */
-    public function __construct()
+    public function __construct($arguments)
     {
         // Start Di container
         $this->container = new FactoryDefault();
+
+        // Register arguments
+        $this->arguments = $arguments;
 
         // Register core namespaces
         $this->registerConsoleNamespaces();
@@ -46,15 +55,21 @@ final class ConsoleHandler
     /**
      * Handle application's response
      *
-     * @return string
      * @throws Exception
      */
-    public function handle(): string
+    public function handle()
     {
         $console = new Console();
 
-        $arguments = [];
-        foreach ($argv as $k => $arg) {
+        $console->setDi($this->container);
+
+        $arguments = [
+            'task' => 'main',
+            'action' => 'main',
+            'params' => []
+        ];
+
+        foreach ($this->arguments as $k => $arg) {
             if ($k === 1) {
                 $arguments['task'] = $arg;
             } elseif ($k === 2) {
@@ -64,7 +79,7 @@ final class ConsoleHandler
             }
         }
 
-        return (string) $console->handle($arguments);
+        $console->handle($arguments);
     }
 
     /**
@@ -75,12 +90,7 @@ final class ConsoleHandler
         // Register core namespaces
         (new Loader())
             ->registerNamespaces([
-                'Component'   => BASE_PATH . '/core/Components',
-                'Error'       => BASE_PATH . '/core/errors',
-                'Middleware'  => BASE_PATH . '/core/middlewares',
-                'Provider'    => BASE_PATH . '/core/providers',
-                'Service'     => BASE_PATH . '/core/Services',
-                'Mvc'         => BASE_PATH . '/core/mvc',
+                'Core'        => BASE_PATH . '/core',
                 'Libraries'   => BASE_PATH . '/libraries',
             ])
             ->register();
@@ -91,6 +101,9 @@ final class ConsoleHandler
      */
     public function registerConsoleServices()
     {
+        (new ApplicationService)
+            ->register($this->container);
+
         (new DispatcherService)
             ->register($this->container);
 

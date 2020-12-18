@@ -1,8 +1,8 @@
 <?php
 
-$serverName = $_SERVER['SERVER_NAME'];
+$serverName = $_SERVER['SERVER_NAME'] ?? null;
 $baseUri = preg_replace('/public([\/\\\\])index.php$/', '', $_SERVER["PHP_SELF"]);
-$requestUri = '/'.str_replace($baseUri, '', $_SERVER['REQUEST_URI']);
+$requestUri = '/'.str_replace($baseUri, '', ($_SERVER['REQUEST_URI'] ?? null));
 
 return [
     'version' => '0.1',

@@ -49,8 +49,13 @@ final class ApplicationHandler
         // Start Di container
         $this->application = new Application();
 
+        // Register core namespaces
         $this->registerCoreNamespaces();
+
+        // Register main Services in DI container
         $this->registerCoreServices();
+
+        // Bind event to console application
         $this->registerCoreEvents();
     }
 
@@ -64,13 +69,16 @@ final class ApplicationHandler
     {
         $requestUri = $this->container->get('config')->get('requestUri');
 
-        return (string) $this->container->get('mvc')->handle($requestUri)->getContent();
+        return (string) $this->container
+            ->get('mvc')
+            ->handle($requestUri)
+            ->getContent();
     }
 
     /**
      * Register core namespaces
      */
-    private function registerCoreNamespaces()
+    private function registerCoreNamespaces(): ApplicationHandler
     {
         (new \Phalcon\Loader())
             ->registerNamespaces([
@@ -85,7 +93,7 @@ final class ApplicationHandler
     /**
      * Register core Services
      */
-    private function registerCoreServices()
+    private function registerCoreServices(): ApplicationHandler
     {
         (new MvcService())
             ->register($this->container);
@@ -123,7 +131,7 @@ final class ApplicationHandler
     /**
      * Register application events
      */
-    private function registerCoreEvents()
+    private function registerCoreEvents(): ApplicationHandler
     {
         $eventsManager = $this->container->get('eventsManager');
         $eventsManager->attach('application', new MvcMiddleware);

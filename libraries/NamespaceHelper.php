@@ -19,7 +19,7 @@ final class NamespaceHelper
      * @param string $classNamespace
      * @return string
      */
-    public static function dispatchNamespace(string $classNamespace)
+    public static function dispatchNamespace(string $classNamespace): string
     {
         $di = Di::getDefault();
         $application = $di->get('application');
@@ -49,7 +49,6 @@ final class NamespaceHelper
             } catch (ReflectionException $e) {
                 return $classNamespace;
             }
-
         }
 
         return $classNamespace;
@@ -61,7 +60,7 @@ final class NamespaceHelper
      * @param string $classPath
      * @return string
      */
-    public function dispatchPath(string $classPath)
+    public static function dispatchPath(string $classPath): string
     {
         $di = Di::getDefault();
         $application = $di->get('application');
@@ -80,7 +79,7 @@ final class NamespaceHelper
             if (file_exists($overridePath))
             {
                 $classPath = $overridePath;
-                $classNamespace = $this->parseNamespaceFromFilePath($classPath);
+                $classNamespace = self::parseNamespaceFromFilePath($classPath);
 
                 (new \Phalcon\Loader())
                     ->registerClasses([$classNamespace => $overridePath])
@@ -98,13 +97,13 @@ final class NamespaceHelper
      * @param string $baseNamespace Base namespace use to be concatenated between applicationNamespace and className
      * @return string|null
      */
-    public function dispatchClass(string $className, string $baseNamespace = '')
+    public static function dispatchClass(string $className, string $baseNamespace = ''): ?string
     {
         $di = Di::getDefault();
         $application = $di->get('application');
         $config = $di->get('config');
 
-        $basePath = $this->buildNamespacePath($baseNamespace);
+        $basePath = self::buildNamespacePath($baseNamespace);
         $appPath = $application->getTenantPath().'/'.$basePath;
         $basePath = $application->getBasePath().'/'.$basePath;
 
@@ -112,10 +111,10 @@ final class NamespaceHelper
         if (file_exists($appPath.'/'.$className.'.php')) {
             return $application->getTenantNamespace().'\\'.$baseNamespace.'\\'.$className;
         }
-        elseif (file_exists($basePath.'/'.$className.'.php')) {
+        else if (file_exists($basePath.'/'.$className.'.php')) {
             return $application->getBaseNamespace().'\\'.$baseNamespace.'\\'.$className;
         }
-        elseif ($config->get('tenantType') === 'modules')
+        else if ($config->get('tenantType') === 'modules')
         {
             foreach ($config->get('modules') as $moduleName => $definition)
             {
@@ -150,7 +149,8 @@ final class NamespaceHelper
      * @param string $baseNamespace
      * @return string
      */
-    public static function buildNamespacePath(string $baseNamespace) {
+    public static function buildNamespacePath(string $baseNamespace): string
+    {
         $namespacePath = [];
         foreach (explode('\\', $baseNamespace) as $namespace_folder) {
             if (!empty($namespace_folder)) $namespacePath[] = Str::uncamelize($namespace_folder, '_');
@@ -166,7 +166,7 @@ final class NamespaceHelper
      * @param $filePath
      * @return string
      */
-    public static function parseNamespaceFromFilePath($filePath)
+    public static function parseNamespaceFromFilePath($filePath): string
     {
         $fp = fopen($filePath, 'r');
         $class = $namespace = $buffer = '';

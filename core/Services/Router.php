@@ -4,7 +4,6 @@ namespace Core\Services;
 
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
-use Phalcon\Mvc\Router as MvcRouter;
 
 /**
  * Class Router
@@ -22,14 +21,14 @@ class Router implements ServiceProviderInterface
     public function register(DiInterface $container): void
     {
         $container->setShared('router', function () use ($container) {
-            $router =  new MvcRouter();
+            $router =  new \Phalcon\Mvc\Router();
 
             $router->setDI($container);
 
             $config = $container->get('config');
             $application = $container->get('application');
 
-            // We set defaultNamespace as tenant namespace if exist
+            // We set tenant namespace as defaultNamespace if exist
             $defaultNamespace = $application->hasTenant() ? $application->getTenantNamespace() : $application->getBaseNamespace();
 
             $router->setDefaultNamespace($defaultNamespace.'\\Controllers');

@@ -5,6 +5,7 @@ namespace Base\Modules\Api\Controllers;
 use Base\Controllers\BaseController;
 use Exception;
 use Base\Models\BaseModel;
+use Libraries\NamespaceHelper;
 use Phalcon\Helper\Str;
 use Phalcon\Mvc\ModelInterface;
 use phpDocumentor\Reflection\Types\Integer;
@@ -81,7 +82,7 @@ class ControllerBase extends BaseController
     protected function instantiateModel()
     {
         $this->modelName = Str::camelize($this->reference);
-        $this->modelNamespace = $this->dispatcher->dispatchClass($this->modelName, 'Models');
+        $this->modelNamespace = NamespaceHelper::dispatchClass($this->modelName, 'Models');
 
         if ($this->modelNamespace)
         {
