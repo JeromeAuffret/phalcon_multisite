@@ -28,15 +28,6 @@
                     </a>
                 </li>
             <?php } ?>
-
-            <?php if ($this->acl->userAllowed('admin')) { ?>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo $this->url->get('admin')?>">
-                        <span data-feather="shopping-cart"></span>
-                        Administration
-                    </a>
-                </li>
-            <?php } ?>
         </ul>
     </div>
 </nav>

@@ -4,6 +4,7 @@ namespace Base\Models;
 
 use Phalcon\Mvc\Model\ResultInterface;
 use Phalcon\Mvc\Model\ResultSetInterface;
+use Phalcon\Mvc\ModelInterface;
 
 /**
  * Class Role
@@ -165,7 +166,7 @@ class Role extends BaseModel
      * @param mixed $parameters
      * @return Role|ResultInterface
      */
-    public static function findFirst($parameters = null)
+    public static function findFirst($parameters = null): ?ModelInterface
     {
         return parent::findFirst($parameters);
     }

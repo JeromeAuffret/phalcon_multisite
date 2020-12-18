@@ -4,10 +4,6 @@ $basePath = \Phalcon\Di::getDefault()->get('application')->getBasePath();
 $applicationPth = \Phalcon\Di::getDefault()->get('application')->getTenantPath();
 
 return [
-    'admin' => [
-        'className' => 'Base\Modules\Admin\Module',
-        'path' => $basePath . '/modules/admin/Module.php'
-    ],
     'api' => [
         'className' => 'Base\Modules\Api\Module',
         'path' => $basePath . '/modules/api/Module.php'

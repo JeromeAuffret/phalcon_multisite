@@ -14,10 +14,41 @@
         <link rel="shortcut icon" type="image/x-icon" href="<?php echo $this->url->get('public/img/favicon.png')?>"/>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+        <script>
+            window.onload = function () {
+            var people = [{"name": "bob", "age": 32, "url": "https://example.com"}];
+
+            var app = new Vue({
+                delimiters: ['[[', ']]'],
+                el: '#app',
+                data: {
+                    message: 'Hello Vue!',
+                    people: people,
+                },
+                methods: {
+                    greet: function(name) {
+                        console.log('Hello from ' + name + '!')
+                    }
+                }
+            })
+            }
+        </script>
+
         <?php $this->assets->outputCss('view_style'); ?>
     </head>
 
     <body>
-        <?php echo $this->getContent(); ?>
+        <div id="app">
+
+            <li v-for="person in people">
+                <a v-bind:href="person.url">[[ person.name ]]</a> <button v-on:click="greet(person.name)">hey</button>
+            </li>
+
+
+            <?php echo $this->getContent(); ?>
+        </div>
     </body>
 </html>

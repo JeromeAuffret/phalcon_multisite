@@ -4,6 +4,7 @@ namespace Base\Models;
 
 use Phalcon\Mvc\Model\ResultInterface;
 use Phalcon\Mvc\Model\ResultSetInterface;
+use Phalcon\Mvc\ModelInterface;
 use Phalcon\Security;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Email as EmailValidator;
@@ -309,7 +310,7 @@ class User extends BaseModel
      * @param mixed $parameters
      * @return User|ResultInterface
      */
-    public static function findFirst($parameters = null)
+    public static function findFirst($parameters = null): ?ModelInterface
     {
         return parent::findFirst($parameters);
     }

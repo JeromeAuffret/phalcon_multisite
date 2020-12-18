@@ -62,7 +62,7 @@ final class Acl extends Injectable implements AdapterInterface
             return true;
         }
         // superAdmin can access to every registered Components
-        elseif ($this->isSuperAdmin()) {
+        else if ($this->isSuperAdmin()) {
             return $this->isComponent($AclComponent->getComponentName());
         }
         // Check if acl is valid and resolve permission
