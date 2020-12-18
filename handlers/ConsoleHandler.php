@@ -25,7 +25,7 @@ final class ConsoleHandler
     protected $container;
 
     /**
-     * @var
+     * @var array
      */
     protected $arguments;
 
@@ -60,26 +60,11 @@ final class ConsoleHandler
     public function handle()
     {
         $console = new Console();
-
         $console->setDi($this->container);
 
-        $arguments = [
-            'task' => 'main',
-            'action' => 'main',
-            'params' => []
-        ];
-
-        foreach ($this->arguments as $k => $arg) {
-            if ($k === 1) {
-                $arguments['task'] = $arg;
-            } elseif ($k === 2) {
-                $arguments['action'] = $arg;
-            } elseif ($k >= 3) {
-                $arguments['params'][] = $arg;
-            }
-        }
-
-        $console->handle($arguments);
+        $console->handle(
+            $this->parseArguments()
+        );
     }
 
     /**
@@ -121,4 +106,29 @@ final class ConsoleHandler
      * Register application events
      */
     public function registerEvents() {}
+
+    /**
+     * @return array
+     */
+    public function parseArguments(): array
+    {
+        $arguments = [
+            'task' => 'main',
+            'action' => 'main',
+            'params' => []
+        ];
+
+        foreach ($this->arguments as $k => $arg) {
+            if ($k === 1) {
+                $arguments['task'] = $arg;
+            } elseif ($k === 2) {
+                $arguments['action'] = $arg;
+            } elseif ($k >= 3) {
+                $arguments['params'][] = $arg;
+            }
+        }
+
+        return $arguments;
+    }
+
 }
