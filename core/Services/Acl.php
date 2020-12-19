@@ -17,16 +17,15 @@ class Acl implements ServiceProviderInterface
 {
 
     /**
-     * @param DiInterface $container
+     * @param DiInterface $di
      *
      * @return void
      */
-    public function register(DiInterface $container): void
+    public function register(DiInterface $di): void
     {
-        $container->setShared('acl', function ()
+        $di->setShared('acl', function ()
         {
             $acl = new AclComponent();
-
             $acl->setAdapter(new AclAdapter());
             $acl->setDefaultAction(Enum::DENY);
 

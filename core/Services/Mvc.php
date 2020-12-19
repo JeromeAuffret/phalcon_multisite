@@ -14,14 +14,14 @@ class Mvc implements ServiceProviderInterface
 {
 
     /**
-     * @param DiInterface $container
+     * @param DiInterface $di
      *
      * @return void
      */
-    public function register(DiInterface $container): void
+    public function register(DiInterface $di): void
     {
-        $container->setShared('mvc', function () use ($container) {
-            return new \Phalcon\Mvc\Application($container);
+        $di->setShared('mvc', function () use ($di) {
+            return new \Phalcon\Mvc\Application($di);
         });
     }
 

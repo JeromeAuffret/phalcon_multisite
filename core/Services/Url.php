@@ -15,16 +15,16 @@ class Url implements ServiceProviderInterface
 {
 
     /**
-     * @param DiInterface $container
+     * @param DiInterface $di
      *
      * @return void
      */
-    public function register(DiInterface $container): void
+    public function register(DiInterface $di): void
     {
-        $container->setShared('url', function () use ($container) {
+        $di->setShared('url', function () use ($di) {
             $url = new UrlResolver();
             $url->setBaseUri(
-                $container->get('config')->get('baseUri')
+                $di->get('config')->get('baseUri')
             );
 
             return $url;

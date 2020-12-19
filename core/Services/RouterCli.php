@@ -14,15 +14,15 @@ class RouterCli implements ServiceProviderInterface
 {
 
     /**
-     * @param DiInterface $container
+     * @param DiInterface $di
      *
      * @return void
      */
-    public function register(DiInterface $container): void
+    public function register(DiInterface $di): void
     {
-        $container->setShared('router', function () use ($container) {
+        $di->setShared('router', function () use ($di) {
             $router =  new \Phalcon\Cli\Router();
-            $router->setDI($container);
+            $router->setDI($di);
 
             return $router;
         });

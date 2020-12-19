@@ -14,15 +14,14 @@ class DispatcherCli implements ServiceProviderInterface
 {
 
     /**
-     * @param DiInterface $container
+     * @param DiInterface $di
      *
      * @return void
      */
-    public function register(DiInterface $container): void
+    public function register(DiInterface $di): void
     {
-        $container->setShared('dispatcher', function () use ($container) {
+        $di->setShared('dispatcher', function () {
             $dispatcher = new \Phalcon\Cli\Dispatcher();
-
             $dispatcher->setDefaultNamespace('Core\Tasks');
 
             return $dispatcher;

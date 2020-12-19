@@ -14,19 +14,18 @@ class Router implements ServiceProviderInterface
 {
 
     /**
-     * @param DiInterface $container
+     * @param DiInterface $di
      *
      * @return void
      */
-    public function register(DiInterface $container): void
+    public function register(DiInterface $di): void
     {
-        $container->setShared('router', function () use ($container) {
+        $di->setShared('router', function () use ($di) {
             $router =  new \Phalcon\Mvc\Router();
+            $router->setDI($di);
 
-            $router->setDI($container);
-
-            $config = $container->get('config');
-            $application = $container->get('application');
+            $config = $di->get('config');
+            $application = $di->get('application');
 
             // We set tenant namespace as defaultNamespace if exist
             $defaultNamespace = $application->hasTenant() ? $application->getTenantNamespace() : $application->getBaseNamespace();

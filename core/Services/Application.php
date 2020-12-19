@@ -15,16 +15,14 @@ class Application implements ServiceProviderInterface
 {
 
     /**
-     * @param DiInterface $container
+     * @param DiInterface $di
      *
      * @return void
      */
-    public function register(DiInterface $container): void
+    public function register(DiInterface $di): void
     {
-        $container->setShared('application', function () use ($container) {
-            $application = new ApplicationComponent($container);
-
-            return $application;
+        $di->setShared('application', function () use ($di) {
+            return new ApplicationComponent($di);
         });
     }
 

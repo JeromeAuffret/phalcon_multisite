@@ -15,16 +15,17 @@ class View implements ServiceProviderInterface
 {
 
     /**
-     * @param DiInterface $container
+     * @param DiInterface $di
      *
      * @return void
      */
-    public function register(DiInterface $container): void
+    public function register(DiInterface $di): void
     {
-        $container->setShared('view', function () use ($container) {
-            $application = $container->get('application');
-
+        $di->setShared('view', function () use ($di) {
             $view = new ViewComponent();
+
+            $application = $di->get('application');
+
             $view
                 ->setViewsDir($application->getBasePath() . '/views')
                 ->registerEngines([

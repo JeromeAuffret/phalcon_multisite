@@ -15,15 +15,15 @@ class Config implements ServiceProviderInterface
 {
 
     /**
-     * @param DiInterface $container
+     * @param DiInterface $di
      *
      * @return void
      */
-    public function register(DiInterface $container): void
+    public function register(DiInterface $di): void
     {
-        $container->setShared('config', function () use ($container) {
+        $di->setShared('config', function () use ($di) {
             $config = new ConfigComponent();
-            $config->registerMainConfig($container);
+            $config->registerMainConfig($di);
 
             return $config;
         });

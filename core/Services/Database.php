@@ -15,15 +15,15 @@ class Database implements ServiceProviderInterface
 {
 
     /**
-     * @param DiInterface $container
+     * @param DiInterface $di
      *
      * @return void
      */
-    public function register(DiInterface $container): void
+    public function register(DiInterface $di): void
     {
-        $container->setShared('database', function () use ($container) {
+        $di->setShared('database', function () use ($di) {
             $database = new DatabaseComponent();
-            $database->registerMainDb($container);
+            $database->registerMainDb($di);
 
             return $database;
         });

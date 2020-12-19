@@ -16,17 +16,17 @@ class Dispatcher implements ServiceProviderInterface
 {
 
     /**
-     * @param DiInterface $container
+     * @param DiInterface $di
      *
      * @return void
      */
-    public function register(DiInterface $container): void
+    public function register(DiInterface $di): void
     {
-        $container->setShared('dispatcher', function () use ($container) {
+        $di->setShared('dispatcher', function () use ($di) {
             $dispatcher = new \Phalcon\Mvc\Dispatcher();
 
             // Register core events in dispatcher
-            $eventManager = $container->get('eventsManager');
+            $eventManager = $di->get('eventsManager');
 
             $eventManager->attach('dispatch', new DispatchMiddleware);
             $eventManager->attach('dispatch', new ErrorMiddleware);

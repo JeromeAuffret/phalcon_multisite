@@ -117,7 +117,7 @@ final class Application extends AbstractApplication
      * PSR-4 compliant autoloader for module folder
      * Initialize ModuleProvider for each modules defined in configuration
      *
-     * TODO this use the default module configuration use by phalcon. This could be improve to just use moduleName
+     * TODO This use the default module configuration use by phalcon. It could be improve to just use moduleName
      */
     public function registerModulesProvider()
     {

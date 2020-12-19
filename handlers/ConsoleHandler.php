@@ -2,6 +2,7 @@
 
 namespace Handlers;
 
+use Core\Middlewares\Cli as CliMiddleware;
 use Core\Services\Application as ApplicationService;
 use Exception;
 use Phalcon\Cli\Console;
@@ -20,6 +21,11 @@ use Core\Services\RouterCli as RouterService;
 final class ConsoleHandler
 {
     /**
+     * @var Console
+     */
+    protected $console;
+
+    /**
      * @var FactoryDefault
      */
     protected $container;
@@ -27,20 +33,23 @@ final class ConsoleHandler
     /**
      * @var array
      */
-    protected $arguments;
+    protected $argv;
 
     /**
      * Setup Console application
      *
-     * @param $arguments
+     * @param $argv
      */
-    public function __construct($arguments)
+    public function __construct($argv)
     {
+        // Start Cli application
+        $this->console = new Console();
+
         // Start Di container
         $this->container = new FactoryDefault();
 
         // Register arguments
-        $this->arguments = $arguments;
+        $this->argv = $argv;
 
         // Register core namespaces
         $this->registerConsoleNamespaces();
@@ -50,6 +59,9 @@ final class ConsoleHandler
 
         // Bind event to mvc application
         $this->registerEvents();
+
+        // Register di in cli application
+        $this->console->setDi($this->container);
     }
 
     /**
@@ -59,12 +71,11 @@ final class ConsoleHandler
      */
     public function handle()
     {
-        $console = new Console();
-        $console->setDi($this->container);
-
-        $console->handle(
+        $this->console->handle(
             $this->parseArguments()
         );
+
+        echo PHP_EOL;
     }
 
     /**
@@ -105,7 +116,13 @@ final class ConsoleHandler
     /**
      * Register application events
      */
-    public function registerEvents() {}
+    public function registerEvents()
+    {
+        $eventsManager = $this->container->get('eventsManager');
+        $eventsManager->attach('console', new CliMiddleware());
+
+        $this->console->setEventsManager($eventsManager);
+    }
 
     /**
      * @return array
@@ -118,7 +135,7 @@ final class ConsoleHandler
             'params' => []
         ];
 
-        foreach ($this->arguments as $k => $arg) {
+        foreach ($this->argv as $k => $arg) {
             if ($k === 1) {
                 $arguments['task'] = $arg;
             } elseif ($k === 2) {
