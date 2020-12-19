@@ -4,7 +4,7 @@
 namespace Core\Components;
 
 /**
- * Class Console
+ * Class Cli
  * @package Core\Components
  */
 class Console extends \Phalcon\Cli\Console

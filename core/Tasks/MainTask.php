@@ -6,7 +6,6 @@ namespace Core\Tasks;
 use Core\Components\Application;
 use Core\Components\Console;
 use Phalcon\Cli\Task;
-use Phalcon\Cli\Dispatcher;
 
 /**
  * Class MainTask

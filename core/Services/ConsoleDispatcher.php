@@ -2,6 +2,8 @@
 
 namespace Core\Services;
 
+use Core\Middlewares\Task as TaskMiddleware;
+use Core\Middlewares\Error as ErrorMiddleware;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
 
@@ -20,12 +22,20 @@ class ConsoleDispatcher implements ServiceProviderInterface
      */
     public function register(DiInterface $di): void
     {
-        $di->setShared('dispatcher', function () {
+        $di->setShared('dispatcher', function () use ($di) {
             $dispatcher = new \Phalcon\Cli\Dispatcher();
 
+            // Register defaults for console routing
             $dispatcher->setDefaultNamespace('Core\Tasks');
             $dispatcher->setDefaultTask('main');
             $dispatcher->setDefaultAction('main');
+
+            // Register task events in dispatcher
+            $eventManager = $di->get('eventsManager');
+            $eventManager->attach('dispatch', new TaskMiddleware);
+            $eventManager->attach('dispatch', new ErrorMiddleware);
+
+            $dispatcher->setEventsManager($eventManager);
 
             return $dispatcher;
         });

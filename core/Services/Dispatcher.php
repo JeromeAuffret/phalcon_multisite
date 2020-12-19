@@ -2,7 +2,7 @@
 
 namespace Core\Services;
 
-use Core\Middlewares\Dispatch as DispatchMiddleware;
+use Core\Middlewares\Controller as ControllerMiddleware;
 use Core\Middlewares\Error as ErrorMiddleware;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
@@ -27,8 +27,7 @@ class Dispatcher implements ServiceProviderInterface
 
             // Register core events in dispatcher
             $eventManager = $di->get('eventsManager');
-
-            $eventManager->attach('dispatch', new DispatchMiddleware);
+            $eventManager->attach('dispatch', new ControllerMiddleware);
             $eventManager->attach('dispatch', new ErrorMiddleware);
 
             $dispatcher->setEventsManager($eventManager);

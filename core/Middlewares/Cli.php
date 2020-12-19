@@ -5,24 +5,24 @@ namespace Core\Middlewares;
 use Exception;
 use Phalcon\Events\Event;
 use Phalcon\Di\Injectable;
-use Phalcon\Cli\Console as CliConsole;
+use Core\Components\Console as ConsoleComponent;
 
 /**
- * Class Dispatch
+ * Class Controller
  *
  * @package Middleware
  */
-class Console extends Injectable
+class Cli extends Injectable
 {
 
     /**
      * Log start script
      *
      * @param Event $event
-     * @param CliConsole $console
+     * @param ConsoleComponent $console
      * @return void
      */
-    public function boot(Event $event, CliConsole $console)
+    public function boot(Event $event, ConsoleComponent $console)
     {
         echo '['.date('Y-m-d H:i:s').'] Start console'.PHP_EOL.PHP_EOL;
     }
@@ -31,11 +31,11 @@ class Console extends Injectable
      * Log start module
      *
      * @param Event   $event
-     * @param Console $console
+     * @param ConsoleComponent $console
      * @return void
      * @throws Exception
      */
-    public function beforeStartModule(Event $event, Console $console)
+    public function beforeStartModule(Event $event, ConsoleComponent $console)
     {
         echo '['.date('Y-m-d H:i:s').'] Start module'.PHP_EOL.PHP_EOL;
     }

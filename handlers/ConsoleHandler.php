@@ -2,7 +2,7 @@
 
 namespace Handlers;
 
-use Core\Middlewares\Console as CliMiddleware;
+use Core\Middlewares\Cli as CliMiddleware;
 use Core\Services\Application as ApplicationService;
 use Exception;
 use Phalcon\Di\FactoryDefault;
@@ -32,7 +32,7 @@ final class ConsoleHandler
     protected $argv;
 
     /**
-     * Setup Console application
+     * Setup Cli application
      *
      * @param $argv
      */
@@ -142,7 +142,7 @@ final class ConsoleHandler
                 continue;
             }
 
-            // Dispatch arguments for cli router
+            // Controller arguments for cli router
             if ($i === 1) {
                 $arguments['task'] = $arg;
             } elseif ($i === 2) {

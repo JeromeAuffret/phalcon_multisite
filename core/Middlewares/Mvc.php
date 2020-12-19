@@ -13,7 +13,7 @@ use Phalcon\Mvc\Application;
 use Core\Providers\ModuleProvider;
 
 /**
- * Class Dispatch
+ * Class Controller
  *
  * @property ApplicationComponent application
  * @property Config config
@@ -23,7 +23,7 @@ class Mvc extends Injectable
 {
 
     /**
-     * Dispatch applications on MVC boot event
+     * Controller applications on MVC boot event
      * Try to register specific application and initialise provider
      * By default, register base's provider
      *

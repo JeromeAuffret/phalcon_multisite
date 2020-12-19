@@ -24,7 +24,7 @@ class Error extends Injectable
 {
 
     /**
-     * Dispatch errors messages and status code
+     * Controller errors messages and status code
      *
      * @param Event      $event
      * @param Dispatcher $dispatcher

@@ -14,14 +14,14 @@ use ReflectionException;
 use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
 
 /**
- * Class Dispatch
+ * Class Controller
  *
  * @property Application application
  * @property Config $config
  * @property Dispatcher dispatcher
  * @package Middleware
  */
-class Dispatch extends Injectable
+class Controller extends Injectable
 {
 
     /**
@@ -66,7 +66,7 @@ class Dispatch extends Injectable
         // Display maintenance page if defined in config
         $this->displayMaintenancePage();
 
-        // Dispatch views directories
+        // Controller views directories
         $this->dispatchViews();
 
         // Initialise Assets collections
@@ -101,7 +101,7 @@ class Dispatch extends Injectable
      ************************************************************/
 
     /**
-     * Dispatch views between base/application folders
+     * Controller views between base/application folders
      */
     public function dispatchViews()
     {
