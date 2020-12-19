@@ -21,9 +21,7 @@ class Cli extends Injectable
 {
 
     /**
-     * Dispatch applications on MVC boot event
-     * Try to register specific application and initialise provider
-     * By default, register base's provider
+     * Log start script
      *
      * @param Event   $event
      * @param Console $console
@@ -36,7 +34,7 @@ class Cli extends Injectable
     }
 
     /**
-     * Register specific module events from moduleProvider
+     * Log start module
      *
      * @param Event   $event
      * @param Console $console

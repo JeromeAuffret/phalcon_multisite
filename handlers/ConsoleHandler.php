@@ -132,17 +132,31 @@ final class ConsoleHandler
         $arguments = [
             'task' => 'main',
             'action' => 'main',
-            'params' => []
+            'params' => [],
+            'options' => []
         ];
 
-        foreach ($this->argv as $k => $arg) {
-            if ($k === 1) {
+        $i = 0;
+        foreach ($this->argv as $k => $arg)
+        {
+            // Detect options syntax
+            // Escape loop to prevent increment
+            $optionDelimiter = '--';
+            $len = strlen($optionDelimiter);
+            if (substr($arg, 0, $len) === $optionDelimiter) {
+                $arguments['options'][] = $arg;
+                continue;
+            }
+
+            if ($i === 1) {
                 $arguments['task'] = $arg;
-            } elseif ($k === 2) {
+            } elseif ($i === 2) {
                 $arguments['action'] = $arg;
-            } elseif ($k >= 3) {
+            } elseif ($i >= 3) {
                 $arguments['params'][] = $arg;
             }
+
+            $i++;
         }
 
         return $arguments;
