@@ -14,12 +14,12 @@ final class View extends \Phalcon\Mvc\View
 {
 
     /**
-     * @param string $view
-     * @param array  $vars
+     * @param string $partialPath
+     * @param array  $params
      *
      * @return string|void
      */
-    public function getPartial(string $view, $vars = []): string
+    public function getPartial(string $partialPath, $params = []): string
     {
         $di = $this->getDi();
         $application = $di->get('application');
@@ -33,7 +33,7 @@ final class View extends \Phalcon\Mvc\View
         $appViewPath = $application->getTenantPath().'/views';
         $appModuleViewPath = $application->getTenantModulePath($moduleName).'/views';
         
-        $viewArray = explode('/', $view);
+        $viewArray = explode('/', $partialPath);
         $partial = end($viewArray);
         $partialKey = array_keys($viewArray, $partial)[0];
 
@@ -55,7 +55,7 @@ final class View extends \Phalcon\Mvc\View
             $this->setPartialsDir($baseViewPath.'/'.$partialDir.'/');
         }
 
-        return $this->getPartialContent($partial, $vars);
+        return $this->getPartialContent($partial, $params);
     }
 
     /**
@@ -89,7 +89,7 @@ final class View extends \Phalcon\Mvc\View
      *
      * @return Collection
      */
-    public function registerTenantAssetsCollection(Collection $collection, $type)
+    public function registerTenantAssetsCollection(Collection $collection, $type): Collection
     {
         $application = $this->getDI()->get('application');
         $appPath = $application->getTenantPath().'/assets/';
@@ -120,7 +120,7 @@ final class View extends \Phalcon\Mvc\View
      * @param string     $type
      * @return Collection
      */
-    public function registerViewAssetsCollection(Collection $collection, string $type)
+    public function registerViewAssetsCollection(Collection $collection, string $type): Collection
     {
         $container = $this->getDI();
         $application = $container->get('application');

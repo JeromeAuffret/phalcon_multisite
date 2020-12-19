@@ -181,7 +181,7 @@ final class Application extends AbstractApplication
      * @param mixed|null $key
      * @return Collection|mixed|null
      */
-    public function getTenant($key = null)
+    public function getTenant($key = null): ?Collection
     {
         if (!$key)
             return $this->tenant;
@@ -235,7 +235,7 @@ final class Application extends AbstractApplication
      * @param mixed|null $key
      * @return Collection|mixed|null
      */
-    public function getUser($key = null)
+    public function getUser($key = null): ?Collection
     {
         if (!$key)
             return $this->user;

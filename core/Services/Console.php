@@ -2,7 +2,7 @@
 
 namespace Core\Services;
 
-use Core\Components\Config as ConfigComponent;
+use Core\Components\Console as ConsoleComponent;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
 
@@ -22,7 +22,7 @@ class Console implements ServiceProviderInterface
     public function register(DiInterface $di): void
     {
         $di->setShared('console', function () use ($di) {
-            $console = new \Phalcon\Cli\Console();
+            $console = new ConsoleComponent();
             $console->setDi($di);
 
             return $console;

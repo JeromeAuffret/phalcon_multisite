@@ -3,10 +3,15 @@
 
 namespace Core\Tasks;
 
+use Core\Components\Application;
+use Core\Components\Console;
 use Phalcon\Cli\Task;
 
 /**
  * Class MainTask
+ * @property Console $console
+ * @property Application $application
+ * @property Console $config
  * @package Core\Tasks
  */
 class MainTask extends Task

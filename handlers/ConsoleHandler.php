@@ -137,10 +137,12 @@ final class ConsoleHandler
             $optionDelimiter = '--';
             $len = strlen($optionDelimiter);
             if (substr($arg, 0, $len) === $optionDelimiter) {
-                $arguments['options'][] = $arg;
+                $explodeValue = explode('=', str_replace($optionDelimiter, '', $arg)); // Remove $optionDelimiter and explode by key / value
+                $arguments['options'][trim($explodeValue[0])] = trim($explodeValue[1] ?? '');
                 continue;
             }
 
+            // Dispatch arguments for cli router
             if ($i === 1) {
                 $arguments['task'] = $arg;
             } elseif ($i === 2) {
@@ -151,6 +153,15 @@ final class ConsoleHandler
 
             $i++;
         }
+
+        // Register arguments in console component
+        $this->container->get('console')->setArguments($arguments);
+
+        // Register params in console component
+        $this->container->get('console')->setParams($arguments['params']);
+
+        // Register options in console component
+        $this->container->get('console')->setOptions($arguments['options']);
 
         return $arguments;
     }
