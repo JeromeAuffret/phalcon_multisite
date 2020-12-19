@@ -23,11 +23,8 @@ class View implements ServiceProviderInterface
     {
         $di->setShared('view', function () use ($di) {
             $view = new ViewComponent();
-
-            $application = $di->get('application');
-
             $view
-                ->setViewsDir($application->getBasePath() . '/views')
+                ->setViewsDir($di->get('application')->getBasePath() . '/views')
                 ->registerEngines([
                     '.phtml' => \Phalcon\Mvc\View\Engine\Php::class
                 ]);

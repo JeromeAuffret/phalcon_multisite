@@ -30,6 +30,7 @@ class Dispatch extends Injectable
      * @param Event $event
      * @param Dispatcher $dispatcher
      * @return void
+     * @throws DispatchException
      */
     public function beforeDispatch(Event $event, Dispatcher $dispatcher)
     {
@@ -40,9 +41,10 @@ class Dispatch extends Injectable
             $this->dispatcher->setNamespaceName((new \ReflectionClass($controllerClass))->getNamespaceName());
         }
         catch (ReflectionException $e) {
-            new DispatchException('Not found', DispatchException::EXCEPTION_HANDLER_NOT_FOUND, $e);
+            throw new DispatchException('Not found', DispatchException::EXCEPTION_HANDLER_NOT_FOUND, $e);
         }
     }
+
 
     /************************************************************
      *

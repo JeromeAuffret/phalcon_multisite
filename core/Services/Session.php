@@ -26,7 +26,7 @@ class Session implements ServiceProviderInterface
             $manager = new Manager();
             $manager
                 ->setAdapter(new Stream([
-                    'savePath' => '/tmp',
+                    'savePath' => sys_get_temp_dir(),
                 ]))
                 ->setName('auth-session')
                 ->start();

@@ -10,7 +10,7 @@ use Phalcon\Di\ServiceProviderInterface;
  *
  * @package Core\Services
  */
-class DispatcherCli implements ServiceProviderInterface
+class ConsoleDispatcher implements ServiceProviderInterface
 {
 
     /**
@@ -22,7 +22,10 @@ class DispatcherCli implements ServiceProviderInterface
     {
         $di->setShared('dispatcher', function () {
             $dispatcher = new \Phalcon\Cli\Dispatcher();
+
             $dispatcher->setDefaultNamespace('Core\Tasks');
+            $dispatcher->setDefaultTask('main');
+            $dispatcher->setDefaultAction('main');
 
             return $dispatcher;
         });

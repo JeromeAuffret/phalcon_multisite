@@ -2,7 +2,7 @@
 
 namespace Handlers;
 
-use Core\Middlewares\Cli as CliMiddleware;
+use Core\Middlewares\Console as CliMiddleware;
 use Core\Services\Application as ApplicationService;
 use Exception;
 use Phalcon\Di\FactoryDefault;
@@ -10,8 +10,8 @@ use Phalcon\Loader;
 use Core\Services\Console as ConsoleService;
 use Core\Services\Config as ConfigService;
 use Core\Services\Database as DbService;
-use Core\Services\DispatcherCli as DispatcherService;
-use Core\Services\RouterCli as RouterService;
+use Core\Services\ConsoleDispatcher as DispatcherService;
+use Core\Services\ConsoleRouter as RouterService;
 
 /**
  * Class ConsoleHandler
@@ -123,8 +123,8 @@ final class ConsoleHandler
     public function parseArguments(): array
     {
         $arguments = [
-            'task' => 'main',
-            'action' => 'main',
+            'task',
+            'action',
             'params' => [],
             'options' => []
         ];

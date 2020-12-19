@@ -10,7 +10,7 @@ use Phalcon\Di\ServiceProviderInterface;
  *
  * @package Core\Services
  */
-class RouterCli implements ServiceProviderInterface
+class ConsoleRouter implements ServiceProviderInterface
 {
 
     /**
