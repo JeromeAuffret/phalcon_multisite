@@ -31,7 +31,7 @@ class Error extends Injectable
      * @param            $exception
      * @return false|void
      */
-    public function beforeException(Event $event, Dispatcher $dispatcher, $exception): bool
+    public function beforeException(Event $event, Dispatcher $dispatcher, $exception)
     {
         /* @var Exception $exception */
         error_log($exception->getMessage());
