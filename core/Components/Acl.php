@@ -37,7 +37,7 @@ final class Acl extends Injectable implements AdapterInterface
     /**
      * @return AbstractAdapter
      */
-    public function getAdapter()
+    public function getAdapter(): AbstractAdapter
     {
         return $this->adapter;
     }
@@ -51,7 +51,7 @@ final class Acl extends Injectable implements AdapterInterface
      * @param array $params
      * @return bool
      */
-    public function userAllowed(string $moduleName = null, string $controllerName = null, string $actionName = null, array $params = [])
+    public function userAllowed(string $moduleName = null, string $controllerName = null, string $actionName = null, array $params = []): bool
     {
         // Defined resource
         $aclComponentClass = NamespaceHelper::dispatchNamespace(AclComponent::class);
@@ -101,7 +101,7 @@ final class Acl extends Injectable implements AdapterInterface
     /**
      * @return AclUserRole
      */
-    public function getAclRole()
+    public function getAclRole(): AclUserRole
     {
         $aclRoleClass = NamespaceHelper::dispatchNamespace(AclUserRole::class);
         $userRole = $this->application->hasUserRole() ? $this->application->getUserRole() : 'guest';

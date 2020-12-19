@@ -5,9 +5,9 @@ namespace Handlers;
 use Core\Middlewares\Cli as CliMiddleware;
 use Core\Services\Application as ApplicationService;
 use Exception;
-use Phalcon\Cli\Console;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Loader;
+use Core\Services\Console as ConsoleService;
 use Core\Services\Config as ConfigService;
 use Core\Services\Database as DbService;
 use Core\Services\DispatcherCli as DispatcherService;
@@ -20,10 +20,6 @@ use Core\Services\RouterCli as RouterService;
  */
 final class ConsoleHandler
 {
-    /**
-     * @var Console
-     */
-    protected $console;
 
     /**
      * @var FactoryDefault
@@ -42,9 +38,6 @@ final class ConsoleHandler
      */
     public function __construct($argv)
     {
-        // Start Cli application
-        $this->console = new Console();
-
         // Start Di container
         $this->container = new FactoryDefault();
 
@@ -59,9 +52,6 @@ final class ConsoleHandler
 
         // Bind event to mvc application
         $this->registerEvents();
-
-        // Register di in cli application
-        $this->console->setDi($this->container);
     }
 
     /**
@@ -71,7 +61,7 @@ final class ConsoleHandler
      */
     public function handle()
     {
-        $this->console->handle(
+        $this->container->get('console')->handle(
             $this->parseArguments()
         );
 
@@ -97,6 +87,9 @@ final class ConsoleHandler
      */
     public function registerConsoleServices()
     {
+        (new ConsoleService)
+            ->register($this->container);
+
         (new ApplicationService)
             ->register($this->container);
 
@@ -121,7 +114,7 @@ final class ConsoleHandler
         $eventsManager = $this->container->get('eventsManager');
         $eventsManager->attach('console', new CliMiddleware());
 
-        $this->console->setEventsManager($eventsManager);
+        $this->container->get('console')->setEventsManager($eventsManager);
     }
 
     /**
@@ -137,7 +130,7 @@ final class ConsoleHandler
         ];
 
         $i = 0;
-        foreach ($this->argv as $k => $arg)
+        foreach ($this->argv as $arg)
         {
             // Detect options syntax
             // Escape loop to prevent increment
