@@ -3,7 +3,7 @@
 namespace Core\Components;
 
 use Base\Models\Application as ApplicationModel;
-use Libraries\NamespaceHelper;
+use Core\Helpers\NamespaceHelper;
 use Phalcon\Application\AbstractApplication;
 use Phalcon\Collection;
 use Phalcon\Dispatcher\Exception as DispatcherException;

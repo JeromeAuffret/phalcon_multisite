@@ -81,10 +81,7 @@ final class ApplicationHandler
     private function registerCoreNamespaces(): ApplicationHandler
     {
         (new \Phalcon\Loader())
-            ->registerNamespaces([
-                'Core'        => BASE_PATH . '/core',
-                'Libraries'   => BASE_PATH . '/libraries',
-            ])
+            ->registerNamespaces(['Core' => BASE_PATH.'/core'])
             ->register();
 
         return $this;

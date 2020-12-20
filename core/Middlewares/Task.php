@@ -4,7 +4,7 @@ namespace Core\Middlewares;
 
 use Core\Components\Application;
 use Core\Components\Console;
-use Libraries\NamespaceHelper;
+use Core\Helpers\NamespaceHelper;
 use Phalcon\Cli\Dispatcher;
 use Phalcon\Cli\Dispatcher\Exception as DispatcherException;
 use Phalcon\Cli\Router;

@@ -74,11 +74,7 @@ final class ConsoleHandler
     {
         // Register core namespaces
         (new Loader())
-            ->registerNamespaces([
-                'Core'        => BASE_PATH . '/core',
-                'Libraries'   => BASE_PATH . '/libraries',
-                'Base\Models' => BASE_PATH . '/src/shared/models',
-            ])
+            ->registerNamespaces(['Core' => BASE_PATH . '/core'])
             ->register();
     }
 

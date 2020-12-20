@@ -4,9 +4,7 @@ namespace Core\Middlewares;
 
 use Core\Components\Config;
 use Core\Components\Application as ApplicationComponent;
-use Base\Models\Application as ApplicationModel;
 use Exception;
-use Libraries\NamespaceHelper;
 use Phalcon\Events\Event;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Application;

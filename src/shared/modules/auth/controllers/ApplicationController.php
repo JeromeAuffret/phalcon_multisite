@@ -6,7 +6,7 @@ use Core\Errors\AuthException;
 use Exception;
 use Base\Models\Role;
 use Base\Models\Application;
-use Libraries\NamespaceHelper;
+use Core\Helpers\NamespaceHelper;
 use Phalcon\Collection;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;

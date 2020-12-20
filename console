@@ -18,7 +18,7 @@ try {
     // Output stream content and write it in log file
     $content = ob_get_clean();
     echo $content;
-    file_put_contents('logs/'.time().'.log', $content);
+    file_put_contents('var/logs/'.time().'.log', $content);
 }
 catch (Exception $e) {
     echo $e->getMessage() . PHP_EOL;

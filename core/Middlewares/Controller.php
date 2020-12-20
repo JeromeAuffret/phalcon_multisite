@@ -4,7 +4,7 @@ namespace Core\Middlewares;
 
 use Core\Components\Application;
 use Core\Components\Config;
-use Libraries\NamespaceHelper;
+use Core\Helpers\NamespaceHelper;
 use Phalcon\Assets\Filters\Cssmin;
 use Phalcon\Assets\Filters\Jsmin;
 use Phalcon\Events\Event;

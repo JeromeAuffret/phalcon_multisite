@@ -3,11 +3,11 @@
 namespace Base\Models;
 
 /**
- * Class BaseModel
+ * Class Model
  *
  * @package Base\Models
  */
-class BaseModel extends \Phalcon\Mvc\Model
+class BaseModel extends \Core\Models\Model
 {
 
 }

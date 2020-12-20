@@ -6,7 +6,7 @@ use Core\Acl\AclComponent;
 use Core\Components\Acl;
 use Core\Components\Application;
 use Core\Errors\AuthException;
-use Libraries\NamespaceHelper;
+use Core\Helpers\NamespaceHelper;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Di\Injectable;

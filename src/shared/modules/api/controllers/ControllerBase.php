@@ -3,12 +3,11 @@
 namespace Base\Modules\Api\Controllers;
 
 use Base\Controllers\BaseController;
-use Exception;
 use Base\Models\BaseModel;
-use Libraries\NamespaceHelper;
+use Exception;
+use Core\Helpers\NamespaceHelper;
 use Phalcon\Helper\Str;
 use Phalcon\Mvc\ModelInterface;
-use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * Class ControllerBase

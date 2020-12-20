@@ -3,8 +3,7 @@
 
 # Generated files
 .phalcon/*
-cache/*
-logs/*
+var/**/*
 public/temp/*
 
 # Composer

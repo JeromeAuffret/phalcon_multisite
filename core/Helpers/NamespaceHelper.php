@@ -1,6 +1,6 @@
 <?php
 
-namespace Libraries;
+namespace Core\Helpers;
 
 use Phalcon\Di;
 use Phalcon\Helper\Str;

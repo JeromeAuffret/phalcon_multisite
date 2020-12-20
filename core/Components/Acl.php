@@ -4,7 +4,7 @@ namespace Core\Components;
 
 use Core\Acl\AclComponent;
 use Core\Acl\AclUserRole;
-use Libraries\NamespaceHelper;
+use Core\Helpers\NamespaceHelper;
 use Phalcon\Acl\ComponentInterface;
 use Phalcon\Acl\RoleInterface;
 use Phalcon\Acl\Adapter\AbstractAdapter;
