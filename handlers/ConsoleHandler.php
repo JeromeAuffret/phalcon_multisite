@@ -5,6 +5,7 @@ namespace Handlers;
 use Core\Middlewares\Cli as CliMiddleware;
 use Core\Services\Application as ApplicationService;
 use Exception;
+use Phalcon\Collection;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Loader;
 use Core\Services\Console as ConsoleService;
@@ -64,8 +65,6 @@ final class ConsoleHandler
         $this->container->get('console')->handle(
             $this->parseArguments()
         );
-
-        echo PHP_EOL;
     }
 
     /**
@@ -78,6 +77,7 @@ final class ConsoleHandler
             ->registerNamespaces([
                 'Core'        => BASE_PATH . '/core',
                 'Libraries'   => BASE_PATH . '/libraries',
+                'Base\Models' => BASE_PATH . '/src/shared/models',
             ])
             ->register();
     }
@@ -123,8 +123,8 @@ final class ConsoleHandler
     public function parseArguments(): array
     {
         $arguments = [
-            'task',
-            'action',
+            'task' => 'main',
+            'action' => 'main',
             'params' => [],
             'options' => []
         ];
@@ -155,13 +155,19 @@ final class ConsoleHandler
         }
 
         // Register arguments in console component
-        $this->container->get('console')->setArguments($arguments);
+        $this->container->get('console')->setArguments(
+            new Collection($arguments)
+        );
 
         // Register params in console component
-        $this->container->get('console')->setParams($arguments['params']);
+        $this->container->get('console')->setParams(
+            new Collection($arguments['params'])
+        );
 
         // Register options in console component
-        $this->container->get('console')->setOptions($arguments['options']);
+        $this->container->get('console')->setOptions(
+            new Collection($arguments['options'])
+        );
 
         return $arguments;
     }

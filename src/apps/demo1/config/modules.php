@@ -9,15 +9,15 @@ return [
         'path' => $basePath . '/modules/api/Module.php'
     ],
     'dashboard' => [
-        'className' => 'Base\Modules\Dashboard\Module',
+        'className' => 'Demo1\Modules\Dashboard\Module',
         'path' => $applicationPth . '/modules/dashboard/Module.php'
     ],
     'order' => [
-        'className' => 'Base\Modules\Order\Module',
+        'className' => 'Demo1\Modules\Order\Module',
         'path' => $applicationPth . '/modules/order/Module.php'
     ],
     'product' => [
-        'className' => 'Base\Modules\Product\Module',
+        'className' => 'Demo1\Modules\Product\Module',
         'path' => $applicationPth . '/modules/product/Module.php'
     ]
 ];

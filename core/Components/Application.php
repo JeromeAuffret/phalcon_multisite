@@ -2,6 +2,8 @@
 
 namespace Core\Components;
 
+use Base\Models\Application as ApplicationModel;
+use Libraries\NamespaceHelper;
 use Phalcon\Application\AbstractApplication;
 use Phalcon\Collection;
 use Phalcon\Helper\Str;
@@ -92,10 +94,10 @@ final class Application extends AbstractApplication
     public function registerBaseProvider()
     {
         (new \Phalcon\Loader())
-            ->registerNamespaces([$this->baseNamespace => $this->basePath])
+            ->registerNamespaces([$this->getBaseNamespace() => $this->getBasePath()])
             ->register();
 
-        $applicationProvider = (!empty($this->baseNamespace) ? $this->baseNamespace.'\\' : '') . $this->tenantClass;
+        $applicationProvider = (!empty($this->getBaseNamespace()) ? $this->getBaseNamespace().'\\' : '') . $this->getTenantClass();
         new $applicationProvider($this->container);
     }
 
@@ -106,10 +108,10 @@ final class Application extends AbstractApplication
     public function registerTenantProvider()
     {
         (new \Phalcon\Loader())
-            ->registerNamespaces([$this->tenantNamespace => $this->tenantPath])
+            ->registerNamespaces([$this->getTenantNamespace() => $this->getTenantPath()])
             ->register();
 
-        $applicationProvider = $this->tenantNamespace.'\\'.$this->tenantClass;
+        $applicationProvider = $this->getTenantNamespace().'\\'.$this->getTenantClass();
         new $applicationProvider($this->container);
     }
 
@@ -119,7 +121,7 @@ final class Application extends AbstractApplication
      *
      * TODO This use the default module configuration use by phalcon. It could be improve to just use moduleName
      */
-    public function registerModulesProvider()
+    public function registerModulesProviders()
     {
         $config = $this->container->get('config');
 
@@ -168,6 +170,20 @@ final class Application extends AbstractApplication
     }
 
     /**
+     * @param string $tenantSlug
+     */
+    public function registerTenantBySlug(string $tenantSlug)
+    {
+        /** @var ApplicationModel $application */
+        $application = NamespaceHelper::dispatchNamespace(ApplicationModel::class);
+        $application = $application::getBySlug($tenantSlug);
+
+        if ($application) {
+            $this->registerTenant($application->toArray());
+        }
+    }
+
+    /**
      * @return bool
      */
     public function hasTenant(): bool
@@ -181,7 +197,7 @@ final class Application extends AbstractApplication
      * @param mixed|null $key
      * @return Collection|mixed|null
      */
-    public function getTenant($key = null): ?Collection
+    public function getTenant($key = null)
     {
         if (!$key)
             return $this->tenant;
@@ -235,7 +251,7 @@ final class Application extends AbstractApplication
      * @param mixed|null $key
      * @return Collection|mixed|null
      */
-    public function getUser($key = null): ?Collection
+    public function getUser($key = null)
     {
         if (!$key)
             return $this->user;

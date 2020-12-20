@@ -27,7 +27,8 @@ final class Tenant extends TenantProvider
                 'Base\Controllers'  => __DIR__ . '/controllers',
                 'Base\Models'       => __DIR__ . '/models',
                 'Base\Forms'        => __DIR__ . '/forms',
-                'Base\Middlewares'  => __DIR__ . '/middlewares'
+                'Base\Middlewares'  => __DIR__ . '/middlewares',
+                'Base\Tasks'        => __DIR__ . '/tasks'
             ])
             ->register();
     }
@@ -46,11 +47,13 @@ final class Tenant extends TenantProvider
         $container->get('database')->registerTenantDb($container);
 
         // Register Tenant Modules
-        $container->get('application')->registerModulesProvider();
+        $container->get('application')->registerModulesProviders();
 
-        // Register Events
-        $container->get('eventsManager')->attach('dispatch', new Acl);
-        $container->get('eventsManager')->attach('dispatch', new Auth);
+        // Register events for mvc application
+        if ($container->has('mvc')) {
+            $container->get('eventsManager')->attach('dispatch', new Acl);
+            $container->get('eventsManager')->attach('dispatch', new Auth);
+        }
     }
 
 }

@@ -112,19 +112,10 @@ class Mvc extends Injectable
         // Find serverName in main host configuration
         $serverName = $this->config->get('serverName');
 
-        if ($this->config->has('host') && $this->config->get('host')->has($serverName))
-        {
-            $application = NamespaceHelper::dispatchNamespace(ApplicationModel::class);
-            $application = $application::getBySlug(
+        if ($this->config->has('host') && $this->config->get('host')->has($serverName)) {
+            $this->application->registerTenantBySlug(
                 $this->config->get('host')->get($serverName)
             );
-
-            if ($application)
-            {
-                $this->application->registerTenant(
-                    $application->toArray()
-                );
-            }
         }
     }
 
@@ -137,17 +128,9 @@ class Mvc extends Injectable
     {
         if ($this->request->has('_app'))
         {
-            $application = NamespaceHelper::dispatchNamespace(ApplicationModel::class);
-            $application = $application::getBySlug(
+            $this->application->registerTenantBySlug(
                 $this->request->get('_app')
             );
-
-            if ($application)
-            {
-                $this->application->registerTenant(
-                    $application->toArray()
-                );
-            }
         }
     }
 

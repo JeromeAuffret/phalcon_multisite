@@ -2,6 +2,7 @@
 
 namespace Core\Providers;
 
+use Phalcon\Application\AbstractApplication;
 use Phalcon\Collection;
 use Phalcon\Di;
 use Phalcon\Di\DiInterface;
@@ -70,7 +71,6 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
     {
         if (!($container && $moduleName)) return;
 
-        $mvc = $container->get('mvc');
         $config = $container->get('config');
         $router = $container->get('router');
         $modulesConfig = $config->get('modules');
@@ -86,33 +86,51 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
         $modulePath = preg_replace('/\/Module.php$/', '', $moduleDefinition->get('path'));;
         $this->setModulePath($modulePath);
 
-        $controllerNamespace = $this->getModuleNamespace().'\\Controllers';
-        $this->setControllerNamespace($controllerNamespace);
+        if ($container->has('mvc')) {
+            $controllerNamespace = $this->getModuleNamespace() . '\\Controllers';
+            $this->setControllerNamespace($controllerNamespace);
 
-        $controllerPath = $this->getModulePath().'/controllers';
-        $this->setControllerPath($controllerPath);
+            $controllerPath = $this->getModulePath() . '/controllers';
+            $this->setControllerPath($controllerPath);
 
-        $defaultController = $this->getModuleDefinition()->get('defaultController') ;
-        $this->setDefaultController($defaultController);
+            $defaultController = $this->getModuleDefinition()->get('defaultController');
+            $this->setDefaultController($defaultController);
 
-        $defaultAction = $this->getModuleDefinition()->get('defaultAction');
-        $this->setDefaultAction($defaultAction);
+            $defaultAction = $this->getModuleDefinition()->get('defaultAction');
+            $this->setDefaultAction($defaultAction);
+        }
 
-        // Register module in mvc application
-        $mvc->registerModules([
-            $this->moduleName => [
-                'className' => $this->getModuleDefinition()->get('className'),
-                'path' => $this->getModuleDefinition()->get('path')
-            ],
-        ], true);
-
-        // Register router defaults
-        if ($config->get('defaultModule') === $this->getModuleName()) {
+        // Register router defaults only for mvc handler
+        if ($container->has('mvc') && $config->get('defaultModule') === $this->getModuleName()) {
             $router->setDefaultModule($config->get('defaultModule'));
             $router->setDefaultNamespace($this->getControllerNamespace());
             $router->setDefaultController($this->getDefaultController());
             $router->setDefaultAction($this->getDefaultAction());
         }
+
+        // Register Module in Mvc/Cli
+        $this->registerModules($container);
+    }
+
+    /**
+     * @param DiInterface|null $container
+     */
+    private function registerModules(DiInterface $container)
+    {
+        if ($container->has('mvc')) {
+            $handler = $container->get('mvc');
+        } elseif ($container->has('console')) {
+            $handler = $container->get('console');
+        }
+
+        // Register module in mvc/console application
+        /** @var AbstractApplication $handler */
+        $handler->registerModules([
+            $this->moduleName => [
+                'className' => $this->getModuleDefinition()->get('className'),
+                'path' => $this->getModuleDefinition()->get('path')
+            ],
+        ], true);
     }
 
     /**

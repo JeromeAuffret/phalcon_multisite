@@ -4,8 +4,8 @@ namespace Demo1;
 
 use Base\Middlewares\Acl;
 use Base\Middlewares\Auth;
-use Phalcon\Di\DiInterface;
 use Core\Providers\TenantProvider;
+use Phalcon\Di\DiInterface;
 
 /**
  * Class Tenant
@@ -24,9 +24,10 @@ class Tenant extends TenantProvider
     {
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Base\Controllers' => __DIR__ . '/controllers',
-                'Base\Models'      => __DIR__ . '/models',
-                'Base\Forms'       => __DIR__ . '/forms',
+                'Demo1\Controllers' => __DIR__ . '/controllers',
+                'Demo1\Models'      => __DIR__ . '/models',
+                'Demo1\Forms'       => __DIR__ . '/forms',
+                'Demo1\Tasks'       => __DIR__ . '/tasks',
             ])
             ->register();
     }
@@ -45,11 +46,13 @@ class Tenant extends TenantProvider
         $container->get('database')->registerTenantDb($container);
 
         // Register Tenant Modules
-        $container->get('application')->registerModulesProvider();
+        $container->get('application')->registerModulesProviders();
 
-        // Events
-        $container->get('eventsManager')->attach("dispatch", new Acl);
-        $container->get('eventsManager')->attach("dispatch", new Auth);
+        // Register events for mvc application
+        if ($container->has('mvc')) {
+            $container->get('eventsManager')->attach("dispatch", new Acl);
+            $container->get('eventsManager')->attach("dispatch", new Auth);
+        }
     }
 
 }

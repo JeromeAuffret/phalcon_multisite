@@ -2,8 +2,8 @@
 
 namespace Demo2;
 
-use Phalcon\Di\DiInterface;
 use Core\Providers\TenantProvider;
+use Phalcon\Di\DiInterface;
 
 /**
  * Class Tenant
@@ -14,7 +14,7 @@ class Tenant extends TenantProvider
 {
 
     /**
-     *  Registers an autoloader related to the application
+     * Registers an autoloader related to the application
      *
      * @param DiInterface|null $container
      */

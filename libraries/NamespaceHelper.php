@@ -144,7 +144,7 @@ final class NamespaceHelper
 
     /**
      * Get class path based on namespace.
-     * /!\ This use a lowercase version of PSR-4 standard for folder's name
+     * /!\ This use a snake_case version of PSR-4 standard for folder's name
      *
      * @param string $baseNamespace
      * @return string

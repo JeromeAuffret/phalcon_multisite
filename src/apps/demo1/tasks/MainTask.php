@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Core\Tasks;
+namespace Demo1\Tasks;
 
 use Core\Components\Application;
 use Core\Components\Console;
@@ -12,7 +12,7 @@ use Phalcon\Cli\Task;
  * @property Console $console
  * @property Application $application
  * @property Console $config
- * @package Core\Tasks
+ * @package Core\tasks
  */
 class MainTask extends Task
 {
@@ -21,6 +21,6 @@ class MainTask extends Task
      */
     public function mainAction()
     {
-        echo 'This is the default task and the default action' . PHP_EOL;
+        echo 'This is the default task and the default action DEMO1' . PHP_EOL;
     }
 }
