@@ -49,7 +49,7 @@ class Task extends Injectable
 
         // Throw exception if task namespace is not correctly registered
         if (!$taskNamespace) throw new DispatcherException(
-            'Task '.$this->dispatcher->getTaskName().' not found ',
+            'Task '.$this->dispatcher->getTaskName().' not found '.($this->dispatcher->getModuleName() ? 'in module ' . $this->dispatcher->getModuleName() : ''),
             DispatchException::EXCEPTION_HANDLER_NOT_FOUND
         );
 
