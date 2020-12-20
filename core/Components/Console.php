@@ -39,7 +39,7 @@ class Console extends \Phalcon\Cli\Console
     {
         if (!$key)
             return $this->_arguments;
-        elseif ($this->_arguments && $this->$this->_arguments->has($key))
+        elseif ($this->_arguments && $this->_arguments->has($key))
             return $this->_arguments->get($key);
         else
             return null;

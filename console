@@ -9,8 +9,16 @@ try {
     // Include composer's autoloader
     require_once BASE_PATH . '/vendor/autoload.php';
 
+    // Stream handle output
+    ob_start();
+
     // Handle console's application
     (new \Handlers\ConsoleHandler($argv))->handle();
+
+    // Output stream content and write it in log file
+    $content = ob_get_clean();
+    echo $content;
+    file_put_contents('logs/'.time().'.log', $content);
 }
 catch (Exception $e) {
     echo $e->getMessage() . PHP_EOL;

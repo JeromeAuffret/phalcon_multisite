@@ -9,9 +9,9 @@ use Phalcon\Assets\Filters\Cssmin;
 use Phalcon\Assets\Filters\Jsmin;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
+use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
 use Phalcon\Di\Injectable;
 use ReflectionException;
-use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
 
 /**
  * Class Controller
@@ -42,7 +42,7 @@ class Controller extends Injectable
             $this->dispatcher->setNamespaceName((new \ReflectionClass($controllerClass))->getNamespaceName());
         }
         catch (ReflectionException $e) {
-            throw new DispatchException('Not found', DispatchException::EXCEPTION_HANDLER_NOT_FOUND, $e);
+            throw new DispatchException('Controller not found', DispatchException::EXCEPTION_HANDLER_NOT_FOUND, $e);
         }
     }
 

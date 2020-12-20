@@ -94,40 +94,40 @@ final class NamespaceHelper
      * Helper method to dispatch a class between base and application folder
      *
      * @param string $className
-     * @param string $baseNamespace Base namespace use to be concatenated between applicationNamespace and className
+     * @param string $prefixNamespace Namespace use to be concatenated between applicationNamespace and className
      * @return string|null
      */
-    public static function dispatchClass(string $className, string $baseNamespace = ''): ?string
+    public static function dispatchClass(string $className, string $prefixNamespace = ''): ?string
     {
         $di = Di::getDefault();
         $application = $di->get('application');
         $config = $di->get('config');
 
-        $basePath = self::buildNamespacePath($baseNamespace);
-        $appPath = $application->getTenantPath().'/'.$basePath;
+        $basePath = self::buildNamespacePath($prefixNamespace);
+        $tenantPath = $application->getTenantPath().'/'.$basePath;
         $basePath = $application->getBasePath().'/'.$basePath;
 
         $namespace = $path = null;
-        if (file_exists($appPath.'/'.$className.'.php')) {
-            return $application->getTenantNamespace().'\\'.$baseNamespace.'\\'.$className;
+        if (file_exists($tenantPath.'/'.$className.'.php')) {
+            return $application->getTenantNamespace().'\\'.$prefixNamespace.'\\'.$className;
         }
-        else if (file_exists($basePath.'/'.$className.'.php')) {
-            return $application->getBaseNamespace().'\\'.$baseNamespace.'\\'.$className;
+        elseif (file_exists($basePath.'/'.$className.'.php')) {
+            return $application->getBaseNamespace().'\\'.$prefixNamespace.'\\'.$className;
         }
-        else if ($config->get('tenantType') === 'modules')
+        elseif ($config->get('tenantType') === 'modules')
         {
             foreach ($config->get('modules') as $moduleName => $definition)
             {
-                $appModulePath = $application->getTenantModulePath($moduleName).'/'.$basePath;
+                $tenantModulePath = $application->getTenantModulePath($moduleName).'/'.$basePath;
                 $baseModulePath = $application->getBaseModulePath($moduleName).'/'.$basePath;
 
-                if (file_exists($appModulePath.'/'.$className.'.php')) {
-                    $namespace = $application->getTenantModuleNamespace($moduleName).'\\'.$baseNamespace.'\\'.$className;
-                    $path = $appModulePath.'/'.$className.'.php';
+                if (file_exists($tenantModulePath.'/'.$className.'.php')) {
+                    $namespace = $application->getTenantModuleNamespace($moduleName).'\\'.$prefixNamespace.'\\'.$className;
+                    $path = $tenantModulePath.'/'.$className.'.php';
                     break;
                 }
                 elseif (file_exists($baseModulePath.'/'.$className.'.php')) {
-                    $namespace = $application->getBaseModuleNamespace($moduleName).'\\'.$baseNamespace.'\\'.$className;
+                    $namespace = $application->getBaseModuleNamespace($moduleName).'\\'.$prefixNamespace.'\\'.$className;
                     $path = $baseModulePath.'/'.$className.'.php';
                     break;
                 }

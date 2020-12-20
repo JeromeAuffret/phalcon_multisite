@@ -22,7 +22,7 @@ class Module extends ModuleProvider
     {
         (new \Phalcon\Loader())
             ->registerNamespaces([
-                'Demo1\Modules\Dashboard\Controllers' => __DIR__ . '/controllers/'
+                'Demo1\Modules\Dashboard\Controllers' => __DIR__ . '/controllers/',
             ])
             ->register();
     }

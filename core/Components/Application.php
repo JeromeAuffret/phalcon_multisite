@@ -6,6 +6,7 @@ use Base\Models\Application as ApplicationModel;
 use Libraries\NamespaceHelper;
 use Phalcon\Application\AbstractApplication;
 use Phalcon\Collection;
+use Phalcon\Dispatcher\Exception as DispatcherException;
 use Phalcon\Helper\Str;
 
 /**
@@ -153,6 +154,29 @@ final class Application extends AbstractApplication
 
     /**********************************************************
      *
+     *                         HANDLER
+     *
+     **********************************************************/
+
+    /**
+     * @return bool
+     */
+    public function isCli(): bool
+    {
+        return php_sapi_name() === "cli";
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMvc(): bool
+    {
+        return !(php_sapi_name() === "cli");
+    }
+
+
+    /**********************************************************
+     *
      *                         TENANT
      *
      **********************************************************/
@@ -171,16 +195,21 @@ final class Application extends AbstractApplication
 
     /**
      * @param string $tenantSlug
+     * @throws DispatcherException
      */
     public function registerTenantBySlug(string $tenantSlug)
     {
-        /** @var ApplicationModel $application */
-        $application = NamespaceHelper::dispatchNamespace(ApplicationModel::class);
-        $application = $application::getBySlug($tenantSlug);
+        /** @var ApplicationModel $tenant */
+        $tenant = NamespaceHelper::dispatchNamespace(ApplicationModel::class);
+        $tenant = $tenant::getBySlug($tenantSlug);
 
-        if ($application) {
-            $this->registerTenant($application->toArray());
-        }
+        // Throw exception if tenant is not found in database
+        if (!$tenant) throw new DispatcherException(
+            'Tenant '.$tenantSlug.' not found',
+            DispatcherException::EXCEPTION_HANDLER_NOT_FOUND
+        );
+
+        $this->registerTenant($tenant->toArray());
     }
 
     /**
@@ -380,7 +409,7 @@ final class Application extends AbstractApplication
     public function getTenantModulePath(?string $moduleName): ?string
     {
         if (!$moduleName) return null;
-        return $this->tenantPath.'/'.$this->moduleBaseDir.'/'.$moduleName;
+        return $this->getTenantPath().'/'.$this->moduleBaseDir.'/'.$moduleName;
     }
 
     /**
@@ -390,7 +419,7 @@ final class Application extends AbstractApplication
     public function getTenantModuleNamespace(?string $moduleName): ?string
     {
         if (!$moduleName) return null;
-        return $this->tenantNamespace.'\\'.$this->moduleBaseNamespace.'\\'.Str::camelize($moduleName);
+        return $this->getTenantNamespace().'\\'.$this->moduleBaseNamespace.'\\'.Str::camelize($moduleName);
     }
 
     /**
@@ -416,7 +445,7 @@ final class Application extends AbstractApplication
     public function getBaseModulePath(?string $moduleName): ?string
     {
         if (!$moduleName) return null;
-        return $this->basePath.'/'.$this->moduleBaseDir.'/'.$moduleName;
+        return $this->getBasePath().'/'.$this->moduleBaseDir.'/'.$moduleName;
     }
 
     /**
@@ -426,7 +455,7 @@ final class Application extends AbstractApplication
     public function getBaseModuleNamespace(?string $moduleName): ?string
     {
         if (!$moduleName) return null;
-        return (!empty($this->baseNamespace) ? $this->baseNamespace.'\\' : '') . $this->moduleBaseNamespace.'\\'.Str::camelize($moduleName);
+        return (!empty($this->getBaseNamespace()) ? $this->getBaseNamespace().'\\' : '') . $this->moduleBaseNamespace.'\\'.Str::camelize($moduleName);
     }
 
 }

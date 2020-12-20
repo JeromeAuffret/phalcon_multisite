@@ -8,7 +8,7 @@ use Core\Components\Console;
 use Phalcon\Cli\Task;
 
 /**
- * Class MainTask
+ * Class TestTask
  * @property Console $console
  * @property Application $application
  * @property Console $config

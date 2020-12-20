@@ -86,7 +86,9 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
         $modulePath = preg_replace('/\/Module.php$/', '', $moduleDefinition->get('path'));;
         $this->setModulePath($modulePath);
 
-        if ($container->has('mvc')) {
+        // Register Mvc defaults
+        if ($container->get('application')->isMvc())
+        {
             $controllerNamespace = $this->getModuleNamespace() . '\\Controllers';
             $this->setControllerNamespace($controllerNamespace);
 
@@ -98,14 +100,14 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
 
             $defaultAction = $this->getModuleDefinition()->get('defaultAction');
             $this->setDefaultAction($defaultAction);
-        }
 
-        // Register router defaults only for mvc handler
-        if ($container->has('mvc') && $config->get('defaultModule') === $this->getModuleName()) {
-            $router->setDefaultModule($config->get('defaultModule'));
-            $router->setDefaultNamespace($this->getControllerNamespace());
-            $router->setDefaultController($this->getDefaultController());
-            $router->setDefaultAction($this->getDefaultAction());
+            // Router
+            if ($config->get('defaultModule') === $this->getModuleName()) {
+                $router->setDefaultModule($config->get('defaultModule'));
+                $router->setDefaultNamespace($this->getControllerNamespace());
+                $router->setDefaultController($this->getDefaultController());
+                $router->setDefaultAction($this->getDefaultAction());
+            }
         }
 
         // Register Module in Mvc/Cli
@@ -113,18 +115,19 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
     }
 
     /**
+     * Register module in mvc/console application
+     *
      * @param DiInterface|null $container
      */
     private function registerModules(DiInterface $container)
     {
-        if ($container->has('mvc')) {
-            $handler = $container->get('mvc');
-        } elseif ($container->has('console')) {
+        /** @var AbstractApplication $handler */
+        if ($container->get('application')->isCli()) {
             $handler = $container->get('console');
+        } else {
+            $handler = $container->get('mvc');
         }
 
-        // Register module in mvc/console application
-        /** @var AbstractApplication $handler */
         $handler->registerModules([
             $this->moduleName => [
                 'className' => $this->getModuleDefinition()->get('className'),

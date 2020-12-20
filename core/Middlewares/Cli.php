@@ -5,11 +5,11 @@ namespace Core\Middlewares;
 use Base\Models\Application;
 use Core\Components\Console;
 use Exception;
-use Libraries\NamespaceHelper;
 use Phalcon\Cli\Dispatcher;
 use Phalcon\Cli\Router;
 use Phalcon\Di\Injectable;
 use Phalcon\Events\Event;
+use Throwable;
 
 /**
  * Class Controller
@@ -34,7 +34,7 @@ class Cli extends Injectable
     {
         $this->application->registerBaseProvider();
 
-        $this->dispatchTenantByOptions();
+        $this->registerTenantByOptions();
 
         echo '=========================================================='.PHP_EOL;
         echo '['.date('Y-m-d H:i:s').'] Start console'.PHP_EOL;
@@ -65,7 +65,7 @@ class Cli extends Injectable
      *
      * @throws Exception
      */
-    private function dispatchTenantByOptions()
+    private function registerTenantByOptions()
     {
         // Register tenancy in console service
         $tenancy = $this->console->getOptions('tenant');
@@ -84,22 +84,49 @@ class Cli extends Injectable
     /**
      * Setup application options
      *
+     * We reset dispatcher values for each tenant
+     * It allow to correctly dispatch namespaces in beforeDispatch event
+     *
      * @throws Exception
      */
     private function dispatchTenantTask()
     {
         foreach ($this->console->getTenancy() as $tenant)
         {
-            $this->application->registerTenantBySlug($tenant);
-            $this->application->registerTenantProvider();
+            try {
+                $this->application->registerTenantBySlug($tenant);
+                $this->application->registerTenantProvider();
 
-            // We reset namespace for each tenancy, that allow to correctly dispatch namespace
-            $this->dispatcher->setNamespaceName(
-                $this->dispatcher->getDefaultNamespace()
-            );
+                // Bind defaultNamespace to dispatcher currentNamespace
+                $this->dispatcher->setNamespaceName(
+                    $this->dispatcher->getDefaultNamespace()
+                );
 
-            // Run task for each tenant
-            $this->dispatcher->dispatch();
+                // Bind console task to dispatcher service
+                $this->dispatcher->setTaskName($this->console->getArguments('task'));
+
+                // Bind console action to dispatcher service
+                $this->dispatcher->setActionName($this->console->getArguments('action'));
+
+                // Bind console params to dispatcher service
+                $this->dispatcher->setParams(
+                    $this->console->getParams()->toArray()
+                );
+
+                // Bind console params to dispatcher service
+                $this->dispatcher->setOptions(
+                    $this->console->getOptions()->toArray()
+                );
+
+                // Dispatch task for each tenant
+                $this->dispatcher->dispatch();
+            }
+            catch (Throwable $e) {
+                echo $e->getMessage() . PHP_EOL;
+                echo $e->getTraceAsString() . PHP_EOL;
+                echo '==========================================================' . PHP_EOL;
+                continue;
+            }
         }
     }
 
