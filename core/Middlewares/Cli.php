@@ -37,6 +37,8 @@ class Cli extends Injectable
      */
     public function boot(Event $event, Console $console)
     {
+        $this->application->registerBaseProvider();
+
         $this->registerTenantByOptions();
 
         echo '=========================================================='.PHP_EOL;
@@ -94,9 +96,6 @@ class Cli extends Injectable
      */
     private function dispatchTenantTask()
     {
-        // Register BaseProvider
-        $this->application->registerBaseProvider();
-
         // Dispatch task for each registered tenant
         foreach ($this->console->getTenancy() as $tenant)
         {
