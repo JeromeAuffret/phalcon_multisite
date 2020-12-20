@@ -43,9 +43,11 @@ class Task extends Injectable
         echo '['.date('Y-m-d H:i:s').'] Params : '.$this->console->getParams()->toJson().PHP_EOL;
         echo '['.date('Y-m-d H:i:s').'] Options : '.$this->console->getOptions()->toJson().PHP_EOL;
 
-        // Dispatch task between shared/apps folders
-        $taskClass = Str::camelize($this->dispatcher->getTaskName()).$this->dispatcher->getTaskSuffix();
-        $taskNamespace = NamespaceHelper::dispatchClass($taskClass,'Tasks');
+        // Dispatch task between shared and apps folders
+        $taskNamespace = NamespaceHelper::dispatchClass(
+            Str::camelize($this->dispatcher->getTaskName()).$this->dispatcher->getTaskSuffix(),
+            'Tasks'
+        );
 
         echo '['.date('Y-m-d H:i:s').'] Namespace : '.$taskNamespace.PHP_EOL;
         echo '=========================================================='.PHP_EOL;

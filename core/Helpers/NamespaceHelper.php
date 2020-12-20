@@ -14,12 +14,13 @@ use ReflectionException;
 final class NamespaceHelper
 {
     /**
-     * Helper method to dispatch a namespace between base and application folder
+     * Helper method to find Tenant\Namespace from Base\Namespace
+     * Return parameters if class is not correctly registered
      *
      * @param string $classNamespace
      * @return string
      */
-    public static function dispatchNamespace(string $classNamespace): string
+    public static function findTenantNamespace(string $classNamespace): string
     {
         $di = Di::getDefault();
         $application = $di->get('application');
@@ -45,7 +46,6 @@ final class NamespaceHelper
                         ->registerClasses([$classNamespace => $overridePath])
                         ->register();
                 }
-                // We return default namespace if
             } catch (ReflectionException $e) {
                 return $classNamespace;
             }
@@ -55,12 +55,13 @@ final class NamespaceHelper
     }
 
     /**
-     * Helper method to dispatch a namespace between base and application folder
+     * Helper method to find tenant/path from shared/path
+     * Return parameters if path does not exist
      *
      * @param string $classPath
      * @return string
      */
-    public static function dispatchPath(string $classPath): string
+    public static function findTenantPath(string $classPath): string
     {
         $di = Di::getDefault();
         $application = $di->get('application');
@@ -91,11 +92,14 @@ final class NamespaceHelper
     }
 
     /**
-     * Helper method to dispatch a class between base and application folder
+     * Helper method to dispatch a class name between base and application folder
+     * If some modules are registered, it try to resolve modules path
+     *
+     * This method is based on the PSR-4 standard but resolve folder_name using snake_case format
      *
      * @param string $className
-     * @param string $prefixNamespace Namespace use to be concatenated between applicationNamespace and className
-     * @return string|null
+     * @param string $prefixNamespace Namespace is use to be concatenated between applicationNamespace and className
+     * @return string|null Return a namespace if class exit in path
      */
     public static function dispatchClass(string $className, string $prefixNamespace = ''): ?string
     {
@@ -135,16 +139,19 @@ final class NamespaceHelper
         }
 
         // Register namespace before return it
-        (new \Phalcon\Loader())
-            ->registerClasses([$namespace => $path])
-            ->register();
+        if ($namespace) {
+            (new \Phalcon\Loader())
+                ->registerClasses([$namespace => $path])
+                ->register();
+        }
 
         return $namespace;
     }
 
     /**
-     * Get class path based on namespace.
-     * /!\ This use a snake_case version of PSR-4 standard for folder's name
+     * Get class path based on namespace
+     *
+     * This method is based on the PSR-4 standard but resolve folder_name using snake_case format
      *
      * @param string $baseNamespace
      * @return string

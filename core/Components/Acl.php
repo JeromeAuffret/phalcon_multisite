@@ -54,7 +54,7 @@ final class Acl extends Injectable implements AdapterInterface
     public function userAllowed(string $moduleName = null, string $controllerName = null, string $actionName = null, array $params = []): bool
     {
         // Defined resource
-        $aclComponentClass = NamespaceHelper::dispatchNamespace(AclComponent::class);
+        $aclComponentClass = NamespaceHelper::findTenantNamespace(AclComponent::class);
         $AclComponent = new $aclComponentClass($moduleName, $controllerName, $actionName, $params);
 
         // Prevent verification for public Components
@@ -103,7 +103,7 @@ final class Acl extends Injectable implements AdapterInterface
      */
     public function getAclRole(): AclUserRole
     {
-        $aclRoleClass = NamespaceHelper::dispatchNamespace(AclUserRole::class);
+        $aclRoleClass = NamespaceHelper::findTenantNamespace(AclUserRole::class);
         $userRole = $this->application->hasUserRole() ? $this->application->getUserRole() : 'guest';
 
         return new $aclRoleClass(

@@ -200,7 +200,7 @@ final class Application extends AbstractApplication
     public function registerTenantBySlug(string $tenantSlug)
     {
         /** @var ApplicationModel $tenant */
-        $tenant = NamespaceHelper::dispatchNamespace(ApplicationModel::class);
+        $tenant = NamespaceHelper::findTenantNamespace(ApplicationModel::class);
         $tenant = $tenant::getBySlug($tenantSlug);
 
         // Throw exception if tenant is not found in database

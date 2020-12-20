@@ -25,7 +25,7 @@ class Controller extends Injectable
 {
 
     /**
-     * Check if user can access to the resource
+     * Dispatch controller between Base and Tenant namespaces
      *
      * @param Event $event
      * @param Dispatcher $dispatcher
@@ -34,7 +34,7 @@ class Controller extends Injectable
      */
     public function beforeDispatch(Event $event, Dispatcher $dispatcher)
     {
-        $controllerClass = NamespaceHelper::dispatchNamespace(
+        $controllerClass = NamespaceHelper::findTenantNamespace(
             $this->dispatcher->getControllerClass()
         );
 

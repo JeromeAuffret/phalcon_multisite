@@ -105,7 +105,7 @@ class Cli extends Injectable
 
                 // Bind defaultNamespace to dispatcher currentNamespace
                 $this->dispatcher->setNamespaceName(
-                    $this->dispatcher->getDefaultNamespace()
+                    $this->application->getTenantNamespace()
                 );
 
                 // Bind console task to dispatcher service
