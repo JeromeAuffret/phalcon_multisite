@@ -37,21 +37,19 @@ class Task extends Injectable
      */
     public function beforeDispatch(Event $event, Dispatcher $dispatcher)
     {
+        $taskNamespace = $this->console->getTaskNamespace();
+
         echo '['.date('Y-m-d H:i:s').'] Start Tenant : '.$this->application->getTenant('name').PHP_EOL;
         echo '['.date('Y-m-d H:i:s').'] Task : '.$this->dispatcher->getTaskName().PHP_EOL;
         echo '['.date('Y-m-d H:i:s').'] Action : '.$this->dispatcher->getActionName().PHP_EOL;
         echo '['.date('Y-m-d H:i:s').'] Params : '.$this->console->getParams()->toJson().PHP_EOL;
         echo '['.date('Y-m-d H:i:s').'] Options : '.$this->console->getOptions()->toJson().PHP_EOL;
-
-        $taskClass = Str::camelize($this->dispatcher->getTaskName()).$this->dispatcher->getTaskSuffix();
-        $taskNamespace = NamespaceHelper::dispatchClass($taskClass,'Tasks');
-
         echo '['.date('Y-m-d H:i:s').'] Namespace : '.$taskNamespace.PHP_EOL;
         echo '=========================================================='.PHP_EOL;
 
         // Throw exception if task namespace is not correctly registered
         if (!$taskNamespace) throw new DispatcherException(
-            'Task '.$this->dispatcher->getHandlerClass().' not found ',
+            'Task '.$this->dispatcher->getTaskName().' not found ',
             DispatchException::EXCEPTION_HANDLER_NOT_FOUND
         );
 

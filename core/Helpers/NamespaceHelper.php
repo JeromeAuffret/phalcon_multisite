@@ -141,7 +141,6 @@ final class NamespaceHelper
     {
         $di = Di::getDefault();
         $application = $di->get('application');
-        $config = $di->get('config');
 
         $prefixPath = self::buildNamespacePath($prefixNamespace);
         $tenantPath = $application->getTenantPath().'/'.$prefixPath;
@@ -149,29 +148,50 @@ final class NamespaceHelper
 
         $namespace = $path = null;
         if (file_exists($tenantPath.'/'.$className.'.php')) {
-            return $application->getTenantNamespace().'\\'.$prefixNamespace.'\\'.$className;
+            $namespace = $application->getTenantNamespace().'\\'.$prefixNamespace.'\\'.$className;
         }
         elseif (file_exists($basePath.'/'.$className.'.php')) {
-            return $application->getBaseNamespace().'\\'.$prefixNamespace.'\\'.$className;
+            $namespace = $application->getBaseNamespace().'\\'.$prefixNamespace.'\\'.$className;
         }
-        elseif ($config->get('tenantType') === 'modules')
-        {
-            foreach ($config->get('modules') as $moduleName => $definition)
-            {
-                $tenantModulePath = $application->getTenantModulePath($moduleName).'/'.$prefixPath;
-                $baseModulePath = $application->getBaseModulePath($moduleName).'/'.$prefixPath;
 
-                if (file_exists($tenantModulePath.'/'.$className.'.php')) {
-                    $namespace = $application->getTenantModuleNamespace($moduleName).'\\'.$prefixNamespace.'\\'.$className;
-                    $path = $tenantModulePath.'/'.$className.'.php';
-                    break;
-                }
-                elseif (file_exists($baseModulePath.'/'.$className.'.php')) {
-                    $namespace = $application->getBaseModuleNamespace($moduleName).'\\'.$prefixNamespace.'\\'.$className;
-                    $path = $baseModulePath.'/'.$className.'.php';
-                    break;
-                }
-            }
+        // Register namespace before return it
+        if ($namespace) {
+            (new \Phalcon\Loader())
+                ->registerClasses([$namespace => $path])
+                ->register();
+        }
+
+        return $namespace;
+    }
+
+    /**
+     * Helper method to dispatch a class name between base and application folder
+     * If some modules are registered, it try to resolve modules path
+     *
+     * This method is based on the PSR-4 standard but resolve folder_name using snake_case format
+     *
+     * @param string $className
+     * @param string $moduleName
+     * @param string $prefixNamespace Namespace is use to be concatenated between applicationNamespace and className
+     * @return string|null Return a namespace if class exit in path
+     */
+    public static function dispatchModuleClass(string $className, string $moduleName = '', string $prefixNamespace = ''): ?string
+    {
+        $di = Di::getDefault();
+        $application = $di->get('application');
+        $namespace = $path = null;
+
+        $prefixPath = self::buildNamespacePath($prefixNamespace);
+        $tenantModulePath = $application->getTenantModulePath($moduleName).'/'.$prefixPath;
+        $baseModulePath = $application->getBaseModulePath($moduleName).'/'.$prefixPath;
+
+        if (file_exists($tenantModulePath.'/'.$className.'.php')) {
+            $namespace = $application->getTenantModuleNamespace($moduleName).'\\'.$prefixNamespace.'\\'.$className;
+            $path = $tenantModulePath.'/'.$className.'.php';
+        }
+        elseif (file_exists($baseModulePath.'/'.$className.'.php')) {
+            $namespace = $application->getBaseModuleNamespace($moduleName).'\\'.$prefixNamespace.'\\'.$className;
+            $path = $baseModulePath.'/'.$className.'.php';
         }
 
         // Register namespace before return it
