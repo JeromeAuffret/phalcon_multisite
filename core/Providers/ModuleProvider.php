@@ -172,7 +172,8 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
     /**
      * @param string $moduleName
      */
-    protected function setModuleName(string $moduleName) {
+    protected function setModuleName(string $moduleName)
+    {
         $this->moduleName = $moduleName;
     }
 

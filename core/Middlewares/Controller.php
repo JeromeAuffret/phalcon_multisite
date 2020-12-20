@@ -272,8 +272,8 @@ class Controller extends Injectable
             ->addFilter(new Cssmin());
 
         $app_script
-            ->setTargetPath($assetPath.'/app.js')
-            ->setTargetUri($assetPath.'/app.js')
+            ->setTargetPath($assetPath.'/index.js')
+            ->setTargetUri($assetPath.'/index.js')
             ->setLocal(false)
             ->join(true)
             ->addFilter(new Jsmin());
