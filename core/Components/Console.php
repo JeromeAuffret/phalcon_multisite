@@ -29,7 +29,7 @@ class Console extends \Phalcon\Cli\Console
     /**
      * @var array
      */
-    protected $tenancy = [];
+    protected $_tenancy = [];
 
     /**
      * @param null $key
@@ -102,15 +102,15 @@ class Console extends \Phalcon\Cli\Console
      */
     public function getTenancy(): array
     {
-        return $this->tenancy;
+        return $this->_tenancy;
     }
 
     /**
-     * @param array $tenancy
+     * @param array $_tenancy
      */
-    public function setTenancy(array $tenancy): void
+    public function setTenancy(array $_tenancy): void
     {
-        $this->tenancy = $tenancy;
+        $this->_tenancy = $_tenancy;
     }
 
 }

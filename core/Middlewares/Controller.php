@@ -34,7 +34,7 @@ class Controller extends Injectable
      */
     public function beforeDispatch(Event $event, Dispatcher $dispatcher)
     {
-        $controllerClass = NamespaceHelper::findTenantNamespace(
+        $controllerClass = NamespaceHelper::toTenantNamespace(
             $this->dispatcher->getControllerClass()
         );
 

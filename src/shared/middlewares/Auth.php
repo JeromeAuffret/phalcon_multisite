@@ -36,7 +36,7 @@ class Auth extends Injectable
         $actionName = $this->router->getActionName();
         $params = $this->router->getParams();
 
-        $aclComponentClass = NamespaceHelper::findTenantNamespace(AclComponent::class);
+        $aclComponentClass = NamespaceHelper::toTenantNamespace(AclComponent::class);
         $AclComponent = new $aclComponentClass($moduleName, $controllerName, $actionName, $params);
 
         // Allow access to public Components

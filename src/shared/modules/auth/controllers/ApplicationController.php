@@ -51,7 +51,7 @@ class ApplicationController extends ControllerBase
             $this->session->set('application', new Collection($application->toArray()));
 
             /** @var Role $roleModel */
-            $roleModel = NamespaceHelper::findTenantNamespace(Role::class);
+            $roleModel = NamespaceHelper::toTenantNamespace(Role::class);
             $role = $roleModel::getUserRole($this->session->get('user')->get('id'), $this->session->get('application')->get('id'));
             $this->session->set('user_role', $role ? $role->getSlug() : 'guest');
         }

@@ -137,18 +137,26 @@ final class Application extends AbstractApplication
         }
 
         // Initialize moduleProvider for each module
-        foreach ($config->get('modules') as $moduleName => $module)
-        {
-            $moduleNamespace = preg_replace('/\\\\'.$this->moduleClass.'$/', '', $module->get('className'));
-            $modulePath = preg_replace('/\/'.$this->moduleClass.'.php$/', '', $module->get('path'));
-
-            (new \Phalcon\Loader())
-                ->registerNamespaces([$moduleNamespace => $modulePath])
-                ->register();
-
-            $moduleProviderNamespace = $module->get('className');
-            new $moduleProviderNamespace($this->container, $moduleName);
+        foreach ($config->get('modules') as $moduleName => $module) {
+            $this->instantiateModuleProvider($module, $moduleName);
         }
+    }
+
+    /**
+     * @param Collection $module
+     * @param string $moduleName
+     */
+    public function instantiateModuleProvider(Collection $module, string $moduleName)
+    {
+        $moduleNamespace = preg_replace('/\\\\'.$this->moduleClass.'$/', '', $module->get('className'));
+        $modulePath = preg_replace('/\/'.$this->moduleClass.'.php$/', '', $module->get('path'));
+
+        (new \Phalcon\Loader())
+            ->registerNamespaces([$moduleNamespace => $modulePath])
+            ->register();
+
+        $moduleProviderNamespace = $module->get('className');
+        new $moduleProviderNamespace($this->container, $moduleName);
     }
 
 
@@ -200,7 +208,7 @@ final class Application extends AbstractApplication
     public function registerTenantBySlug(string $tenantSlug)
     {
         /** @var ApplicationModel $tenant */
-        $tenant = NamespaceHelper::findTenantNamespace(ApplicationModel::class);
+        $tenant = NamespaceHelper::toTenantNamespace(ApplicationModel::class);
         $tenant = $tenant::getBySlug($tenantSlug);
 
         // Throw exception if tenant is not found in database

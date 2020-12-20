@@ -112,6 +112,9 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
 
         // Register Module in Mvc/Cli
         $this->registerModules($container);
+
+        // TODO Resolve register module provider
+        $this->registerAutoloaders($container);
     }
 
     /**

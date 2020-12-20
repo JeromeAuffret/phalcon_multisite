@@ -20,7 +20,7 @@ final class NamespaceHelper
      * @param string $classNamespace
      * @return string
      */
-    public static function findTenantNamespace(string $classNamespace): string
+    public static function toTenantNamespace(string $classNamespace): string
     {
         $di = Di::getDefault();
         $application = $di->get('application');
@@ -41,6 +41,42 @@ final class NamespaceHelper
                 if (file_exists($overridePath))
                 {
                     $classNamespace = str_replace($baseNamespace, $application->getTenantNamespace(), $classNamespace);
+
+                    (new \Phalcon\Loader())
+                        ->registerClasses([$classNamespace => $overridePath])
+                        ->register();
+                }
+            } catch (ReflectionException $e) {
+                return $classNamespace;
+            }
+        }
+
+        return $classNamespace;
+    }
+
+    /**
+     * Helper method to find Base\Namespace from Tenant\Namespace
+     * Return parameters if class is not correctly registered
+     *
+     * @param string $classNamespace
+     * @return string
+     */
+    public static function toBaseNamespace(string $classNamespace): string
+    {
+        $di = Di::getDefault();
+        $application = $di->get('application');
+        $tenantNamespace = $application->getTenantNamespace();
+
+        // If namespace is part of tenant namespace, we check if override exist in base namespace
+        if (substr($classNamespace, 0, strlen($tenantNamespace)) === $tenantNamespace)
+        {
+            try {
+                $classPath = (new \ReflectionClass($classNamespace))->getFileName();
+                $overridePath = str_replace( $application->getTenantPath(), $application->getBasePath(), $classPath);
+
+                if (file_exists($overridePath))
+                {
+                    $classNamespace = str_replace($tenantNamespace, $application->getBaseNamespace(), $classNamespace);
 
                     (new \Phalcon\Loader())
                         ->registerClasses([$classNamespace => $overridePath])
@@ -107,9 +143,9 @@ final class NamespaceHelper
         $application = $di->get('application');
         $config = $di->get('config');
 
-        $basePath = self::buildNamespacePath($prefixNamespace);
-        $tenantPath = $application->getTenantPath().'/'.$basePath;
-        $basePath = $application->getBasePath().'/'.$basePath;
+        $prefixPath = self::buildNamespacePath($prefixNamespace);
+        $tenantPath = $application->getTenantPath().'/'.$prefixPath;
+        $basePath = $application->getBasePath().'/'.$prefixPath;
 
         $namespace = $path = null;
         if (file_exists($tenantPath.'/'.$className.'.php')) {
@@ -122,8 +158,8 @@ final class NamespaceHelper
         {
             foreach ($config->get('modules') as $moduleName => $definition)
             {
-                $tenantModulePath = $application->getTenantModulePath($moduleName).'/'.$basePath;
-                $baseModulePath = $application->getBaseModulePath($moduleName).'/'.$basePath;
+                $tenantModulePath = $application->getTenantModulePath($moduleName).'/'.$prefixPath;
+                $baseModulePath = $application->getBaseModulePath($moduleName).'/'.$prefixPath;
 
                 if (file_exists($tenantModulePath.'/'.$className.'.php')) {
                     $namespace = $application->getTenantModuleNamespace($moduleName).'\\'.$prefixNamespace.'\\'.$className;

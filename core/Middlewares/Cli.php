@@ -40,18 +40,18 @@ class Cli extends Injectable
         $this->application->registerBaseProvider();
 
         $this->registerTenantByOptions();
+        $this->registerModuleByOptions();
 
         echo '=========================================================='.PHP_EOL;
         echo '['.date('Y-m-d H:i:s').'] Start console'.PHP_EOL;
         echo '['.date('Y-m-d H:i:s').'] Arguments : '.$this->console->getArguments()->toJson().PHP_EOL;
-        echo '['.date('Y-m-d H:i:s').'] Tenant : '.($this->console->getOptions('tenant') ?? 'all').PHP_EOL;
+        echo '['.date('Y-m-d H:i:s').'] Tenant : '.($this->console->getOptions('tenant') ?? '').PHP_EOL;
+        echo '['.date('Y-m-d H:i:s').'] Module : '.($this->dispatcher->getModuleName() ?? '').PHP_EOL;
         echo '=========================================================='.PHP_EOL;
 
         $this->dispatchTenantTask();
 
         echo '['.date('Y-m-d H:i:s').'] End console'.PHP_EOL;
-        echo '['.date('Y-m-d H:i:s').'] Arguments : '.$this->console->getArguments()->toJson().PHP_EOL;
-        echo '['.date('Y-m-d H:i:s').'] Tenant : '.($this->console->getOptions('tenant') ?? 'all').PHP_EOL;
         echo '=========================================================='.PHP_EOL;
 
         // As we dispatch task manually, we prevent other task to be dispatch
@@ -66,7 +66,10 @@ class Cli extends Injectable
      *************************************************************/
 
     /**
-     * Setup application options
+     * Setup tenancy options
+     *
+     * Tenancy is defined by a list of tenant separated by comma
+     * '*' define all tenant
      *
      * @throws Exception
      */
@@ -74,15 +77,29 @@ class Cli extends Injectable
     {
         // Register tenancy in console service
         $tenancy = $this->console->getOptions('tenant');
-        if ($tenancy) {
-            $this->console->setTenancy(explode(',', $tenancy));
-        }
-        else {
+        if ($tenancy && $tenancy === '*') {
             $applicationList = [];
             foreach (Application::find() as $application) {
                 $applicationList[] = $application->getSlug();
             }
             $this->console->setTenancy($applicationList);
+        }
+        elseif ($tenancy) {
+            $this->console->setTenancy(explode(',', $tenancy));
+        }
+    }
+
+    /**
+     * Setup application options
+     *
+     * @throws Exception
+     */
+    private function registerModuleByOptions()
+    {
+        // Register tenancy in console service
+        $module = $this->console->getOptions('module');
+        if ($module) {
+            $this->dispatcher->setModuleName($module);
         }
     }
 
@@ -103,23 +120,21 @@ class Cli extends Injectable
                 $this->application->registerTenantBySlug($tenant);
                 $this->application->registerTenantProvider();
 
+                // Register tenant modules to allow module interdependence
+                $this->application->registerModulesProviders();
+
                 // Bind defaultNamespace to dispatcher currentNamespace
                 $this->dispatcher->setNamespaceName(
                     $this->application->getTenantNamespace()
                 );
 
-                // Bind console task to dispatcher service
                 $this->dispatcher->setTaskName($this->console->getArguments('task'));
-
-                // Bind console action to dispatcher service
                 $this->dispatcher->setActionName($this->console->getArguments('action'));
 
-                // Bind console params to dispatcher service
                 $this->dispatcher->setParams(
                     $this->console->getParams()->toArray()
                 );
 
-                // Bind console params to dispatcher service
                 $this->dispatcher->setOptions(
                     $this->console->getOptions()->toArray()
                 );

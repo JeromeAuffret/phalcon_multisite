@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Demo1\Tasks;
+namespace Demo1\Modules\Product\Tasks;
 
 use Core\Components\Application;
 use Core\Components\Console;
