@@ -21,6 +21,16 @@ final class Console extends \Phalcon\Cli\Console
     protected $_arguments;
 
     /**
+     * @var String $_task
+     */
+    protected $_task;
+
+    /**
+     * @var String $_action
+     */
+    protected $_action;
+
+    /**
      * @var Collection
      */
     protected $_params;
@@ -34,6 +44,65 @@ final class Console extends \Phalcon\Cli\Console
      * @var array
      */
     protected $_tenancy = [];
+
+
+    /**
+     * Register argument in console service
+     *
+     * @param array $arguments
+     */
+    public function registerArguments(array $arguments)
+    {
+        // Register arguments in console component
+        $this->setArguments(new Collection($arguments));
+
+        // Register task in console component
+        $this->setTask($arguments['task']);
+
+        // Register action in console component
+        $this->setTask($arguments['task']);
+
+        // Register arguments in console component
+        $this->setArguments(new Collection($arguments));
+
+        // Register params in console component
+        $this->setParams(new Collection($arguments['params']));
+
+        // Register options in console component
+        $this->setOptions(new Collection($arguments['options']));
+    }
+
+    /**
+     * @return String|null
+     */
+    public function getTask(): ?string
+    {
+        return $this->_task;
+    }
+
+    /**
+     * @param string|null $task
+     */
+    public function setTask(?string $task): void
+    {
+        $this->_task = $task;
+    }
+
+    /**
+     * @return String|null
+     */
+    public function getAction(): ?string
+    {
+        return $this->_action;
+    }
+
+    /**
+     * @param string|null $action
+     */
+    public function setAction(?string $action): void
+    {
+        $this->_action = $action;
+    }
 
     /**
      * @param null $key

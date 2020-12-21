@@ -26,6 +26,7 @@ class ConsoleDispatcher implements ServiceProviderInterface
 
             // Register defaults for console routing
             $dispatcher->setDefaultNamespace('Base\Tasks');
+            $dispatcher->setTaskSuffix('');
 
             // Register task events in dispatcher
             $eventManager = $di->get('eventsManager');

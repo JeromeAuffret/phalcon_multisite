@@ -119,8 +119,8 @@ final class ConsoleHandler
     public function parseArguments(): array
     {
         $arguments = [
-            'task' => 'main',
-            'action' => 'main',
+            'task' => null,
+            'action' => null,
             'params' => [],
             'options' => []
         ];
@@ -150,20 +150,8 @@ final class ConsoleHandler
             $i++;
         }
 
-        // Register arguments in console component
-        $this->container->get('console')->setArguments(
-            new Collection($arguments)
-        );
-
-        // Register params in console component
-        $this->container->get('console')->setParams(
-            new Collection($arguments['params'])
-        );
-
-        // Register options in console component
-        $this->container->get('console')->setOptions(
-            new Collection($arguments['options'])
-        );
+        // Register arguments in console service
+        $this->container->get('console')->registerArguments($arguments);
 
         return $arguments;
     }

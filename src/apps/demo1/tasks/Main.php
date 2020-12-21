@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Base\Tasks;
+namespace Demo1\Tasks;
 
 use Core\Components\Application;
 use Core\Components\Console;
@@ -14,13 +14,15 @@ use Phalcon\Cli\Task;
  * @property Console $config
  * @package Core\tasks
  */
-class MainTask extends Task
+class Main extends Task
 {
     /**
-     *
+     * @param int $value_1
+     * @param int $value_2
      */
-    public function mainAction()
+    public function mainAction(int $value_1, int $value_2)
     {
-        echo 'This is the default task and the default action' . PHP_EOL;
+        echo $value_1 + $value_2;
+        echo PHP_EOL;
     }
 }

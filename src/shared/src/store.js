@@ -14,10 +14,7 @@ export default new Vuex.Store({
     },
     decrement(state) {
       state.count -= 1;
-    },
-    increment2(state) {
-      state.count += 2;
-    },
+    }
   },
   plugins: [sharedMutations({ predicate: ['increment', 'decrement'] })],
 });

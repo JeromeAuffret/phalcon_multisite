@@ -49,12 +49,21 @@ class Cli extends Injectable
         echo '['.date('Y-m-d H:i:s').'] Module : '.($this->dispatcher->getModuleName() ?? '').PHP_EOL;
         echo '=========================================================='.PHP_EOL;
 
-        $this->dispatchTenantTask();
+        // Display help task if no task defined or help option is defined
+        if (!$this->console->getTask() || $this->console->getOptions('help')) {
+            $this->dispatcher->setTaskName('help');
+            $this->dispatcher->dispatch();
+        }
+        // Run task for every registered tenants
+        else {
+            foreach ($this->console->getTenancy() as $tenantSlug) {
+                $this->dispatchTenantTask($tenantSlug);
+            }
+        }
 
         echo '['.date('Y-m-d H:i:s').'] End console'.PHP_EOL;
         echo '=========================================================='.PHP_EOL;
 
-        // As we dispatch task manually, we prevent other task to be dispatch
         return false;
     }
 
@@ -77,26 +86,27 @@ class Cli extends Injectable
     {
         // Register tenancy in console service
         $tenancy = $this->console->getOptions('tenant');
-        if ($tenancy && $tenancy === '*') {
-            $applicationList = [];
-            foreach (Application::find() as $application) {
-                $applicationList[] = $application->getSlug();
+        if ($tenancy) {
+            if ($tenancy === '*') {
+                $applicationList = [];
+                foreach (Application::find() as $application) {
+                    $applicationList[] = $application->getSlug();
+                }
+                $this->console->setTenancy($applicationList);
             }
-            $this->console->setTenancy($applicationList);
-        }
-        elseif ($tenancy) {
-            $this->console->setTenancy(explode(',', $tenancy));
+            else {
+                $this->console->setTenancy(explode(',', $tenancy));
+            }
         }
     }
 
     /**
-     * Setup application options
+     * Register tenancy in console service
      *
      * @throws Exception
      */
     private function registerModuleByOptions()
     {
-        // Register tenancy in console service
         $module = $this->console->getOptions('module');
         if ($module) {
             $this->dispatcher->setModuleName($module);
@@ -104,50 +114,51 @@ class Cli extends Injectable
     }
 
     /**
-     * Setup application options
+     * Dispatch task for each registered tenant
      *
      * We reset dispatcher values for each tenant
      * It allow to correctly dispatch namespaces in beforeDispatch event
      *
-     * @throws Exception
+     * @param $tenantSlug
      */
-    private function dispatchTenantTask()
+    private function dispatchTenantTask($tenantSlug)
     {
-        // Dispatch task for each registered tenant
-        foreach ($this->console->getTenancy() as $tenant)
-        {
-            try {
-                $this->application->registerTenantBySlug($tenant);
-                $this->application->registerTenantProvider();
+        try {
+            $this->application->registerTenantBySlug($tenantSlug);
+            $this->application->registerTenantProvider();
 
-                // Register tenant modules to allow module interdependence
-                $this->application->registerModulesProviders();
+            // Register tenant modules to allow module interdependence
+            $this->application->registerModulesProviders();
 
-                // Bind defaultNamespace to dispatcher currentNamespace
-                $this->dispatcher->setNamespaceName(
-                    $this->application->getTenantNamespace()
-                );
+            // Reset dispatcher value with options registered arguments
 
-                $this->dispatcher->setTaskName($this->console->getArguments('task'));
-                $this->dispatcher->setActionName($this->console->getArguments('action'));
+            $this->dispatcher->setNamespaceName(
+                $this->application->getTenantNamespace()
+            );
 
-                $this->dispatcher->setParams(
-                    $this->console->getParams()->toArray()
-                );
-
-                $this->dispatcher->setOptions(
-                    $this->console->getOptions()->toArray()
-                );
-
-                // Dispatch task for each tenant
-                $this->dispatcher->dispatch();
+            if ($this->console->getTask()) {
+                $this->dispatcher->setTaskName($this->console->getTask());
             }
-            catch (Throwable $e) {
-                echo $e->getMessage() . PHP_EOL;
-                echo $e->getTraceAsString() . PHP_EOL;
-                echo '==========================================================' . PHP_EOL;
-                continue;
+
+            if ($this->console->getAction()) {
+                $this->dispatcher->setActionName($this->console->getAction());
             }
+
+            $this->dispatcher->setParams(
+                $this->console->getParams()->toArray()
+            );
+
+            $this->dispatcher->setOptions(
+                $this->console->getOptions()->toArray()
+            );
+
+            // Dispatch task for each tenant
+            $this->dispatcher->dispatch();
+        }
+        catch (Throwable $e) {
+            echo $e->getMessage() . PHP_EOL;
+            echo $e->getTraceAsString() . PHP_EOL;
+            echo '==========================================================' . PHP_EOL;
         }
     }
 
