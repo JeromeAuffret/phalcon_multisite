@@ -120,17 +120,18 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
         // Register Module in Mvc/Cli
         $this->registerModules($container);
 
-        // Register Module in Mvc/Cli
-        $this->registerServices($container);
-
         // Register namespaces relative to the module
         $this->registerAutoloaders($container);
 
-        // Register Routes relative to the module
-        $this->registerRoutes($container);
+        // Register Services in Mvc/Cli
+        $this->registerServices($container);
 
-        // Register Routes relative to the module
-        if ($application->isMvc()) {
+        if ($application->isMvc())
+        {
+            // Register Routes relative to the module
+            $this->registerRoutes($container);
+
+            // Register Acl relative to the module
             $this->registerAcl($container);
         }
     }
