@@ -27,7 +27,6 @@ use Throwable;
  */
 class Cli extends Injectable
 {
-
     /**
      * Log start script
      *
@@ -49,22 +48,41 @@ class Cli extends Injectable
         echo '['.date('Y-m-d H:i:s').'] Module : '.($this->dispatcher->getModuleName() ?? '').PHP_EOL;
         echo '=========================================================='.PHP_EOL;
 
-        // Display help task if no task defined or help option is defined
-        if (!$this->console->getTask() || $this->console->getOptions('help')) {
-            $this->dispatcher->setTaskName('help');
-            $this->dispatcher->dispatch();
-        }
-        // Run task for every registered tenants
-        else {
-            foreach ($this->console->getTenancy() as $tenantSlug) {
-                $this->dispatchTenantTask($tenantSlug);
-            }
-        }
+        // Dispatch task based on console arguments
+        $this->dispatchTask();
 
         echo '['.date('Y-m-d H:i:s').'] End console'.PHP_EOL;
         echo '=========================================================='.PHP_EOL;
 
+        // Prevent using default dispatch as we trigger dispatcher manually
         return false;
+    }
+
+    /**
+     * Dispatch task based on console arguments
+     *
+     * Catch every throwable error/exceptions if throw while running scripts
+     */
+    private function dispatchTask()
+    {
+        try {
+            // Display help task if no task defined or help option is defined
+            if (!$this->console->getTask() || $this->console->getOptions('help')) {
+                $this->dispatcher->setTaskName('help');
+                $this->dispatcher->dispatch();
+            }
+            // Run task for every registered tenants
+            else {
+                foreach ($this->console->getTenancy() as $tenantSlug) {
+                    $this->dispatchTenantTask($tenantSlug);
+                }
+            }
+        }
+        catch (Throwable $e) {
+            echo $e->getMessage() . PHP_EOL;
+            echo $e->getTraceAsString() . PHP_EOL;
+            echo '==========================================================' . PHP_EOL;
+        }
     }
 
 
@@ -79,15 +97,14 @@ class Cli extends Injectable
      *
      * Tenancy is defined by a list of tenant separated by comma
      * '*' define all tenant
-     *
-     * @throws Exception
      */
     private function registerTenantByOptions()
     {
         // Register tenancy in console service
-        $tenancy = $this->console->getOptions('tenant');
-        if ($tenancy) {
-            if ($tenancy === '*') {
+        $tenants = $this->console->getOptions('tenant');
+
+        if ($tenants) {
+            if ($tenants === '*') {
                 $applicationList = [];
                 foreach (Application::find() as $application) {
                     $applicationList[] = $application->getSlug();
@@ -95,15 +112,13 @@ class Cli extends Injectable
                 $this->console->setTenancy($applicationList);
             }
             else {
-                $this->console->setTenancy(explode(',', $tenancy));
+                $this->console->setTenancy(explode(',', $tenants));
             }
         }
     }
 
     /**
      * Register tenancy in console service
-     *
-     * @throws Exception
      */
     private function registerModuleByOptions()
     {
