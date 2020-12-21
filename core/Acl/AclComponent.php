@@ -98,6 +98,9 @@ class AclComponent implements ComponentAware
         elseif ($controllerName === 'logout') {
             $this->componentName = '_logout';
         }
+        elseif ($controllerName === 'assets') {
+            $this->componentName = '_assets';
+        }
         elseif ($config->get('tenantType') === 'modules') {
             $this->componentName = $moduleName.'_'.$controllerName;
         }
@@ -125,7 +128,7 @@ class AclComponent implements ComponentAware
      *
      * @return bool
      */
-    public function isPublicComponent()
+    public function isPublicComponent(): bool
     {
         return in_array($this->getComponentName(), Di::getDefault()->get('config')->get('publicComponents')->getValues());
     }

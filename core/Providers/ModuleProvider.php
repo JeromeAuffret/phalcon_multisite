@@ -269,7 +269,7 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
     /**
      * @param string|null $defaultController
      */
-    public function setDefaultController(string $defaultController): void
+    public function setDefaultController(?string $defaultController): void
     {
         $this->defaultController = $defaultController;
     }
@@ -286,7 +286,7 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
     /**
      * @param string|null $defaultAction
      */
-    public function setDefaultAction(string $defaultAction = null): void
+    public function setDefaultAction(?string $defaultAction = null): void
     {
         $this->defaultAction = $defaultAction;
     }

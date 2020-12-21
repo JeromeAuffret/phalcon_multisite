@@ -46,7 +46,7 @@ return [
 
     // publicComponents define an AclComponent's list where ACL and Auth middleware are disabled
     'publicComponents' => [
-        '_error', '_logout',
-        'auth_login',
+        '_error', '_logout', '_assets',
+        'auth_login'
     ]
 ];

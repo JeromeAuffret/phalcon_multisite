@@ -53,8 +53,8 @@ final class Tenant extends TenantProvider
         if ($container->get('application')->isMvc())
         {
             // Register security events
-            $container->get('eventsManager')->attach('dispatch', new Acl);
-            $container->get('eventsManager')->attach('dispatch', new Auth);
+//            $container->get('eventsManager')->attach('dispatch', new Acl);
+//            $container->get('eventsManager')->attach('dispatch', new Auth);
         }
     }
 

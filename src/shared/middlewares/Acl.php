@@ -35,7 +35,7 @@ class Acl extends Injectable
 
         try {
             if (!$this->acl->userAllowed($moduleName, $controllerName, $actionName, $params)) {
-                throw new AclException('Unauthorized');
+                throw new AclException("Unauthorized by acl middleware : $moduleName, $controllerName, $actionName");
             }
         } catch (Exception $e) {
             throw new AclException($e->getMessage(), $e->getCode(), $e);

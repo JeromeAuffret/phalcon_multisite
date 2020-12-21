@@ -42,7 +42,7 @@ class Controller extends Injectable
             $this->dispatcher->setNamespaceName((new \ReflectionClass($controllerClass))->getNamespaceName());
         }
         catch (ReflectionException $e) {
-            throw new DispatchException('Controller not found', DispatchException::EXCEPTION_HANDLER_NOT_FOUND, $e);
+            throw new DispatchException('Controller '.$controllerClass.' not found', DispatchException::EXCEPTION_HANDLER_NOT_FOUND, $e);
         }
     }
 
@@ -224,7 +224,7 @@ class Controller extends Injectable
     public function setMainCollection()
     {
         $this->assets->collection('main_style')
-            ->addCss('img/favicon.png')
+            ->addCss('img/favicon.ico')
             ->join(true);
 
         $this->assets->collection('main_script')
@@ -310,6 +310,10 @@ class Controller extends Injectable
             ->join(true)
             ->addFilter(new Jsmin());
 
+        $view_script
+            ->addJs($this->application->getBasePath().'/dist/js/chunk-vendors.js')
+            ->addJs($this->application->getBasePath().'/dist/js/app.js');
+
         /**
          * Load specific view assets base on routing process
          */
@@ -327,7 +331,7 @@ class Controller extends Injectable
     /**
      *
      */
-    public function getViewCollectionName()
+    public function getViewCollectionName(): string
     {
         $module = $this->dispatcher->getModuleName();
         $controller = $this->dispatcher->getControllerName();
@@ -339,7 +343,7 @@ class Controller extends Injectable
     /**
      *
      */
-    public function getTenantAssetPath()
+    public function getTenantAssetPath(): string
     {
         $assetPath = 'temp/'.($this->application->getTenantSlug() ?: 'shared');
 

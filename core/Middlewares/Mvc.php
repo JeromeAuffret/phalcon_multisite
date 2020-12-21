@@ -56,11 +56,10 @@ class Mvc extends Injectable
         $moduleName = $this->router->getModuleName();
         $module = $application->getModule($moduleName);
 
-        $moduleClass = $module['className'];
         /* @var ModuleProvider $moduleClass */
+        $moduleClass = $module['className'];
         $moduleClass = new $moduleClass;
 
-        // Register module events only in module context
         $moduleClass->registerEvents($this->getDI());
     }
 

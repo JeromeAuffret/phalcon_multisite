@@ -53,7 +53,7 @@ class Auth extends Injectable
         }
 
         // Throw Unauthorized Exception
-        throw new AuthException('Unauthorized');
+        throw new AuthException("Unauthorized by auth middleware : $moduleName, $controllerName, $actionName");
     }
 
 }
