@@ -14,120 +14,6 @@ use ReflectionException;
 final class NamespaceHelper
 {
     /**
-     * Helper method to find Tenant\Namespace from Base\Namespace
-     * Return parameters if class is not correctly registered
-     *
-     * @param string $classNamespace
-     * @return string
-     */
-    public static function toTenantNamespace(string $classNamespace): string
-    {
-        $di = Di::getDefault();
-        $application = $di->get('application');
-        $baseNamespace = $application->getBaseNamespace();
-
-        // Prevent dispatching controller if no application is registered
-        if (!$application->hasTenant()) {
-            return $classNamespace;
-        }
-
-        // If namespace is part of base namespace, we check if override exist in application namespace
-        if (substr($classNamespace, 0, strlen($baseNamespace)) === $baseNamespace)
-        {
-            try {
-                $classPath = (new \ReflectionClass($classNamespace))->getFileName();
-                $overridePath = str_replace($application->getBasePath(), $application->getTenantPath(), $classPath);
-
-                if (file_exists($overridePath))
-                {
-                    $classNamespace = str_replace($baseNamespace, $application->getTenantNamespace(), $classNamespace);
-
-                    (new \Phalcon\Loader())
-                        ->registerClasses([$classNamespace => $overridePath])
-                        ->register();
-                }
-            } catch (ReflectionException $e) {
-                return $classNamespace;
-            }
-        }
-
-        return $classNamespace;
-    }
-
-    /**
-     * Helper method to find Base\Namespace from Tenant\Namespace
-     * Return parameters if class is not correctly registered
-     *
-     * @param string $classNamespace
-     * @return string
-     */
-    public static function toBaseNamespace(string $classNamespace): string
-    {
-        $di = Di::getDefault();
-        $application = $di->get('application');
-        $tenantNamespace = $application->getTenantNamespace();
-
-        // If namespace is part of tenant namespace, we check if override exist in base namespace
-        if (substr($classNamespace, 0, strlen($tenantNamespace)) === $tenantNamespace)
-        {
-            try {
-                $classPath = (new \ReflectionClass($classNamespace))->getFileName();
-                $overridePath = str_replace( $application->getTenantPath(), $application->getBasePath(), $classPath);
-
-                if (file_exists($overridePath))
-                {
-                    $classNamespace = str_replace($tenantNamespace, $application->getBaseNamespace(), $classNamespace);
-
-                    (new \Phalcon\Loader())
-                        ->registerClasses([$classNamespace => $overridePath])
-                        ->register();
-                }
-            } catch (ReflectionException $e) {
-                return $classNamespace;
-            }
-        }
-
-        return $classNamespace;
-    }
-
-    /**
-     * Helper method to find tenant/path from shared/path
-     * Return parameters if path does not exist
-     *
-     * @param string $classPath
-     * @return string
-     */
-    public static function findTenantPath(string $classPath): string
-    {
-        $di = Di::getDefault();
-        $application = $di->get('application');
-        $basePath = $application->getBasePath();
-
-        // Prevent dispatching controller if no application is registered
-        if (!$application->hasTenant()) {
-            return $classPath;
-        }
-
-        // If path is part of base, we check if override exist in application folder
-        if (substr($classPath, 0, strlen($basePath)) === $application->$basePath())
-        {
-            $overridePath = str_replace($basePath, $application->getTenantPath(), $classPath);
-
-            if (file_exists($overridePath))
-            {
-                $classPath = $overridePath;
-                $classNamespace = self::parseNamespaceFromFilePath($classPath);
-
-                (new \Phalcon\Loader())
-                    ->registerClasses([$classNamespace => $overridePath])
-                    ->register();
-            }
-        }
-
-        return $classPath;
-    }
-
-    /**
      * Helper method to dispatch a class name between base and application folder
      * If some modules are registered, it try to resolve modules path
      *
@@ -202,6 +88,131 @@ final class NamespaceHelper
         }
 
         return $namespace;
+    }
+    /**
+     * Helper method to find Tenant\Namespace from Base\Namespace
+     * Return parameters if class is not correctly registered
+     *
+     * @param string $classNamespace
+     * @return string
+     */
+    public static function toTenantNamespace(string $classNamespace): string
+    {
+        $di = Di::getDefault();
+        $application = $di->get('application');
+        $baseNamespace = $application->getBaseNamespace();
+
+        // Prevent dispatching controller if no application is registered
+        if (!$application->hasTenant()) {
+            return $classNamespace;
+        }
+
+        // If namespace is part of base namespace, we check if override exist in application namespace
+        if (substr($classNamespace, 0, strlen($baseNamespace)) === $baseNamespace)
+        {
+            try {
+                $overrideNamespace = str_replace($baseNamespace, $application->getTenantNamespace(), $classNamespace);
+
+                // Prevent loading class that already exist
+                if (!class_exists($overrideNamespace))
+                {
+                    $overridePath = str_replace($application->getBasePath(), $application->getTenantPath(), (new \ReflectionClass($classNamespace))->getFileName());
+                    if (file_exists($overridePath))
+                    {
+                        (new \Phalcon\Loader())
+                            ->registerClasses([$overrideNamespace => $overridePath])
+                            ->register();
+
+                        return $overrideNamespace;
+                    }
+                } else {
+                    return $overrideNamespace;
+                }
+            } catch (ReflectionException $e) {
+                return $classNamespace;
+            }
+        }
+
+        return $classNamespace;
+    }
+
+    /**
+     * Helper method to find Base\Namespace from Tenant\Namespace
+     * Return parameters if class is not correctly registered
+     *
+     * @param string $classNamespace
+     * @return string
+     */
+    public static function toBaseNamespace(string $classNamespace): string
+    {
+        $di = Di::getDefault();
+        $application = $di->get('application');
+        $tenantNamespace = $application->getTenantNamespace();
+
+        // If namespace is part of tenant namespace, we check if override exist in base namespace
+        if (substr($classNamespace, 0, strlen($tenantNamespace)) === $tenantNamespace)
+        {
+            try {
+                $overrideNamespace = str_replace($tenantNamespace, $application->getBaseNamespace(), $classNamespace);
+
+                // Prevent loading class that already exist
+                if (!class_exists($overrideNamespace))
+                {
+                    $overridePath = str_replace( $application->getTenantPath(), $application->getBasePath(), $classPath);
+                    if (file_exists($overridePath))
+                    {
+                        (new \Phalcon\Loader())
+                            ->registerClasses([$overrideNamespace => $overridePath])
+                            ->register();
+
+                        return $overrideNamespace;
+                    }
+                } else {
+                    return $overrideNamespace;
+                }
+            } catch (ReflectionException $e) {
+                return $classNamespace;
+            }
+        }
+
+        return $classNamespace;
+    }
+
+    /**
+     * Helper method to find tenant/path from shared/path
+     * Return parameters if path does not exist
+     *
+     * @param string $classPath
+     * @return string
+     */
+    public static function findTenantPath(string $classPath): string
+    {
+        $di = Di::getDefault();
+        $application = $di->get('application');
+        $basePath = $application->getBasePath();
+
+        // Prevent dispatching controller if no application is registered
+        if (!$application->hasTenant()) {
+            return $classPath;
+        }
+
+        // If path is part of base, we check if override exist in application folder
+        if (substr($classPath, 0, strlen($basePath)) === $application->$basePath())
+        {
+            $overridePath = str_replace($basePath, $application->getTenantPath(), $classPath);
+
+            if (file_exists($overridePath))
+            {
+                $classPath = $overridePath;
+                $classNamespace = self::parseNamespaceFromFilePath($classPath);
+
+                (new \Phalcon\Loader())
+                    ->registerClasses([$classNamespace => $overridePath])
+                    ->register();
+            }
+        }
+
+        return $classPath;
     }
 
     /**

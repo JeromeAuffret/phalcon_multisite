@@ -2,6 +2,7 @@
 
 namespace Core\Acl;
 
+use Core\Components\Config;
 use Phalcon\Acl\ComponentAware;
 use Phalcon\Di;
 
@@ -65,15 +66,11 @@ class AclComponent implements ComponentAware
      */
     public function __construct(?string $moduleName, ?string $controllerName, ?string $actionName, array $params)
     {
+        /** @var Config $config */
         $config = Di::getDefault()->get('config');
 
-        if (!$controllerName) {
-            $controllerName = $config->get('modules')[$moduleName]['defaultController'] ?? $config->defaultController;
-        }
-
-        if (!$actionName) {
-            $actionName = $config->get('modules')[$moduleName]['defaultAction'] ?? $config->defaultAction;
-        }
+        $controllerName = $controllerName ?? $config->get('defaultController');
+        $actionName = $actionName ?? $config->get('defaultAction');
 
         $this->initialize($moduleName, $controllerName, $actionName, $params);
     }
@@ -92,6 +89,7 @@ class AclComponent implements ComponentAware
         $config = $container->get('config');
         $request = $container->get('request');
 
+        // Core controllers that should avoid acl process
         if ($controllerName === 'error') {
             $this->componentName = '_error';
         }
@@ -101,6 +99,8 @@ class AclComponent implements ComponentAware
         elseif ($controllerName === 'assets') {
             $this->componentName = '_assets';
         }
+
+        // Build component name base on routing process
         elseif ($config->get('tenantType') === 'modules') {
             $this->componentName = $moduleName.'_'.$controllerName;
         }

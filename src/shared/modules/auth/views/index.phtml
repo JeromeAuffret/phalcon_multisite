@@ -14,8 +14,8 @@
     <link rel="shortcut icon" type="image/x-icon" href="<?php echo $this->url->get('public/img/favicon.ico')?>"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-    <link href="<?php echo $this->url->get('api/assets/js/app.js') ?>" rel="preload" as="script">
-    <link href="<?php echo $this->url->get('api/assets/js/chunk-vendors.js') ?>" rel="preload" as="script">
+<!--    <link href="--><?php //echo $this->url->get('api/assets/js/app.js') ?><!--" rel="preload" as="script">-->
+<!--    <link href="--><?php //echo $this->url->get('api/assets/js/chunk-vendors.js') ?><!--" rel="preload" as="script">-->
 
     <?php $this->assets->outputCss('view_style'); ?>
 </head>
@@ -26,9 +26,9 @@
     <div id="app"></div>
 </body>
 
-<?php $this->assets->outputCss('view_script'); ?>
+<?php //$this->assets->outputCss('view_script'); ?>
 
-<script src="<?php echo $this->url->get('api/assets/js/chunk-vendors.js') ?>"></script>
-<script src="<?php echo $this->url->get('api/assets/js/app.js') ?>"></script>
+<!--<script src="--><?php //echo $this->url->get('api/assets/js/chunk-vendors.js') ?><!--"></script>-->
+<!--<script src="--><?php //echo $this->url->get('api/assets/js/app.js') ?><!--"></script>-->
 
 </html>

@@ -28,14 +28,14 @@ class Acl extends Injectable
      */
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
-        $moduleName = $this->router->getModuleName();
-        $controllerName = $this->router->getControllerName();
-        $actionName = $this->router->getActionName();
-        $params = $this->router->getParams();
+        $moduleName = $this->dispatcher->getModuleName();
+        $controllerName = $this->dispatcher->getControllerName();
+        $actionName = $this->dispatcher->getActionName();
+        $params = $this->dispatcher->getParams();
 
         try {
             if (!$this->acl->userAllowed($moduleName, $controllerName, $actionName, $params)) {
-                throw new AclException("Unauthorized by acl middleware : $moduleName, $controllerName, $actionName");
+                throw new AclException("Unauthorized by acl middleware : $moduleName, $controllerName, $actionName, ".implode(',', $params));
             }
         } catch (Exception $e) {
             throw new AclException($e->getMessage(), $e->getCode(), $e);

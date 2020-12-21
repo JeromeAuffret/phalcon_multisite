@@ -3,10 +3,8 @@
 
 namespace Core\Components;
 
-use Core\Helpers\NamespaceHelper;
 use Phalcon\Cli\Dispatcher;
 use Phalcon\Collection;
-use Phalcon\Helper\Str;
 
 /**
  * Class Cli
@@ -184,21 +182,6 @@ final class Console extends \Phalcon\Cli\Console
     public function setTenancy(array $_tenancy): void
     {
         $this->_tenancy = $_tenancy;
-    }
-
-    /**
-     *
-     */
-    public function getTaskNamespace(): ?string
-    {
-        $taskClass = Str::camelize($this->dispatcher->getTaskName()).$this->dispatcher->getTaskSuffix();
-        if ($this->dispatcher->getModuleName()) {
-            $taskNamespace = NamespaceHelper::dispatchModuleClass($taskClass, $this->dispatcher->getModuleName(),'Tasks');
-        } else {
-            $taskNamespace = NamespaceHelper::dispatchClass($taskClass,'Tasks');
-        }
-
-        return $taskNamespace;
     }
 
 }

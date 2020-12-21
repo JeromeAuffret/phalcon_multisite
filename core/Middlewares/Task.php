@@ -8,11 +8,11 @@ use Core\Helpers\NamespaceHelper;
 use Phalcon\Cli\Dispatcher;
 use Phalcon\Cli\Dispatcher\Exception as DispatcherException;
 use Phalcon\Cli\Router;
-use Phalcon\Events\Event;
 use Phalcon\Di\Injectable;
+use Phalcon\Events\Event;
 use Phalcon\Helper\Str;
-use ReflectionException;
 use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
+use ReflectionException;
 
 /**
  * Class Controller
@@ -37,7 +37,13 @@ class Task extends Injectable
      */
     public function beforeDispatch(Event $event, Dispatcher $dispatcher)
     {
-        $taskNamespace = $this->console->getTaskNamespace();
+        // Dispatch task between base and tenant namespace
+        $taskClass = Str::camelize($this->dispatcher->getTaskName()).$this->dispatcher->getTaskSuffix();
+        if ($this->dispatcher->getModuleName()) {
+            $taskNamespace = NamespaceHelper::dispatchModuleClass($taskClass, $this->dispatcher->getModuleName(),'Tasks');
+        } else {
+            $taskNamespace = NamespaceHelper::dispatchClass($taskClass,'Tasks');
+        }
 
         echo '['.date('Y-m-d H:i:s').'] Start Tenant : '.$this->application->getTenant('name').PHP_EOL;
         echo '['.date('Y-m-d H:i:s').'] Task : '.$this->dispatcher->getTaskName().PHP_EOL;

@@ -68,7 +68,7 @@ class Error extends Injectable
             }
             else {
                 $this->session->destroy();
-                $this->response->redirect('auth/login');
+                $this->response->redirect('auth');
             }
 
             $this->sendResponse();
@@ -94,7 +94,7 @@ class Error extends Injectable
                 }
                 else {
                     $this->session->destroy();
-                    $this->response->redirect('auth/login');
+                    $this->response->redirect('auth');
                 }
             }
 
@@ -120,7 +120,7 @@ class Error extends Injectable
     {
         $this->response->setStatusCode(404, 'Not Found');
         $this->dispatcher->forward([
-            'namespace'  => 'Core\Controllers',
+            'namespace'  => 'Base\Controllers',
             'controller' => 'error',
             'action'     => 'NotFound',
         ]);
@@ -133,7 +133,7 @@ class Error extends Injectable
     {
         $this->response->setStatusCode(500, 'Internal Server Error');
         $this->dispatcher->forward([
-            'namespace'  => 'Core\Controllers',
+            'namespace'  => 'Base\Controllers',
             'controller' => 'error',
             'action'     => 'InternalError',
         ]);

@@ -24,7 +24,7 @@ class ConsoleDispatcher implements ServiceProviderInterface
         $di->setShared('dispatcher', function () use ($di) {
             $dispatcher = new \Phalcon\Cli\Dispatcher();
 
-            // Register defaults for console routing
+            // Register defaults for console dispatch
             $dispatcher->setDefaultNamespace('Base\Tasks');
             $dispatcher->setTaskSuffix('');
 

@@ -142,7 +142,6 @@ class Role extends BaseModel
     public function initialize()
     {
         $this->setConnectionService('main_db');
-        $this->setSchema("public");
         $this->setSource("role");
 
         $this->hasMany('id', UserRole::class, 'id_role', ['alias' => 'UserRole']);

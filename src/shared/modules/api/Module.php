@@ -46,8 +46,6 @@ class Module extends ModuleProvider
                 'action' => 3,
                 'params' => 4
             ]);
-
-        $container->get('acl')->registerAclFromFile(__DIR__.'/config/acl.php');
     }
 
     /**
@@ -61,6 +59,16 @@ class Module extends ModuleProvider
             ->attach('dispatch:beforeDispatch', function () use ($container) {
                 $this->dispatchController($container);
             });
+    }
+
+    /**
+     * Register acl related to the module
+     *
+     * @param DiInterface $container
+     */
+    public function registerAcl(DiInterface $container)
+    {
+        $container->get('acl')->registerAclFromFile(__DIR__.'/config/acl.php');
     }
 
     /**
@@ -83,7 +91,7 @@ class Module extends ModuleProvider
         $baseControllerModulePath = $application->getBaseModulePath($moduleName).'/controllers/'.$controllerName;
 
         if ($controllerName === 'error') {
-            $dispatcher->setNamespaceName('Core\Controllers');
+            $dispatcher->setNamespaceName('Base\Controllers');
         }
         else if ($application && file_exists($appControllerModulePath.'/'.$referenceControllerFile)) {
             $namespace = $application->getTenantModulePath($moduleName).'\Controllers\\'.$controllerName;
@@ -100,5 +108,4 @@ class Module extends ModuleProvider
             $dispatcher->setControllerName($referenceName);
         }
     }
-
 }

@@ -8,6 +8,7 @@ use Core\Helpers\NamespaceHelper;
 use Phalcon\Assets\Filters\Cssmin;
 use Phalcon\Assets\Filters\Jsmin;
 use Phalcon\Events\Event;
+use Phalcon\Helper\Str;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
 use Phalcon\Di\Injectable;
@@ -31,27 +32,47 @@ class Controller extends Injectable
      * @param Dispatcher $dispatcher
      * @return void
      * @throws DispatchException
+     * @throws ReflectionException
      */
     public function beforeDispatch(Event $event, Dispatcher $dispatcher)
     {
-        $controllerClass = NamespaceHelper::toTenantNamespace(
-            $this->dispatcher->getControllerClass()
+        // Set default namespace for mvc dispatch
+        if ($this->config->get('tenantType') === 'modules') {
+            // If module does not exist in dispatcher we set defaultModule instead
+            if (!$this->dispatcher->getModuleName()) {
+                $this->dispatcher->setModuleName(
+                    $this->config->get('defaultModule')
+                );
+            }
+            // Register default namespace
+            $this->dispatcher->setDefaultNamespace($this->application->getBaseModuleNamespace(
+                $this->dispatcher->getModuleName()
+            ));
+        } else {
+            $this->dispatcher->setDefaultNamespace($this->application->getBaseNamespace());
+        }
+
+        // Dispatch controller between base and tenant namespace
+        $controllerClass = Str::camelize($this->dispatcher->getControllerName()).$this->dispatcher->getHandlerSuffix();
+
+        if ($controllerClass === 'ErrorController' || $controllerClass === 'LogoutController') {
+            $controllerNamespace = NamespaceHelper::dispatchClass($controllerClass,'Controllers');
+        }
+        elseif ($this->dispatcher->getModuleName()) {
+            $controllerNamespace = NamespaceHelper::dispatchModuleClass($controllerClass, $this->dispatcher->getModuleName(),'Controllers');
+        }
+        else {
+            $controllerNamespace = NamespaceHelper::dispatchClass($controllerClass,'Controllers');
+        }
+
+        // Throw exception if controller is not found in applications folder
+        if (!$controllerNamespace) throw new DispatchException(
+            'Controller '.$controllerClass.' not found',
+            DispatchException::EXCEPTION_HANDLER_NOT_FOUND
         );
 
-        try {
-            $this->dispatcher->setNamespaceName((new \ReflectionClass($controllerClass))->getNamespaceName());
-        }
-        catch (ReflectionException $e) {
-            throw new DispatchException('Controller '.$controllerClass.' not found', DispatchException::EXCEPTION_HANDLER_NOT_FOUND, $e);
-        }
+        $this->dispatcher->setNamespaceName((new \ReflectionClass($controllerNamespace))->getNamespaceName());
     }
-
-
-    /************************************************************
-     *
-     *                   CONTROLLER MIDDLEWARES
-     *
-     ************************************************************/
 
     /**
      * @param Event $event
@@ -106,14 +127,13 @@ class Controller extends Injectable
      */
     public function dispatchViews()
     {
-        $application = $this->getDI()->get('application');
-        $moduleName = $this->router->getModuleName();
+        $moduleName = $this->dispatcher->getModuleName();
 
-        $baseViewPath = $application->getBasePath().'/Views/';
-        $baseModuleViewPath = $application->getBaseModulePath($moduleName).'/views';
+        $baseViewPath = $this->application->getBasePath().'/views/';
+        $baseModuleViewPath = $this->application->getBaseModulePath($moduleName).'/views';
 
-        $appViewPath = $application->getTenantPath().'/views';
-        $appModuleViewPath = $application->getTenantModulePath($moduleName).'/views';
+        $appViewPath = $this->application->getTenantPath().'/views';
+        $appModuleViewPath = $this->application->getTenantModulePath($moduleName).'/views';
 
         $this->dispatchMainView($baseViewPath, $baseModuleViewPath, $appViewPath, $appModuleViewPath);
         $this->dispatchLayoutDir($baseViewPath, $baseModuleViewPath, $appViewPath, $appModuleViewPath);
@@ -309,10 +329,6 @@ class Controller extends Injectable
             ->setLocal(false)
             ->join(true)
             ->addFilter(new Jsmin());
-
-        $view_script
-            ->addJs($this->application->getBasePath().'/dist/js/chunk-vendors.js')
-            ->addJs($this->application->getBasePath().'/dist/js/app.js');
 
         /**
          * Load specific view assets base on routing process

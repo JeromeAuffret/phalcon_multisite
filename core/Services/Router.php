@@ -24,16 +24,6 @@ class Router implements ServiceProviderInterface
             $router =  new \Phalcon\Mvc\Router();
             $router->setDI($di);
 
-            $config = $di->get('config');
-            $application = $di->get('application');
-
-            // We set tenant namespace as defaultNamespace if exist
-            $defaultNamespace = $application->hasTenant() ? $application->getTenantNamespace() : $application->getBaseNamespace();
-
-            $router->setDefaultNamespace($defaultNamespace.'\\Controllers');
-            $router->setDefaultController($config->defaultController);
-            $router->setDefaultAction($config->defaultAction);
-
             return $router;
         });
     }

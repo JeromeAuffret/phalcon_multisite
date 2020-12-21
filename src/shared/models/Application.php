@@ -142,7 +142,6 @@ class Application extends BaseModel
     public function initialize()
     {
         $this->setConnectionService('main_db');
-//        $this->setSchema("public");
         $this->setSource("application");
 
         $this->hasMany('id', Role::class, 'id_application', ['alias' => 'Role']);

@@ -31,13 +31,12 @@ class Auth extends Injectable
      */
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
-        $moduleName = $this->router->getModuleName();
-        $controllerName = $this->router->getControllerName();
-        $actionName = $this->router->getActionName();
-        $params = $this->router->getParams();
+        $moduleName = $this->dispatcher->getModuleName();
+        $controllerName = $this->dispatcher->getControllerName();
+        $actionName = $this->dispatcher->getActionName();
+        $params = $this->dispatcher->getParams();
 
-        $aclComponentClass = NamespaceHelper::toTenantNamespace(AclComponent::class);
-        $AclComponent = new $aclComponentClass($moduleName, $controllerName, $actionName, $params);
+        $AclComponent = new AclComponent($moduleName, $controllerName, $actionName, $params);
 
         // Allow access to public Components
         if ($AclComponent->isPublicComponent()) {
@@ -53,7 +52,7 @@ class Auth extends Injectable
         }
 
         // Throw Unauthorized Exception
-        throw new AuthException("Unauthorized by auth middleware : $moduleName, $controllerName, $actionName");
+        throw new AuthException('Unauthorized by auth middleware');
     }
 
 }

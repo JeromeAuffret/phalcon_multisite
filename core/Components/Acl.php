@@ -54,8 +54,7 @@ final class Acl extends Injectable implements AdapterInterface
     public function userAllowed(string $moduleName = null, string $controllerName = null, string $actionName = null, array $params = []): bool
     {
         // Defined resource
-        $aclComponentClass = NamespaceHelper::toTenantNamespace(AclComponent::class);
-        $AclComponent = new $aclComponentClass($moduleName, $controllerName, $actionName, $params);
+        $AclComponent = new AclComponent($moduleName, $controllerName, $actionName, $params);
 
         // Prevent verification for public Components
         if ($AclComponent->isPublicComponent()) {

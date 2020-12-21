@@ -32,14 +32,7 @@ class Module extends ModuleProvider
      *
      * @param DiInterface $container
      */
-    public function registerServices(DiInterface $container)
-    {
-        // Register Router
-        $this->registerRouter($container);
-
-        // Register Acl
-        $this->registerAcl($container);
-    }
+    public function registerServices(DiInterface $container) {}
 
     /**
      * Register events related to the module
@@ -54,7 +47,7 @@ class Module extends ModuleProvider
      *
      * @param DiInterface $container
      */
-    private function registerAcl(DiInterface $container)
+    public function registerAcl(DiInterface $container)
     {
         $acl = $container->get('acl');
 
@@ -68,16 +61,6 @@ class Module extends ModuleProvider
         // Rules
         $acl->allow('admin', 'product_index', '*');
         $acl->allow('user', 'product_index', '*');
-    }
-
-    /**
-     * Register router related to the application
-     *
-     * @param DiInterface $container
-     */
-    private function registerRouter(DiInterface $container)
-    {
-        $this->registerDefaultRoutes($container);
     }
 
 }

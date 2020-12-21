@@ -32,14 +32,14 @@ class Mvc extends Injectable
      */
     public function boot(Event $event, Application $application)
     {
+        $this->application->registerBaseProvider();
+
         $this->dispatchTenantBySession();
         $this->dispatchTenantByHost();
         $this->dispatchTenantByHash();
 
         if ($this->application->hasTenant()) {
             $this->application->registerTenantProvider();
-        } else {
-            $this->application->registerBaseProvider();
         }
     }
 

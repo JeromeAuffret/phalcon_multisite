@@ -11,11 +11,11 @@ use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\View;
 
 /**
- * Class LoginController
+ * Class IndexController
  *
  * @package Base\Modules\Auth\Controllers
  */
-class LoginController extends ControllerBase
+class IndexController extends ControllerBase
 {
     /**
      * Disabled layout level

@@ -287,7 +287,6 @@ class User extends BaseModel
     public function initialize()
     {
         $this->setConnectionService('main_db');
-        $this->setSchema("public");
         $this->setSource("user");
 
         $this->hasMany('id', UserRole::class, 'id_user', ['alias' => 'UserRole']);
