@@ -10,6 +10,7 @@ use Core\Components\Console;
 use Exception;
 use Phalcon\Cli\Dispatcher;
 use Phalcon\Cli\Router;
+use Phalcon\Collection;
 use Phalcon\Di\Injectable;
 use Phalcon\Events\Event;
 use Throwable;
@@ -67,13 +68,16 @@ class Cli extends Injectable
     {
         try {
             // Display help task if no task defined or help option is defined
-            if (!$this->console->getTask() || $this->console->getOptions('help')) {
+            if (!$this->console->getTask() || $this->console->hasOptions('help'))
+            {
+                $this->console->setTask('help');
                 $this->dispatcher->setTaskName('help');
                 $this->dispatcher->dispatch();
             }
+
             // Run task for every registered tenants
             else {
-                foreach ($this->console->getTenancy() as $tenantSlug) {
+                foreach ($this->console->getTenants() as $tenantSlug) {
                     $this->dispatchTenantTask($tenantSlug);
                 }
             }
@@ -100,20 +104,22 @@ class Cli extends Injectable
      */
     private function registerTenantByOptions()
     {
-        // Register tenancy in console service
+        // Register tenants in console service
         $tenants = $this->console->getOptions('tenant');
-
-        if ($tenants) {
+        if ($tenants)
+        {
             if ($tenants === '*') {
                 $applicationList = [];
                 foreach (Application::find() as $application) {
                     $applicationList[] = $application->getSlug();
                 }
-                $this->console->setTenancy($applicationList);
+                $tenants = new Collection($applicationList);
             }
             else {
-                $this->console->setTenancy(explode(',', $tenants));
+                $tenants = new Collection(explode(',', $tenants));
             }
+
+            $this->console->setTenants($tenants);
         }
     }
 

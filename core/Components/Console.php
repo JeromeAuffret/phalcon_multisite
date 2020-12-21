@@ -39,9 +39,9 @@ final class Console extends \Phalcon\Cli\Console
     protected $_options;
 
     /**
-     * @var array
+     * @var Collection
      */
-    protected $_tenancy = [];
+    protected $_tenants = [];
 
 
     /**
@@ -58,7 +58,7 @@ final class Console extends \Phalcon\Cli\Console
         $this->setTask($arguments['task']);
 
         // Register action in console component
-        $this->setTask($arguments['task']);
+        $this->setAction($arguments['action']);
 
         // Register arguments in console component
         $this->setArguments(new Collection($arguments));
@@ -103,10 +103,10 @@ final class Console extends \Phalcon\Cli\Console
     }
 
     /**
-     * @param null $key
+     * @param string|null $key
      * @return mixed
      */
-    public function getArguments($key = null)
+    public function getArguments(?string $key = null)
     {
         if (!$key)
             return $this->_arguments;
@@ -125,7 +125,7 @@ final class Console extends \Phalcon\Cli\Console
     }
 
     /**
-     * @param null $key
+     * @param mixed|null $key
      * @return mixed
      */
     public function getParams($key = null)
@@ -147,7 +147,19 @@ final class Console extends \Phalcon\Cli\Console
     }
 
     /**
-     * @param null $key
+     * @param mixed|null $key
+     * @return mixed
+     */
+    public function hasOptions($key = null): bool
+    {
+        if (!$key)
+            return !empty($this->_options);
+        else
+            return $this->_options->has($key);
+    }
+
+    /**
+     * @param mixed|null $key
      * @return mixed
      */
     public function getOptions($key = null)
@@ -169,19 +181,31 @@ final class Console extends \Phalcon\Cli\Console
     }
 
     /**
-     * @return array
+     * @param mixed|null $key
+     * @return bool
      */
-    public function getTenancy(): array
+    public function hasTenants($key = null): bool
     {
-        return $this->_tenancy;
+        if (!$key)
+            return !empty($this->_tenants);
+        else
+            return $this->_tenants->has($key);
     }
 
     /**
-     * @param array $_tenancy
+     * @return Collection
      */
-    public function setTenancy(array $_tenancy): void
+    public function getTenants(): Collection
     {
-        $this->_tenancy = $_tenancy;
+        return $this->_tenants;
+    }
+
+    /**
+     * @param Collection $_tenants
+     */
+    public function setTenants(Collection $_tenants): void
+    {
+        $this->_tenants = $_tenants;
     }
 
 }

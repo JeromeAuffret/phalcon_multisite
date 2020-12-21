@@ -3,6 +3,8 @@
 namespace Core\Components;
 
 use Phalcon\Assets\Collection;
+use Phalcon\Mvc\Dispatcher;
+use Phalcon\Mvc\Router;
 
 /**
  * Class View
@@ -22,9 +24,12 @@ final class View extends \Phalcon\Mvc\View
     public function getPartial(string $partialPath, $params = []): string
     {
         $di = $this->getDi();
-        $application = $di->get('application');
 
+        /** @var Application $application */
+        $application = $di->get('application');
+        /** @var Router $router */
         $router = $di->get('router');
+
         $moduleName = $router->getModuleName();
 
         $baseViewPath = $application->getBasePath().'/views';
@@ -91,6 +96,7 @@ final class View extends \Phalcon\Mvc\View
      */
     public function registerTenantAssetsCollection(Collection $collection, $type): Collection
     {
+        /** @var Application $application */
         $application = $this->getDI()->get('application');
         $appPath = $application->getTenantPath().'/assets/';
 
@@ -123,8 +129,12 @@ final class View extends \Phalcon\Mvc\View
     public function registerViewAssetsCollection(Collection $collection, string $type): Collection
     {
         $container = $this->getDI();
+
+        /** @var Application $application */
         $application = $container->get('application');
+        /** @var Dispatcher $application */
         $dispatcher = $container->get('dispatcher');
+        /** @var Config $config */
         $config = $container->get('config');
 
         $moduleName = $dispatcher->getModuleName();

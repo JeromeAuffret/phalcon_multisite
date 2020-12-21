@@ -77,6 +77,13 @@ class AclUserRole implements RoleAware
         return in_array($this->getUserLogin(), $this->super_admin);
     }
 
+
+    /*************************************************************
+     *
+     *                          GETTERS
+     *
+     *************************************************************/
+
     /**
      * @return integer
      */
