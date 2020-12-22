@@ -6,17 +6,7 @@
             </div>
         </div>
 
-        <div id="counter"></div>
-
-        <div class="alert alert-warning" role="alert">
-            <h4 class="alert-heading">Welcome !</h4>
-            <div>you can try the following credentials</div>
-            <ul>
-                <li>Admin role : Login <strong>admin</strong> and password <strong>admin</strong> </li>
-                <li>Demo 1 : Login <strong>demo1</strong> and password <strong>demo1</strong> </li>
-                <li>Demo 2 : Login <strong>demo2</strong> and password <strong>demo2</strong> </li>
-            </ul>
-        </div>
+        <div id="auth_index"></div>
 
         <form method="post">
             <input type="hidden" name="<?php echo $this->security->getTokenKey() ?>" value="<?php echo $this->security->getToken() ?>"/>

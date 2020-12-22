@@ -1,6 +1,14 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
+  <div class="header">
+    <div class="alert alert-warning" role="alert">
+      <h4 class="alert-heading">{{msg}}</h4>
+      <div>you can try the following credentials</div>
+      <ul>
+        <li>Admin role : Login <strong>admin</strong> and password <strong>admin</strong> </li>
+        <li>Demo 1 : Login <strong>demo1</strong> and password <strong>demo1</strong> </li>
+        <li>Demo 2 : Login <strong>demo2</strong> and password <strong>demo2</strong> </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -14,7 +22,7 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  margin: 40px 0 0;
+.header {
+  margin: 15px 0;
 }
 </style>

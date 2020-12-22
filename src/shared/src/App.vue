@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
+  <div>
     <Counter/>
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <HelloWorld msg="Welcome !"/>
   </div>
 </template>
 
