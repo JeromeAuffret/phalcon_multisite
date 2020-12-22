@@ -1,6 +1,6 @@
 <?php
 
-namespace Base\Controllers;
+namespace Core\Controllers;
 
 use Core\Components\Application;
 use Phalcon\Mvc\Controller;
@@ -12,7 +12,7 @@ use Phalcon\Mvc\View;
  * @property Application application
  * @package Controllers
  */
-final class ErrorController extends Controller
+class ErrorController extends Controller
 {
 
     /**

@@ -70,7 +70,7 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
      * @param DiInterface|null $container
      * @param string|null $moduleName
      */
-    public function __construct(?DiInterface $container = null, ?string $moduleName = null)
+    final public function __construct(?DiInterface $container = null, ?string $moduleName = null)
     {
         if (!($container && $moduleName)) return;
 
@@ -141,7 +141,7 @@ abstract class ModuleProvider implements ModuleDefinitionInterface
      *
      * @param DiInterface|null $container
      */
-    private function registerModules(DiInterface $container)
+    public function registerModules(DiInterface $container)
     {
         /** @var AbstractApplication $handler */
         if ($container->get('application')->isCli()) {

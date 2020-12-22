@@ -25,7 +25,6 @@ class DataController extends ControllerBase
     public function initialize()
     {
         parent::initialize();
-
         $this->parseRequestParameters();
     }
 

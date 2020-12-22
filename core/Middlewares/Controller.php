@@ -60,9 +60,9 @@ class Controller extends Injectable
         // Dispatch controller between base and tenant namespace
         $controllerClass = Str::camelize($this->dispatcher->getControllerName()).$this->dispatcher->getHandlerSuffix();
 
-        // Find for protected controller
-        if ($controllerClass === 'ErrorController' || $controllerClass === 'LogoutController') {
-            $controllerNamespace = NamespaceHelper::dispatchClass($controllerClass,'Controllers');
+        // Find for controller in BasePath and bypass module
+        if (class_exists('Core\\Controllers\\'.$controllerClass)) {
+            $controllerNamespace = 'Core\\Controllers\\'.$controllerClass;
         }
         // Dispatch namespace between base and tenant folder
         elseif ($this->dispatcher->getModuleName()) {

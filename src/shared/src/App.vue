@@ -1,14 +1,19 @@
 <template>
   <div id="app">
-    <h1>{{ $store.state.count }}</h1>
-    <button @click="$store.commit('decrement');">-</button>
-    <button @click="$store.commit('increment');">+</button>
+    <Counter/>
+    <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>
 </template>
 
 <script>
+import HelloWorld from './components/HelloWorld.vue'
+import Counter from "@/components/Counter";
+
 export default {
   name: 'App',
-};
+  components: {
+    HelloWorld,
+    Counter
+  }
+}
 </script>
-

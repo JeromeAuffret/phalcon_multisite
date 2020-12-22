@@ -18,7 +18,7 @@ abstract class TenantProvider implements ModuleDefinitionInterface
      *
      * @param DiInterface $container
      */
-    public function __construct(DiInterface $container)
+    final public function __construct(DiInterface $container)
     {
         // Register Autoloader
         $this->registerAutoloaders($container);
