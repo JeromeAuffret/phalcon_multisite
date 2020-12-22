@@ -2,10 +2,10 @@
 
 namespace Core\Middlewares;
 
+use Base\Models\Application;
 use Core\Components\Application as ApplicationComponent;
 use Core\Components\Config;
 use Core\Components\Database;
-use Base\Models\Application;
 use Core\Components\Console;
 use Exception;
 use Phalcon\Cli\Dispatcher;
