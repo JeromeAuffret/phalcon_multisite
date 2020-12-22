@@ -1,32 +1,33 @@
-'use strict'
-
+// 'use strict'
+//
 // const glob = require('glob')
 // const pages = {}
 //
-// glob.sync('./modules/*/src/*/*.js').forEach(path => {
-//     const module = path.split('./modules/')[1].split('/src/')[0]
-//     const page = path.split('/'+module+'/src/')[1].split('/')[0]
-//     const action = path.split('/'+page+'/')[1].split('.js')[0]
-//
-//     const chunk = module + '_' + page + '_' + action;
+// glob.sync('./modules/*/src/*.js').forEach(path => {
+//     const chunk = path.split('./modules/')[1].split('/src/main.js')[0];
 //
 //     pages[chunk] = {
 //         entry: path,
-//         template: 'public/index.html',
-//         title: chunk,
-//         chunks: ['chunk-vendors', 'chunk-common', chunk]
+//         // chunks: ['chunk-vendors', 'chunk-common', chunk]
 //     }
 // })
-
-
+//
 module.exports = {
-    // pages,
-
+    pages: {
+        auth: {
+            // entry for the page
+            entry: 'modules/auth/main.js',
+            // output as dist/index.html
+            filename: 'auth.html',
+            // chunks to include on this page, by default includes
+            // extracted common chunks and vendor chunks.
+            chunks: ['chunk-vendors', 'chunk-common', 'auth']
+        }
+    },
     filenameHashing: false,
     chainWebpack: config => {
         config.plugins.delete('html')
         config.plugins.delete('preload')
         config.plugins.delete('prefetch')
     }
-
 }
