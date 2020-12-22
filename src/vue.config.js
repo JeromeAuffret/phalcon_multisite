@@ -16,7 +16,7 @@ module.exports = {
     pages: {
         auth: {
             // entry for the page
-            entry: 'modules/auth/main.js',
+            entry: 'base/modules/auth/main.js',
             // output as dist/index.html
             filename: 'auth.html',
             // chunks to include on this page, by default includes

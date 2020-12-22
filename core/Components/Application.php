@@ -24,7 +24,7 @@ final class Application extends AbstractApplication
     /**
      * @var string $basePath
      */
-    private $basePath = BASE_PATH . "/src/shared";
+    private $basePath = BASE_PATH . "/src/base";
 
     /**
      * @var string $basePath

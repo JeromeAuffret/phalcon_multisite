@@ -33,7 +33,7 @@ class AssetsController extends Controller
 //        $this->response->setHeader('Cache-Control', 'max-age=1000');
         $this->response->setContentType('application/javascript', 'UTF-8');
         $this->response->setContent(
-            file_get_contents($this->application->getBasePath().'/dist/js/'.$filePath)
+            file_get_contents(BASE_PATH.'/src/dist/js/'.$filePath)
         );
         return $this->response;
     }
@@ -48,7 +48,7 @@ class AssetsController extends Controller
         // Setting up the content type;
         $this->response->setContentType('text/css', 'UTF-8');
         $this->response->setContent(
-            file_get_contents($this->application->getBasePath().'/dist/css/'.$filePath)
+            file_get_contents(BASE_PATH.'/src/dist/css/'.$filePath)
         );
 
         return $this->response;
