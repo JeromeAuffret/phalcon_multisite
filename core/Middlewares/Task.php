@@ -25,9 +25,9 @@ use ReflectionException;
  */
 class Task extends Injectable
 {
-
     /**
-     * Log start script
+     * Dispatch correct task namespace in dispatcher
+     * Throw a dispatch exception in case of invalid arguments
      *
      * @param Event $event
      * @param Dispatcher $dispatcher
@@ -59,11 +59,12 @@ class Task extends Injectable
             DispatchException::EXCEPTION_HANDLER_NOT_FOUND
         );
 
+        // Then register correct namespace in dispatcher service
         $this->dispatcher->setNamespaceName((new \ReflectionClass($taskNamespace))->getNamespaceName());
     }
 
     /**
-     * Log start module
+     * Close task prompt section
      *
      * @param Event $event
      * @param Dispatcher $dispatcher

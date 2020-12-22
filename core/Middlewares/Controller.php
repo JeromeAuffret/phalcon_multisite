@@ -24,9 +24,9 @@ use ReflectionException;
  */
 class Controller extends Injectable
 {
-
     /**
-     * Dispatch controller between Base and Tenant namespaces
+     * Dispatch correct controller namespace in dispatcher
+     * Throw a dispatch exception in case of invalid arguments
      *
      * @param Event $event
      * @param Dispatcher $dispatcher
@@ -37,32 +37,37 @@ class Controller extends Injectable
     public function beforeDispatch(Event $event, Dispatcher $dispatcher)
     {
         // Set default namespace for mvc dispatch
-        if ($this->config->get('tenantType') === 'modules') {
+        if ($this->config->get('tenantType') === 'modules')
+        {
             // If module does not exist in dispatcher we set defaultModule instead
             if (!$this->dispatcher->getModuleName()) {
                 $this->dispatcher->setModuleName(
                     $this->config->get('defaultModule')
                 );
             }
+
             // Register default namespace
             $this->dispatcher->setDefaultNamespace($this->application->getBaseModuleNamespace(
                 $this->dispatcher->getModuleName()
             ));
-        } else {
+        }
+
+        // Set base namespace as default for simple application
+        if ($this->config->get('tenantType') === 'simple') {
             $this->dispatcher->setDefaultNamespace($this->application->getBaseNamespace());
         }
 
         // Dispatch controller between base and tenant namespace
         $controllerClass = Str::camelize($this->dispatcher->getControllerName()).$this->dispatcher->getHandlerSuffix();
 
-        // Dispatch namespace between base and tenant folder
+        // Find for protected controller
         if ($controllerClass === 'ErrorController' || $controllerClass === 'LogoutController') {
             $controllerNamespace = NamespaceHelper::dispatchClass($controllerClass,'Controllers');
         }
+        // Dispatch namespace between base and tenant folder
         elseif ($this->dispatcher->getModuleName()) {
             $controllerNamespace = NamespaceHelper::dispatchModuleClass($controllerClass, $this->dispatcher->getModuleName(),'Controllers');
-        }
-        else {
+        } else {
             $controllerNamespace = NamespaceHelper::dispatchClass($controllerClass,'Controllers');
         }
 
@@ -72,6 +77,7 @@ class Controller extends Injectable
             DispatchException::EXCEPTION_HANDLER_NOT_FOUND
         );
 
+        // Then register correct namespace in dispatcher service
         $this->dispatcher->setNamespaceName((new \ReflectionClass($controllerNamespace))->getNamespaceName());
     }
 
