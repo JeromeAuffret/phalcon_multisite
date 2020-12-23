@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="welcome-alert">
     <div class="alert alert-warning" role="alert">
       <h4 class="alert-heading">{{msg}}</h4>
       <div>you can try the following credentials</div>
@@ -22,7 +22,7 @@ export default {
 </script>
 
 <style scoped>
-.header {
+.welcome-alert {
   margin: 15px 0;
 }
 </style>
