@@ -75,3 +75,29 @@ Additionally, you can add a `config.php`, which is ignored from git, to store se
 To deploy the default main database, run :
 
     php vendor/bin/phalcon-migrations migration run --config=src/config/main.php
+
+
+# Front End
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

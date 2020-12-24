@@ -1,30 +1,31 @@
 <div class="container">
-    <div class="col-lg-6 col-md-8 col-sm-12 mx-auto">
-        <div class="header">
-            <div class="media">
-                <img src="<?php echo $this->url->get('img/logo-large.png'); ?>" alt="Login Logo" class="mx-auto" style="max-width: 150px;">
-            </div>
-        </div>
-
-        <div id="auth_index"></div>
-
-        <form method="post">
-            <input type="hidden" name="<?php echo $this->security->getTokenKey() ?>" value="<?php echo $this->security->getToken() ?>"/>
-
-            <div class="form-group">
-                <label for="login">Email</label>
-                <input id="login" type="text" name="login" class="form-control" required />
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input id="password" type="password" name="password" class="form-control" required />
-            </div>
-
-            <div class="row btn-container">
-                <button type="submit" class="btn btn-primary">Sign In</button>
-                <button type="button" class="btn btn-secondary">Forgot Password</button>
-            </div>
-        </form>
+  <div class="col-lg-6 col-md-8 col-sm-12 mx-auto">
+    <div class="header">
+      <div class="media">
+        <img src="<?php echo $this->url->get('img/logo-large.png'); ?>" alt="Login Logo" class="mx-auto" style="max-width: 150px;">
+      </div>
     </div>
+
+    <div id="auth_index"></div>
+    <hello-world></hello-world>
+
+    <form method="post">
+      <input type="hidden" name="<?php echo $this->security->getTokenKey() ?>" value="<?php echo $this->security->getToken() ?>"/>
+
+      <div class="form-group">
+        <label for="login">Email</label>
+        <input id="login" type="text" name="login" class="form-control" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" class="form-control" required />
+      </div>
+
+      <div class="row btn-container">
+        <button type="submit" class="btn btn-primary">Sign In</button>
+        <button type="button" class="btn btn-secondary">Forgot Password</button>
+      </div>
+    </form>
+  </div>
 </div>

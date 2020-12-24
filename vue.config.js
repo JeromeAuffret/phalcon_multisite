@@ -13,13 +13,12 @@
 // })
 
 module.exports = {
-    // pages: {
-    //     auth: {
-    //         entry: 'base/modules/auth/main.js',
-    //         filename: 'shared/auth/auth.html',
-    //         chunks: ['chunk-vendors', 'chunk-common', 'shared/auth']
-    //     }
-    // },
+    pages: {
+        auth: {
+            entry: 'src/base/modules/auth/main.js',
+            chunks: ['chunk-vendors', 'chunk-common', 'auth']
+        }
+    },
     filenameHashing: false,
     // chainWebpack: config => {
     //     config.plugins.delete('html')

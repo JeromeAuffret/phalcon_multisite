@@ -26,15 +26,25 @@ class AssetsController extends Controller
 
     /**
      * @param string $filePath
+     * @param string|null $subFolder
+     * @return Response|ResponseInterface
      */
-    public function jsAction(string $filePath)
+    public function jsAction(string $filePath, ?string $subFolder = null)
     {
+        $file = BASE_PATH.'/dist/'.($subFolder ?: 'js').'/'.$filePath;
+
         // Setting up the content type
 //        $this->response->setHeader('Cache-Control', 'max-age=1000');
         $this->response->setContentType('application/javascript', 'UTF-8');
-        $this->response->setContent(
-            file_get_contents(BASE_PATH.'/src/dist/js/'.$filePath)
-        );
+
+        if (file_exists($file)) {
+            $this->response->setContent(
+                file_get_contents($file)
+            );
+        } else {
+            $this->response->setStatusCode(404);
+        }
+
         return $this->response;
     }
 
@@ -45,11 +55,18 @@ class AssetsController extends Controller
      */
     public function cssAction(string $filePath)
     {
+        $file = BASE_PATH.'/dist/css/'.$filePath;
+
         // Setting up the content type;
         $this->response->setContentType('text/css', 'UTF-8');
-        $this->response->setContent(
-            file_get_contents(BASE_PATH.'/src/dist/css/'.$filePath)
-        );
+
+        if (file_exists($file)) {
+            $this->response->setContent(
+                file_get_contents($file)
+            );
+        } else {
+            $this->response->setStatusCode(404);
+        }
 
         return $this->response;
     }

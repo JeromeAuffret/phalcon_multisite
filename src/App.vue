@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import HelloWorld from '@/components/HelloWorld.vue'
 import Counter from "@/components/Counter";
+import HelloWorld from "@/base/modules/auth/components/HelloWorld";
 
 export default {
   name: 'App',

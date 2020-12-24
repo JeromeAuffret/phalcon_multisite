@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:components": "vue-cli-service build --target wc --dest dist/base --name base-auth src/base/modules/auth/components/HelloWorld.vue",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
