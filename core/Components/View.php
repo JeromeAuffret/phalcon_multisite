@@ -32,11 +32,11 @@ final class View extends \Phalcon\Mvc\View
 
         $moduleName = $router->getModuleName();
 
-        $baseViewPath = $application->getBasePath().'//views';
-        $baseModuleViewPath = $application->getBaseModulePath($moduleName).'//views';
+        $baseViewPath = $application->getBasePath().'/pages';
+        $baseModuleViewPath = $application->getBaseModulePath($moduleName).'/pages';
 
-        $appViewPath = $application->getTenantPath().'//views';
-        $appModuleViewPath = $application->getTenantModulePath($moduleName).'//views';
+        $appViewPath = $application->getTenantPath().'/pages';
+        $appModuleViewPath = $application->getTenantModulePath($moduleName).'/pages';
         
         $viewArray = explode('/', $partialPath);
         $partial = end($viewArray);

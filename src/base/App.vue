@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Counter from "@/components/Counter";
+import Counter from "@/base/components/Counter";
 import HelloWorld from "@/base/modules/auth/components/HelloWorld";
 
 export default {

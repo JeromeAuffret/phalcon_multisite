@@ -31,7 +31,7 @@ class AssetsController extends Controller
      */
     public function jsAction(string $filePath, ?string $subFolder = null)
     {
-        $file = BASE_PATH.'/dist/'.($subFolder ?: 'js').'/'.$filePath;
+        $file = BASE_PATH.'/src/base/dist/'.$filePath;
 
         // Setting up the content type
 //        $this->response->setHeader('Cache-Control', 'max-age=1000');

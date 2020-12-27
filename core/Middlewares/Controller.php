@@ -136,11 +136,11 @@ class Controller extends Injectable
     {
         $moduleName = $this->dispatcher->getModuleName();
 
-        $baseViewPath = $this->application->getBasePath().'//views/';
-        $baseModuleViewPath = $this->application->getBaseModulePath($moduleName).'//views';
+        $baseViewPath = $this->application->getBasePath().'/pages/';
+        $baseModuleViewPath = $this->application->getBaseModulePath($moduleName).'/pages';
 
-        $appViewPath = $this->application->getTenantPath().'//views';
-        $appModuleViewPath = $this->application->getTenantModulePath($moduleName).'//views';
+        $appViewPath = $this->application->getTenantPath().'/pages';
+        $appModuleViewPath = $this->application->getTenantModulePath($moduleName).'/pages';
 
         $this->dispatchMainView($baseViewPath, $baseModuleViewPath, $appViewPath, $appModuleViewPath);
         $this->dispatchLayoutDir($baseViewPath, $baseModuleViewPath, $appViewPath, $appModuleViewPath);

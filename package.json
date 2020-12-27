@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build:components": "vue-cli-service build --target wc --dest dist/base src/base/modules/auth/components/*.vue",
+    "build:tenant": "vue-cli-service build --target wc --dest $DEST $ENTRY",
+    "build:lib": "vue-cli-service build --target wc-async --name base-auth --dest src/base/dist src/base/components/*.vue",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

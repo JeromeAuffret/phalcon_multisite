@@ -16,9 +16,13 @@
     <script src="https://unpkg.com/vue"></script>
 
     <link href="" rel="preload" as="script">
-    <link href="<?php echo $this->url->get('assets/js/chunk-vendors.js') ?>" rel="preload" as="script">
-    <link href="<?php echo $this->url->get('assets/js/auth.js') ?>" rel="preload" as="script">
+<!--    <link href="--><?php //echo $this->url->get('assets/js/chunk-vendors.js') ?><!--" rel="preload" as="script">-->
+<!--    <link href="--><?php //echo $this->url->get('assets/js/app.js') ?><!--" rel="preload" as="script">-->
+<!--    <link href="--><?php //echo $this->url->get('assets/js/auth.js') ?><!--" rel="preload" as="script">-->
     <link href="<?php echo $this->url->get('assets/js/hello-world.js/base') ?>" rel="preload" as="script">
+<!--    <link href="--><?php //echo $this->url->get('assets/js/shared.umd.js/base') ?><!--" rel="preload" as="script">-->
+    <link href="<?php echo $this->url->get('assets/js/shared.umd.js/base') ?>" rel="preload" as="script">
+<!--    <link href="--><?php //echo $this->url->get('assets/js/base-auth.js/base') ?><!--" rel="preload" as="script">-->
 
     <link rel="stylesheet" type="text/css" href="<?php echo $this->url->get('assets/css/auth.css') ?>">
 
@@ -31,8 +35,12 @@
 
 <?php //$this->assets->outputCss('view_script'); ?>
 
-<script src="<?php echo $this->url->get('assets/js/chunk-vendors.js') ?>"></script>
-<script src="<?php echo $this->url->get('assets/js/auth.js') ?>"></script>
+<!--<script src="--><?php //echo $this->url->get('assets/js/chunk-vendors.js') ?><!--"></script>-->
+<!--<script src="--><?php //echo $this->url->get('assets/js/app.js') ?><!--"></script>-->
+<!--<script src="--><?php //echo $this->url->get('assets/js/auth.js') ?><!--"></script>-->
 <script src="<?php echo $this->url->get('assets/js/hello-world.js/base') ?>"></script>
+<!--<script src="--><?php //echo $this->url->get('assets/js/shared.umd.js/base') ?><!--"></script>-->
+  <script src="<?php echo $this->url->get('assets/js/shared.umd.js/base') ?>"></script>
+<!--  <script src="--><?php //echo $this->url->get('assets/js/base-auth.js/base') ?><!--"></script>-->
 
 </html>

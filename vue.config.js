@@ -13,13 +13,17 @@
 // })
 
 module.exports = {
-    pages: {
-        auth: {
-            entry: 'src/base/modules/auth/main.js',
-            chunks: ['chunk-vendors', 'chunk-common', 'auth']
-        }
-    },
+    // pages: {
+    //     auth: {
+    //         entry: 'src/base/modules/auth/main.js',
+    //         chunks: ['chunk-vendors', 'chunk-common', 'auth']
+    //     }
+    // },
     filenameHashing: false,
+    configureWebpack: config => {
+        config.output.filename = 'ittus.[name].js';
+
+    },
     // chainWebpack: config => {
     //     config.plugins.delete('html')
     //     config.plugins.delete('preload')
