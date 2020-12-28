@@ -76,10 +76,15 @@ class Cli extends Injectable
             }
 
             // Run task for every registered tenants
-            else {
+            else if ($this->console->hasTenants()) {
                 foreach ($this->console->getTenants() as $tenantSlug) {
                     $this->dispatchTenantTask($tenantSlug);
                 }
+            }
+
+            // If no tenants are registered, we dispatch base tasks
+            else {
+                $this->dispatchBaseTask();
             }
         }
         catch (Throwable $e) {
@@ -131,6 +136,47 @@ class Cli extends Injectable
         $module = $this->console->getOptions('module');
         if ($module) {
             $this->dispatcher->setModuleName($module);
+        }
+    }
+
+    /**
+     * TODO usefull ?
+     *
+     * Dispatch task for each registered tenant
+     *
+     * We reset dispatcher values for each tenant
+     * It allow to correctly dispatch namespaces in beforeDispatch event
+     */
+    private function dispatchBaseTask()
+    {
+        try {
+            $this->dispatcher->setNamespaceName(
+                $this->application->getBaseNamespace()
+            );
+
+            if ($this->console->getTask()) {
+                $this->dispatcher->setTaskName($this->console->getTask());
+            }
+
+            if ($this->console->getAction()) {
+                $this->dispatcher->setActionName($this->console->getAction());
+            }
+
+            $this->dispatcher->setParams(
+                $this->console->getParams()->toArray()
+            );
+
+            $this->dispatcher->setOptions(
+                $this->console->getOptions()->toArray()
+            );
+
+            // Dispatch task for each tenant
+            $this->dispatcher->dispatch();
+        }
+        catch (Throwable $e) {
+            echo $e->getMessage() . PHP_EOL;
+            echo $e->getTraceAsString() . PHP_EOL;
+            echo '==========================================================' . PHP_EOL;
         }
     }
 

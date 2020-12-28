@@ -29,7 +29,7 @@ final class Application extends AbstractApplication
     /**
      * @var string $basePath
      */
-    private $tenantBasePath = BASE_PATH . "/src/apps";
+    private $tenantRootPath = BASE_PATH . "/src/apps";
 
     /**
      * @var string $tenantClass
@@ -49,7 +49,7 @@ final class Application extends AbstractApplication
     /**
      * @var string $tenantClass
      */
-    private $moduleBaseDir = 'modules';
+    private $moduleRootDir = 'modules';
 
     /**
      * @var Collection $tenant
@@ -399,7 +399,13 @@ final class Application extends AbstractApplication
      */
     public function getTenantNamespace(): ?string
     {
-        return $this->tenantNamespace ?: Str::camelize($this->tenantSlug);
+        if ($this->tenantNamespace) {
+            return $this->tenantNamespace;
+        } elseif ($this->tenantSlug) {
+            return Str::camelize($this->tenantSlug);
+        } else {
+            return $this->getBaseNamespace();
+        }
     }
 
     /**
@@ -407,7 +413,13 @@ final class Application extends AbstractApplication
      */
     public function getTenantPath(): ?string
     {
-        return $this->tenantPath ?: ($this->tenantBasePath.'/'.$this->tenantSlug);
+        if ($this->tenantPath) {
+            return $this->tenantPath;
+        } elseif ($this->tenantSlug) {
+            return $this->tenantRootPath.'/'.$this->tenantSlug;
+        } else {
+            return $this->getBasePath();
+        }
     }
 
     /**
@@ -417,7 +429,7 @@ final class Application extends AbstractApplication
     public function getTenantModulePath(?string $moduleName): ?string
     {
         if (!$moduleName) return null;
-        return $this->getTenantPath().'/'.$this->moduleBaseDir.'/'.$moduleName;
+        return $this->getTenantPath().'/'.$this->moduleRootDir.'/'.$moduleName;
     }
 
     /**
@@ -453,7 +465,7 @@ final class Application extends AbstractApplication
     public function getBaseModulePath(?string $moduleName): ?string
     {
         if (!$moduleName) return null;
-        return $this->getBasePath().'/'.$this->moduleBaseDir.'/'.$moduleName;
+        return $this->getBasePath().'/'.$this->moduleRootDir.'/'.$moduleName;
     }
 
     /**

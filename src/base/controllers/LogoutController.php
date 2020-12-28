@@ -1,8 +1,8 @@
 <?php
 
-namespace Core\Controllers;
+namespace Base\Controllers;
 
-use Phalcon\Mvc\Controller;
+use Core\Controllers\Controller;
 
 /**
  * Class LogoutController

@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --dest src/base/dist",
     "build:tenant": "vue-cli-service build --target wc --dest $DEST $ENTRY",
-    "build:lib": "vue-cli-service build --target wc-async --name base-auth --dest src/base/dist src/base/components/*.vue",
+    "build:lib": "vue-cli-service build --target wc --dest src/base/dist --name auth 'src/base/modules/auth/components/*.vue'",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -17,9 +17,9 @@
     "vuex-shared-mutations": "^1.0.2"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
+    "@vue/cli-plugin-babel": "~4.5.9",
+    "@vue/cli-plugin-eslint": "~4.5.9",
+    "@vue/cli-service": "~4.5.9",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",

@@ -41,7 +41,7 @@ final class Console extends \Phalcon\Cli\Console
     /**
      * @var Collection
      */
-    protected $_tenants = [];
+    protected $_tenants;
 
 
     /**
@@ -193,9 +193,9 @@ final class Console extends \Phalcon\Cli\Console
     }
 
     /**
-     * @return Collection
+     * @return Collection|null
      */
-    public function getTenants(): Collection
+    public function getTenants(): ?Collection
     {
         return $this->_tenants;
     }

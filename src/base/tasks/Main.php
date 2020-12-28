@@ -1,17 +1,11 @@
 <?php
 
-
 namespace Base\Tasks;
 
-use Core\Components\Application;
-use Core\Components\Console;
-use Phalcon\Cli\Task;
+use Core\Tasks\Task;
 
 /**
  * Class TestTask
- * @property Console $console
- * @property Application $application
- * @property Console $config
  * @package Core\tasks
  */
 class Main extends Task

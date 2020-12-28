@@ -4,9 +4,9 @@
       <h4 class="alert-heading">{{msg}}</h4>
       <div>you can try the following credentials</div>
       <ul>
-        <li>Admin role : Login <strong>admin</strong> and password <strong>admin</strong> </li>
-        <li>Demo 1 : Login <strong>demo1</strong> and password <strong>demo1</strong> </li>
-        <li>Demo 2 : Login <strong>demo2</strong> and password <strong>demo2</strong> </li>
+        <li>Admin role : Login <strong>admin</strong> and password <strong>admin</strong></li>
+        <li>Demo 1 : Login <strong>demo1</strong> and password <strong>demo1</strong></li>
+        <li>Demo 2 : Login <strong>demo2</strong> and password <strong>demo2</strong></li>
       </ul>
     </div>
   </div>

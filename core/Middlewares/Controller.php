@@ -61,8 +61,8 @@ class Controller extends Injectable
         $controllerClass = Str::camelize($this->dispatcher->getControllerName()).$this->dispatcher->getHandlerSuffix();
 
         // Find for controller in BasePath and bypass module
-        if (class_exists('Core\\Controllers\\'.$controllerClass)) {
-            $controllerNamespace = 'Core\\Controllers\\'.$controllerClass;
+        if (class_exists('Base\\Controllers\\'.$controllerClass)) {
+            $controllerNamespace = 'Base\\Controllers\\'.$controllerClass;
         }
         // Dispatch namespace between base and tenant folder
         elseif ($this->dispatcher->getModuleName()) {

@@ -27,7 +27,7 @@ vendor/
 .DS_Store
 node_modules
 /dist
-/**/dist
+**/dist
 
 # local env files
 .env.local

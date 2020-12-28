@@ -16,15 +16,19 @@
     <script src="https://unpkg.com/vue"></script>
 
     <link href="" rel="preload" as="script">
-<!--    <link href="--><?php //echo $this->url->get('assets/js/chunk-vendors.js') ?><!--" rel="preload" as="script">-->
-<!--    <link href="--><?php //echo $this->url->get('assets/js/app.js') ?><!--" rel="preload" as="script">-->
-<!--    <link href="--><?php //echo $this->url->get('assets/js/auth.js') ?><!--" rel="preload" as="script">-->
-    <link href="<?php echo $this->url->get('assets/js/hello-world.js/base') ?>" rel="preload" as="script">
-<!--    <link href="--><?php //echo $this->url->get('assets/js/shared.umd.js/base') ?><!--" rel="preload" as="script">-->
-    <link href="<?php echo $this->url->get('assets/js/shared.umd.js/base') ?>" rel="preload" as="script">
-<!--    <link href="--><?php //echo $this->url->get('assets/js/base-auth.js/base') ?><!--" rel="preload" as="script">-->
+    <link href="<?php echo $this->url->get('assets/js/chunk-vendors/base') ?>" rel="preload" as="script">
+<!--<link href="--><?php //echo $this->url->get('assets/js/app.js') ?><!--" rel="preload" as="script">-->
+<link href="<?php echo $this->url->get('assets/js/auth_index/base') ?>" rel="preload" as="script">
+<link href="<?php echo $this->url->get('assets/js/auth_application/base') ?>" rel="preload" as="script">
+<!--<link href="--><?php //echo $this->url->get('assets/js/hello-world.js/base') ?><!--" rel="preload" as="script">-->
+<!--<link href="--><?php //echo $this->url->get('assets/js/shared.umd.js/base') ?><!--" rel="preload" as="script">-->
+<!--<link href="--><?php //echo $this->url->get('assets/js/auth.common/base') ?><!--" rel="preload" as="script">-->
+<!--<link href="--><?php //echo $this->url->get('assets/js/auth.umd/base') ?><!--" rel="preload" as="script">-->
+<!--    <link href="--><?php //echo $this->url->get('assets/js/base-auth/base') ?><!--" rel="preload" as="script">-->
+<!--    <link href="--><?php //echo $this->url->get('assets/js/hello-world/base') ?><!--" rel="preload" as="script">-->
+<!--    <link href="--><?php //echo $this->url->get('assets/js/auth/base') ?><!--" rel="preload" as="script">-->
 
-    <link rel="stylesheet" type="text/css" href="<?php echo $this->url->get('assets/css/auth.css') ?>">
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->url->get('assets/css/auth/base') ?>">
 
     <?php $this->assets->outputCss('view_style'); ?>
 </head>
@@ -35,12 +39,16 @@
 
 <?php //$this->assets->outputCss('view_script'); ?>
 
-<!--<script src="--><?php //echo $this->url->get('assets/js/chunk-vendors.js') ?><!--"></script>-->
+<script src="<?php echo $this->url->get('assets/js/chunk-vendors/base') ?>"></script>
 <!--<script src="--><?php //echo $this->url->get('assets/js/app.js') ?><!--"></script>-->
-<!--<script src="--><?php //echo $this->url->get('assets/js/auth.js') ?><!--"></script>-->
-<script src="<?php echo $this->url->get('assets/js/hello-world.js/base') ?>"></script>
+<script src="<?php echo $this->url->get('assets/js/auth_index/base') ?>"></script>
+<script src="<?php echo $this->url->get('assets/js/auth_application/base') ?>"></script>
+<!--<script src="--><?php //echo $this->url->get('assets/js/hello-world.js/base') ?><!--"></script>-->
 <!--<script src="--><?php //echo $this->url->get('assets/js/shared.umd.js/base') ?><!--"></script>-->
-  <script src="<?php echo $this->url->get('assets/js/shared.umd.js/base') ?>"></script>
-<!--  <script src="--><?php //echo $this->url->get('assets/js/base-auth.js/base') ?><!--"></script>-->
+<!--<script src="--><?php //echo $this->url->get('assets/js/auth.common/base') ?><!--"></script>-->
+<!--<script src="--><?php //echo $this->url->get('assets/js/auth.umd/base') ?><!--"></script>-->
+<!--  <script src="--><?php //echo $this->url->get('assets/js/base-auth/base') ?><!--"></script>-->
+<!--  <script src="--><?php //echo $this->url->get('assets/js/hello-world/base') ?><!--"></script>-->
+<!--  <script src="--><?php //echo $this->url->get('assets/js/auth/base') ?><!--"></script>-->
 
 </html>
