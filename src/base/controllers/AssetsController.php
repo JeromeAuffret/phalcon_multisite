@@ -13,7 +13,6 @@ use Phalcon\Http\ResponseInterface;
  */
 class AssetsController extends Controller
 {
-
     /**
      *  Disabled view for assets delivery controller
      */
@@ -29,11 +28,11 @@ class AssetsController extends Controller
      */
     public function jsAction(string $fileName, ?string $subFolder = null)
     {
-        $tenantPath = $this->application->getTenantPath() ?: $this->application->getBasePath();
-        $basePath = $this->application->getTenantPath() ?: $this->application->getBasePath();
+        $basePath = $this->application->getBasePath();
+        $tenantPath = $this->application->getTenantPath() ?: $basePath;
 
+        $this->response->setHeader('Cache-Control', 'max-age=43200');
         $this->response->setContentType('application/javascript', 'UTF-8');
-        // $this->response->setHeader('Cache-Control', 'max-age=1000');
 
         if (file_exists($tenantPath.'/dist/js/'.$fileName)) {
             $this->response->setContent(file_get_contents($tenantPath.'/dist/js/'.$fileName));
@@ -55,11 +54,11 @@ class AssetsController extends Controller
      */
     public function cssAction(string $fileName)
     {
-        $tenantPath = $this->application->getTenantPath() ?: $this->application->getBasePath();
-        $basePath = $this->application->getTenantPath() ?: $this->application->getBasePath();
+        $basePath = $this->application->getBasePath();
+        $tenantPath = $this->application->getTenantPath() ?: $basePath;
 
+        $this->response->setHeader('Cache-Control', 'max-age=43200');
         $this->response->setContentType('text/css', 'UTF-8');
-        // $this->response->setHeader('Cache-Control', 'max-age=1000');
 
         if (file_exists($tenantPath.'/dist/css/'.$fileName)) {
             $this->response->setContent(file_get_contents($tenantPath.'/dist/css/'.$fileName));
@@ -73,4 +72,5 @@ class AssetsController extends Controller
 
         return $this->response;
     }
+
 }

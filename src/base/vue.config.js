@@ -13,20 +13,41 @@
 // })
 
 module.exports = {
+
+    publicPath: './public',
+
     pages: {
-        auth_index: 'src/base/modules/auth/pages/index/index.js',
-        auth_application:  'src/base/modules/auth/pages/application/index.js'
+        auth_index: 'src/base/modules/auth/pages/index/index.js'
     },
-    publicPath: 'src/base/public',
-    // filenameHashing: false,
+
     chainWebpack: config => {
+        const options = module.exports
+        const pages = options.pages
+        const pageKeys = Object.keys(pages)
+
         config.plugins.delete('html')
         config.plugins.delete('preload')
         config.plugins.delete('prefetch')
 
-        // config.plugin('copy').tap(([options])=> {
-        //     options[0].ignore.push('temp/**/*');
-        //     return [options];
-        // })
+        // https://stackoverflow.com/questions/51242317/how-to-split-vue-cli-3-pages-vendor-file/61089300#61089300
+        config.optimization
+            .splitChunks({
+                cacheGroups: {
+                    ...pageKeys.map(key => ({
+                        name: `${key}-chunk-vendors`,
+                        priority: -11,
+                        chunks: chunk => chunk.name === key,
+                        enforce: true
+                    })),
+                    common: {
+                        name: 'chunk-common',
+                        priority: -20,
+                        chunks: 'initial',
+                        minChunks: 2,
+                        reuseExistingChunk: true,
+                        enforce: true,
+                    },
+                },
+            })
     }
 }

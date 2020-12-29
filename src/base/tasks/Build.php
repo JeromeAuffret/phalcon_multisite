@@ -10,7 +10,6 @@ use Core\Tasks\Task;
  */
 class Build extends Task
 {
-
     protected $vueConfig = 'vue.config.js';
 
     protected $buildDir = 'dist';

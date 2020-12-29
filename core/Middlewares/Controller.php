@@ -249,8 +249,6 @@ class Controller extends Injectable
     public function setupAssetsCollection()
     {
         $this->setMainCollection();
-        $this->setFrameworkCollection();
-        $this->setTenantCollection();
         $this->setViewCollection();
     }
 
@@ -265,60 +263,6 @@ class Controller extends Injectable
 
         $this->assets->collection('main_script')
             ->join(true);
-    }
-
-    /**
-     * Initialize application libraries
-     */
-    public function setFrameworkCollection()
-    {
-        $frk_style = $this->assets->collection('frk_style');
-        $frk_script = $this->assets->collection('frk_script');
-
-        $frk_style
-            ->setTargetPath('temp/application.css')
-            ->setTargetUri('temp/application.css')
-            ->setLocal(true)
-            ->join(true)
-            ->addFilter(new Cssmin());
-
-        $frk_script
-            ->setTargetPath('temp/application.js')
-            ->setTargetUri('temp/application.js')
-            ->setLocal(true)
-            ->join(true)
-            ->addFilter(new Jsmin());
-    }
-
-    /**
-     * Initialize application general assets defined in application asset's folder
-     */
-    public function setTenantCollection()
-    {
-//        $assetPath = $this->getTenantAssetPath();
-//
-//        $app_style = $this->assets->collection('app_style');
-//        $app_script = $this->assets->collection('app_script');
-//
-//        $app_style
-//            ->setTargetPath($assetPath.'/app.css')
-//            ->setTargetUri($assetPath.'/app.css')
-//            ->setLocal(false)
-//            ->join(true)
-//            ->addFilter(new Cssmin());
-//
-//        $app_script
-//            ->setTargetPath($assetPath.'/index.js')
-//            ->setTargetUri($assetPath.'/index.js')
-//            ->setLocal(false)
-//            ->join(true)
-//            ->addFilter(new Jsmin());
-//
-//        /**
-//         * Load specific view assets base on routing process
-//         */
-//        $this->view->registerTenantAssetsCollection($app_style, 'css');
-//        $this->view->registerTenantAssetsCollection($app_script, 'js');
     }
 
     /**
@@ -341,31 +285,30 @@ class Controller extends Injectable
         if ($tenantPath) {
             foreach (glob($tenantPath.'/dist/js/*.js') as $file) {
                 $filename = explode('.', basename($file))[0];
-                if ($filename === $pageFile || $filename === 'chunk-vendors') {
+                if ($filename === $pageFile || $filename === $pageFile.'-chunk-vendors' || $filename === 'chunk-vendors') {
                     if (empty($assetsJs[$filename])) $assetsJs[$filename] = $file;
                 }
             }
 
             foreach (glob($tenantPath.'/dist/css/*.css') as $file) {
                 $filename = explode('.', basename($file))[0];
-                if ($filename === $pageFile) {
+                if ($filename === $pageFile || $filename === $pageFile.'-chunk-vendors' || $filename === 'chunk-vendors') {
                     if (empty($assetsCss[$filename])) $assetsCss[$filename] = $file;
                 }
             }
         }
 
-        if ($basePath)
-        {
+        if ($basePath) {
             foreach (glob($basePath.'/dist/js/*.js') as $file) {
                 $filename = explode('.', basename($file))[0];
-                if ($filename === $pageFile || $filename === 'chunk-vendors') {
+                if ($filename === $pageFile || $filename === $pageFile.'-chunk-vendors' || $filename === 'chunk-vendors') {
                     if (empty($assetsJs[$filename])) $assetsJs[$filename] = $file;
                 }
             }
 
             foreach (glob($basePath.'/dist/css/*.css') as $file) {
                 $filename = explode('.', basename($file))[0];
-                if ($filename === $pageFile) {
+                if ($filename === $pageFile || $filename === $pageFile.'-chunk-vendors' || $filename === 'chunk-vendors') {
                     if (empty($assetsCss[$filename])) $assetsCss[$filename] = $file;
                 }
             }
