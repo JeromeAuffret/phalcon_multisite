@@ -52,6 +52,11 @@ final class Application extends AbstractApplication
     private $moduleRootDir = 'modules';
 
     /**
+     * @var string $tenantClass
+     */
+    private $pagesDir = 'pages';
+
+    /**
      * @var Collection $tenant
      */
     private $tenant = null;
@@ -146,7 +151,7 @@ final class Application extends AbstractApplication
      * @param Collection $module
      * @param string $moduleName
      */
-    public function instantiateModuleProvider(Collection $module, string $moduleName)
+    private function instantiateModuleProvider(Collection $module, string $moduleName)
     {
         $moduleNamespace = preg_replace('/\\\\'.$this->moduleClass.'$/', '', $module->get('className'));
         $modulePath = preg_replace('/\/'.$this->moduleClass.'.php$/', '', $module->get('path'));
@@ -395,7 +400,7 @@ final class Application extends AbstractApplication
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getTenantNamespace(): ?string
     {
@@ -404,12 +409,12 @@ final class Application extends AbstractApplication
         } elseif ($this->tenantSlug) {
             return Str::camelize($this->tenantSlug);
         } else {
-            return $this->getBaseNamespace();
+            return null;
         }
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getTenantPath(): ?string
     {
@@ -418,7 +423,7 @@ final class Application extends AbstractApplication
         } elseif ($this->tenantSlug) {
             return $this->tenantRootPath.'/'.$this->tenantSlug;
         } else {
-            return $this->getBasePath();
+            return null;
         }
     }
 
@@ -476,6 +481,14 @@ final class Application extends AbstractApplication
     {
         if (!$moduleName) return null;
         return (!empty($this->getBaseNamespace()) ? $this->getBaseNamespace().'\\' : '') . $this->moduleBaseNamespace.'\\'.Str::camelize($moduleName);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPagesDir(): string
+    {
+        return $this->pagesDir;
     }
 
 }

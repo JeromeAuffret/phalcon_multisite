@@ -92,6 +92,7 @@ final class NamespaceHelper
 
         return $namespace;
     }
+
     /**
      * Helper method to find Tenant\Namespace from Base\Namespace
      * Return parameters if class is not correctly registered

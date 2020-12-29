@@ -1,29 +1,41 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        
-        <meta name="description" content="Phalcon Multisite">
-        <meta name="keywords" content="phalcon multisite">
-        <meta name="author" content="Lacji">
-        
-        <title>Phalcon Multi Sites</title>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="shortcut icon" type="image/x-icon" href="<?php echo $this->url->get('public/img/favicon.png')?>"/>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <meta name="description" content="Phalcon Multisite">
+    <meta name="keywords" content="phalcon multisite">
+    <meta name="author" content="jerome.auffret.ja@gmail.com">
 
-        <?php $this->assets->outputCss('view_style'); ?>
-    </head>
+    <title>Phalcon Multisite</title>
 
-    <body style="min-height: 100vh">
-        <?php echo $this->getContent(); ?>
+    <link rel="shortcut icon" type="image/x-icon" href="<?php echo $this->url->get('public/favicon.ico')?>"/>
 
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-        <?php $this->assets->outputJs('view_script'); ?>
-    </body>
+    <link href="<?php echo $this->url->get('assets/js/chunk-vendors/base') ?>" rel="preload" as="script">
+    <link href="<?php echo $this->url->get('assets/js/auth_index/base') ?>" rel="preload" as="script">
+    <link href="<?php echo $this->url->get('assets/js/auth_application/base') ?>" rel="preload" as="script">
+
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->url->get('assets/css/auth_index/base') ?>">
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->url->get('assets/css/auth_application/base') ?>">
+  </head>
+
+  <body>
+    <div id="<?php echo $this->view->page_slug ?>">
+      <?php //echo $this->getContent(); ?>
+    <div>
+  </body>
+
+  <footer>
+    <script src="https://unpkg.com/vue@next"></script>
+
+    <?php $this->assets->outputJs('view_script'); ?>
+
+<!--    <script src="--><?php //echo $this->url->get('assets/js/chunk-vendors/base') ?><!--"></script>-->
+<!--    <script src="--><?php //echo $this->url->get('assets/js/auth_index/base') ?><!--"></script>-->
+<!--    <script src="--><?php //echo $this->url->get('assets/js/auth_application/base') ?><!--"></script>-->
+  </footer>
 </html>

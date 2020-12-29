@@ -23,6 +23,7 @@ module.exports = {
             chunks: ['chunk-vendors', 'chunk-common', 'application']
         },
     },
+    publicPath: 'src/base/public',
     // filenameHashing: false,
     chainWebpack: config => {
         config.plugins.delete('html')

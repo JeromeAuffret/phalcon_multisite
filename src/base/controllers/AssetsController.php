@@ -15,7 +15,7 @@ class AssetsController extends Controller
 {
 
     /**
-     *
+     *  Disabled view for assets delivery controller
      */
     public function initialize()
     {
@@ -29,7 +29,7 @@ class AssetsController extends Controller
      */
     public function jsAction(string $fileName, ?string $subFolder = null)
     {
-        foreach (glob(BASE_PATH.'/src/base/dist/js/'.$fileName.'*.js') as $file)
+        foreach (glob(BASE_PATH.'/src/base/dist/js/'.$fileName.'.*.js') as $file)
         {
             // Setting up the content type
             $this->response->setContentType('application/javascript', 'UTF-8');
@@ -54,7 +54,7 @@ class AssetsController extends Controller
      */
     public function cssAction(string $fileName)
     {
-        foreach (glob(BASE_PATH.'/src/base/dist/css/'.$fileName.'*.css') as $file)
+        foreach (glob(BASE_PATH.'/src/base/dist/css/'.$fileName.'.*.css') as $file)
         {
             // Setting up the content type;
             $this->response->setContentType('text/css', 'UTF-8');

@@ -10,18 +10,23 @@ use Core\Tasks\Task;
  */
 class Build extends Task
 {
-    protected $vue_config = 'vue.config.js';
+
+    protected $vueConfig = 'vue.config.js';
+
+    protected $buildDir = 'dist';
 
     /**
      *
      */
     public function mainAction()
     {
-        $dest = $this->application->getTenantPath();
-        $path = $dest . '/' . $this->vue_config;
+        $tenant_path = $this->application->getTenantPath();
+
+        $config_path = $tenant_path.'/'.$this->vueConfig;
+        $build_path = $tenant_path.'/'.$this->buildDir;
 
         $build_cmd = 'npm run build';
 
-        echo shell_exec("VUE_CLI_SERVICE_CONFIG_PATH=$path TARGET=wc DEST=$dest ENTRY=$dest/App.vue npm run build");
+        echo shell_exec("VUE_CLI_SERVICE_CONFIG_PATH=$config_path DEST=$build_path $build_cmd");
     }
 }

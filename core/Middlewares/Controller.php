@@ -45,11 +45,12 @@ class Controller extends Injectable
                     $this->config->get('defaultModule')
                 );
             }
-
             // Register default namespace
-            $this->dispatcher->setDefaultNamespace($this->application->getBaseModuleNamespace(
-                $this->dispatcher->getModuleName()
-            ));
+            $this->dispatcher->setDefaultNamespace(
+                $this->application->getBaseModuleNamespace(
+                    $this->dispatcher->getModuleName()
+                )
+            );
         }
 
         // Set base namespace as default for simple application
@@ -95,6 +96,14 @@ class Controller extends Injectable
         // Display maintenance page if defined in config
         $this->displayMaintenancePage();
 
+        // TODO Improve
+        if ($this->config->get('tenantType') === 'modules') {
+            $this->view->setVar('page_slug', $this->dispatcher->getModuleName().'_'.$this->dispatcher->getControllerName());
+        }
+        elseif ($this->config->get('tenantType') === 'simple') {
+            $this->view->setVar('page_slug', $this->dispatcher->getControllerName());
+        }
+
         // Controller views directories
         $this->dispatchViews();
 
@@ -136,11 +145,11 @@ class Controller extends Injectable
     {
         $moduleName = $this->dispatcher->getModuleName();
 
-        $baseViewPath = $this->application->getBasePath().'/pages/';
-        $baseModuleViewPath = $this->application->getBaseModulePath($moduleName).'/pages';
+        $baseViewPath = $this->application->getBasePath().'/'.$this->application->getPagesDir();
+        $baseModuleViewPath = $this->application->getBaseModulePath($moduleName).'/'.$this->application->getPagesDir();
 
-        $appViewPath = $this->application->getTenantPath().'/pages';
-        $appModuleViewPath = $this->application->getTenantModulePath($moduleName).'/pages';
+        $appViewPath = $this->application->getTenantPath().'/'.$this->application->getPagesDir();
+        $appModuleViewPath = $this->application->getTenantModulePath($moduleName).'/'.$this->application->getPagesDir();
 
         $this->dispatchMainView($baseViewPath, $baseModuleViewPath, $appViewPath, $appModuleViewPath);
         $this->dispatchLayoutDir($baseViewPath, $baseModuleViewPath, $appViewPath, $appModuleViewPath);
@@ -286,30 +295,30 @@ class Controller extends Injectable
      */
     public function setTenantCollection()
     {
-        $assetPath = $this->getTenantAssetPath();
-
-        $app_style = $this->assets->collection('app_style');
-        $app_script = $this->assets->collection('app_script');
-
-        $app_style
-            ->setTargetPath($assetPath.'/app.css')
-            ->setTargetUri($assetPath.'/app.css')
-            ->setLocal(false)
-            ->join(true)
-            ->addFilter(new Cssmin());
-
-        $app_script
-            ->setTargetPath($assetPath.'/index.js')
-            ->setTargetUri($assetPath.'/index.js')
-            ->setLocal(false)
-            ->join(true)
-            ->addFilter(new Jsmin());
-
-        /**
-         * Load specific view assets base on routing process
-         */
-        $this->view->registerTenantAssetsCollection($app_style, 'css');
-        $this->view->registerTenantAssetsCollection($app_script, 'js');
+//        $assetPath = $this->getTenantAssetPath();
+//
+//        $app_style = $this->assets->collection('app_style');
+//        $app_script = $this->assets->collection('app_script');
+//
+//        $app_style
+//            ->setTargetPath($assetPath.'/app.css')
+//            ->setTargetUri($assetPath.'/app.css')
+//            ->setLocal(false)
+//            ->join(true)
+//            ->addFilter(new Cssmin());
+//
+//        $app_script
+//            ->setTargetPath($assetPath.'/index.js')
+//            ->setTargetUri($assetPath.'/index.js')
+//            ->setLocal(false)
+//            ->join(true)
+//            ->addFilter(new Jsmin());
+//
+//        /**
+//         * Load specific view assets base on routing process
+//         */
+//        $this->view->registerTenantAssetsCollection($app_style, 'css');
+//        $this->view->registerTenantAssetsCollection($app_script, 'js');
     }
 
     /**
@@ -318,30 +327,59 @@ class Controller extends Injectable
      */
     public function setViewCollection()
     {
-        $assetPath = $this->getTenantAssetPath();
-
         $view_style = $this->assets->collection('view_style');
         $view_script = $this->assets->collection('view_script');
 
-        $view_style
-            ->setTargetPath($assetPath.'/'.$this->getViewCollectionName().'.css')
-            ->setTargetUri($assetPath.'/'.$this->getViewCollectionName().'.css')
-            ->setLocal(false)
-            ->join(true)
-            ->addFilter(new Cssmin());
+        $pageFile = $this->dispatcher->getModuleName().'_'.$this->dispatcher->getControllerName();
 
-        $view_script
-            ->setTargetPath($assetPath.'/'.$this->getViewCollectionName().'.js')
-            ->setTargetUri($assetPath.'/'.$this->getViewCollectionName().'.js')
-            ->setLocal(false)
-            ->join(true)
-            ->addFilter(new Jsmin());
+        $tenantPath = $this->application->getTenantPath();
+        $basePath = $this->application->getBasePath();
 
-        /**
-         * Load specific view assets base on routing process
-         */
-        $this->view->registerViewAssetsCollection($view_style, 'css');
-        $this->view->registerViewAssetsCollection($view_script, 'js');
+        $assetsJs = [];
+        $assetsCss = [];
+
+        if ($tenantPath) {
+            foreach (glob($tenantPath.'/dist/js/*.js') as $file) {
+                $filename = explode('.', basename($file))[0];
+                if ($filename === $pageFile || $filename === 'chunk-vendors') {
+                    if (empty($assetsJs[$filename])) $assetsJs[$filename] = $file;
+                }
+            }
+        }
+
+        if ($basePath) {
+            foreach (glob($basePath.'/dist/js/*.js') as $file) {
+                $filename = explode('.', basename($file))[0];
+                if ($filename === $pageFile || $filename === 'chunk-vendors') {
+                    if (empty($assetsJs[$filename])) $assetsJs[$filename] = $file;
+                }
+            }
+        }
+
+
+        foreach ($assetsJs as $assetsFile) {
+            $view_script->setTargetUri('assets/js/'.basename($assetsFile));
+        }
+
+
+
+//        $tenantPath = $this->application->getTenantPath();
+//        $basePath = $this->application->getBasePath();
+//
+//        $view_style
+//            ->setTargetPath($assetPath.'/'.$this->getViewCollectionName().'.css')
+//            ->setTargetUri($assetPath.'/'.$this->getViewCollectionName().'.css')
+//            ->setLocal(false)
+//            ->join(true)
+//            ->addFilter(new Cssmin());
+//
+
+//
+//        /**
+//         * Load specific view assets base on routing process
+//         */
+//        $this->view->registerViewAssetsCollection($view_style, 'css');
+//        $this->view->registerViewAssetsCollection($view_script, 'js');
     }
 
 

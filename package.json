@@ -4,14 +4,13 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --dest src/base/dist",
-    "build:tenant": "vue-cli-service build --target wc --dest $DEST $ENTRY",
-    "build:lib": "vue-cli-service build --target wc --dest src/base/dist --name auth 'src/base/modules/auth/components/*.vue'",
+    "build": "vue-cli-service build --dest $DEST",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "core-js": "^3.6.5",
     "glob": "^7.1.6",
+    "jquery": "^3.5.1",
     "vue": "^2.6.11",
     "vuex": "^3.6.0",
     "vuex-shared-mutations": "^1.0.2"

@@ -45,7 +45,7 @@ class Task extends Injectable
             $taskNamespace = NamespaceHelper::dispatchClass($taskClass,'Tasks');
         }
 
-        echo '['.date('Y-m-d H:i:s').'] Start Tenant : '.$this->application->getTenant('name').PHP_EOL;
+        echo '['.date('Y-m-d H:i:s').'] Tenant : '.($this->application->getTenant('name') ?: 'Base').PHP_EOL;
         echo '['.date('Y-m-d H:i:s').'] Task : '.$this->dispatcher->getTaskName().PHP_EOL;
         echo '['.date('Y-m-d H:i:s').'] Action : '.$this->dispatcher->getActionName().PHP_EOL;
         echo '['.date('Y-m-d H:i:s').'] Params : '.$this->console->getParams()->toJson().PHP_EOL;
