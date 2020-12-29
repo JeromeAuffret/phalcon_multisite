@@ -14,14 +14,8 @@
 
 module.exports = {
     pages: {
-        auth_index: {
-            entry: 'src/base/modules/auth/pages/index/index.js',
-            chunks: ['chunk-vendors', 'chunk-common', 'index']
-        },
-        auth_application: {
-            entry: 'src/base/modules/auth/pages/application/index.js',
-            chunks: ['chunk-vendors', 'chunk-common', 'application']
-        },
+        auth_index: 'src/base/modules/auth/pages/index/index.js',
+        auth_application:  'src/base/modules/auth/pages/application/index.js'
     },
     publicPath: 'src/base/public',
     // filenameHashing: false,

@@ -29,19 +29,20 @@ class AssetsController extends Controller
      */
     public function jsAction(string $fileName, ?string $subFolder = null)
     {
-        foreach (glob(BASE_PATH.'/src/base/dist/js/'.$fileName.'.*.js') as $file)
-        {
-            // Setting up the content type
-            $this->response->setContentType('application/javascript', 'UTF-8');
-            // $this->response->setHeader('Cache-Control', 'max-age=1000');
+        $tenantPath = $this->application->getTenantPath() ?: $this->application->getBasePath();
+        $basePath = $this->application->getTenantPath() ?: $this->application->getBasePath();
 
-            if (file_exists($file)) {
-                $this->response->setContent(file_get_contents($file));
-            } else {
-                $this->response->setStatusCode(404);
-            }
+        $this->response->setContentType('application/javascript', 'UTF-8');
+        // $this->response->setHeader('Cache-Control', 'max-age=1000');
 
-            break;
+        if (file_exists($tenantPath.'/dist/js/'.$fileName)) {
+            $this->response->setContent(file_get_contents($tenantPath.'/dist/js/'.$fileName));
+        }
+        elseif (file_exists($basePath.'/dist/js/'.$fileName)) {
+            $this->response->setContent(file_get_contents($basePath.'/dist/js/'.$fileName));
+        }
+        else {
+            $this->response->setStatusCode(404);
         }
 
         return $this->response;
@@ -54,19 +55,20 @@ class AssetsController extends Controller
      */
     public function cssAction(string $fileName)
     {
-        foreach (glob(BASE_PATH.'/src/base/dist/css/'.$fileName.'.*.css') as $file)
-        {
-            // Setting up the content type;
-            $this->response->setContentType('text/css', 'UTF-8');
-            // $this->response->setHeader('Cache-Control', 'max-age=1000');
+        $tenantPath = $this->application->getTenantPath() ?: $this->application->getBasePath();
+        $basePath = $this->application->getTenantPath() ?: $this->application->getBasePath();
 
-            if (file_exists($file)) {
-                $this->response->setContent(file_get_contents($file));
-            } else {
-                $this->response->setStatusCode(404);
-            }
+        $this->response->setContentType('text/css', 'UTF-8');
+        // $this->response->setHeader('Cache-Control', 'max-age=1000');
 
-            break;
+        if (file_exists($tenantPath.'/dist/css/'.$fileName)) {
+            $this->response->setContent(file_get_contents($tenantPath.'/dist/css/'.$fileName));
+        }
+        elseif (file_exists($basePath.'/dist/css/'.$fileName)) {
+            $this->response->setContent(file_get_contents($basePath.'/dist/css/'.$fileName));
+        }
+        else {
+            $this->response->setStatusCode(404);
         }
 
         return $this->response;

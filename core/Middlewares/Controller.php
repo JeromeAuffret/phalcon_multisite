@@ -345,41 +345,40 @@ class Controller extends Injectable
                     if (empty($assetsJs[$filename])) $assetsJs[$filename] = $file;
                 }
             }
+
+            foreach (glob($tenantPath.'/dist/css/*.css') as $file) {
+                $filename = explode('.', basename($file))[0];
+                if ($filename === $pageFile) {
+                    if (empty($assetsCss[$filename])) $assetsCss[$filename] = $file;
+                }
+            }
         }
 
-        if ($basePath) {
+        if ($basePath)
+        {
             foreach (glob($basePath.'/dist/js/*.js') as $file) {
                 $filename = explode('.', basename($file))[0];
                 if ($filename === $pageFile || $filename === 'chunk-vendors') {
                     if (empty($assetsJs[$filename])) $assetsJs[$filename] = $file;
                 }
             }
+
+            foreach (glob($basePath.'/dist/css/*.css') as $file) {
+                $filename = explode('.', basename($file))[0];
+                if ($filename === $pageFile) {
+                    if (empty($assetsCss[$filename])) $assetsCss[$filename] = $file;
+                }
+            }
         }
 
+        foreach ($assetsCss as $assetsFile) {
+            $view_style->addCss('assets/css/'.basename($assetsFile));
+        }
 
         foreach ($assetsJs as $assetsFile) {
-            $view_script->setTargetUri('assets/js/'.basename($assetsFile));
+            $view_script->addJs('assets/js/'.basename($assetsFile));
         }
 
-
-
-//        $tenantPath = $this->application->getTenantPath();
-//        $basePath = $this->application->getBasePath();
-//
-//        $view_style
-//            ->setTargetPath($assetPath.'/'.$this->getViewCollectionName().'.css')
-//            ->setTargetUri($assetPath.'/'.$this->getViewCollectionName().'.css')
-//            ->setLocal(false)
-//            ->join(true)
-//            ->addFilter(new Cssmin());
-//
-
-//
-//        /**
-//         * Load specific view assets base on routing process
-//         */
-//        $this->view->registerViewAssetsCollection($view_style, 'css');
-//        $this->view->registerViewAssetsCollection($view_script, 'js');
     }
 
 

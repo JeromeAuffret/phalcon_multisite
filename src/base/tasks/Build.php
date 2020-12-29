@@ -20,7 +20,7 @@ class Build extends Task
      */
     public function mainAction()
     {
-        $tenant_path = $this->application->getTenantPath();
+        $tenant_path = $this->application->getTenantPath() ?: $this->application->getBasePath();
 
         $config_path = $tenant_path.'/'.$this->vueConfig;
         $build_path = $tenant_path.'/'.$this->buildDir;
