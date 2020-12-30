@@ -1,7 +1,11 @@
 'use strict'
 
+// const path = require('path');
 // const glob = require('glob')
 // const pages = {}
+
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 
 // glob.sync('./modules/*/src/*.js').forEach(path => {
 //     const chunk = path.split('./modules/')[1].split('/src/main.js')[0];
@@ -12,9 +16,10 @@
 //     }
 // })
 
-module.exports = {
+// https://vue-loader.vuejs.org/en/configurations/extract-css.html
 
-    publicPath: './public',
+module.exports = {
+    publicPath: 'src/base/public',
 
     pages: {
         auth_index: 'src/base/modules/auth/pages/index/index.js'
@@ -24,10 +29,6 @@ module.exports = {
         const options = module.exports
         const pages = options.pages
         const pageKeys = Object.keys(pages)
-
-        config.plugins.delete('html')
-        config.plugins.delete('preload')
-        config.plugins.delete('prefetch')
 
         // https://stackoverflow.com/questions/51242317/how-to-split-vue-cli-3-pages-vendor-file/61089300#61089300
         config.optimization
