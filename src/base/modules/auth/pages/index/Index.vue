@@ -4,44 +4,29 @@
 
 			<div class="header">
 				<div class="media">
-					<img src="img/logo-large.png" alt="Login Logo" class="mx-auto" style="max-width: 150px;">
+          TOTO
+<!--					<img src="img/logo-large.png" alt="Login Logo" class="mx-auto" style="max-width: 150px;">-->
 				</div>
 			</div>
 
-			<Counter/>
-			<HelloWorld msg="Welcome !"/>
+<!--			<Counter/>-->
+<!--			<HelloWorld msg="Welcome !"/>-->
 
-			<form method="post">
-				<div class="form-group">
-					<label for="login">Email</label>
-					<input id="login" type="text" name="login" class="form-control" required />
-				</div>
-
-				<div class="form-group">
-					<label for="password">Password</label>
-					<input id="password" type="password" name="password" class="form-control" required />
-				</div>
-
-				<div class="row btn-container">
-					<button type="submit" class="btn btn-primary">Sign In</button>
-					<button type="button" class="btn btn-secondary">Forgot Password</button>
-				</div>
-			</form>
 		</div>
 	</div>
 </template>
 
 <script>
-import Counter from "@/base/components/Counter";
-import HelloWorld from "@/base/modules/auth/components/HelloWorld";
-
+// import Counter from "@/base/components/Counter";
+// import HelloWorld from "@/base/modules/auth/components/HelloWorld";
+//
 import './index.css';
-
-export default {
-	name: 'App',
-	components: {
-		HelloWorld,
-		Counter
-	}
-}
+//
+// export default {
+// 	name: 'App',
+// 	components: {
+// 		HelloWorld,
+// 		Counter
+// 	}
+// }
 </script>

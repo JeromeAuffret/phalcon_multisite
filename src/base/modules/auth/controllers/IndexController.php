@@ -23,7 +23,7 @@ class IndexController extends ControllerBase
     public function initialize()
     {
         $this->view->disableLevel(View::LEVEL_LAYOUT);
-        $this->view->disableLevel(View::LEVEL_ACTION_VIEW);
+//        $this->view->disableLevel(View::LEVEL_ACTION_VIEW);
     }
 
     /**

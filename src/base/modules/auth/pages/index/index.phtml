@@ -3,12 +3,16 @@
 
     <div class="header">
       <div class="media">
-        <img src="<?php echo $this->url->get('img/logo-large.png'); ?>" alt="Login Logo" class="mx-auto" style="max-width: 150px;">
+        <img src="<?php echo $this->url->get('logo-large.png'); ?>" alt="Login Logo" class="mx-auto" style="max-width: 150px;">
       </div>
     </div>
 
-    <div id="hello_world"></div>
-    <auth-hello-world msg="TOTO"></auth-hello-world>
+    <!--    <div id="hello_world"></div>-->
+    <!--    <auth-hello-world msg="TOTO"></auth-hello-world>-->
+
+    <div id="toto">
+      <login-header></login-header>
+    </div>
 
     <form method="post">
       <input type="hidden" name="<?php echo $this->security->getTokenKey() ?>" value="<?php echo $this->security->getToken() ?>"/>
