@@ -20,8 +20,10 @@
   <body>
     <div id="<?php echo $this->view->page_slug ?>">
       <?php echo $this->getContent(); ?>
+
+
+        <?php $this->assets->outputJs('view_script'); ?>
     <div>
   </body>
 
-  <?php $this->assets->outputJs('view_script'); ?>
 </html>
