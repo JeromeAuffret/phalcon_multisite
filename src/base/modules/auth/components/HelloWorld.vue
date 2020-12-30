@@ -1,7 +1,7 @@
 <template>
   <div class="welcome-alert">
     <div class="alert alert-warning" role="alert">
-      <h4 class="alert-heading"></h4>
+      <h4 class="alert-heading">{{msg}}</h4>
       <div>you can try the following credentials</div>
       <ul>
         <li>Admin role : Login <strong>admin</strong> and password <strong>admin</strong></li>
@@ -14,7 +14,10 @@
 
 <script>
 export default {
-
+  name: 'HelloWorld',
+  props: {
+    msg: String
+  }
 }
 </script>
 
