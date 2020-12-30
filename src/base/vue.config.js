@@ -1,7 +1,5 @@
 'use strict'
 
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
-
 // const path = require('path');
 // const glob = require('glob')
 // const pages = {}

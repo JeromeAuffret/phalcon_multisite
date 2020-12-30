@@ -18,10 +18,13 @@
   </head>
 
   <body>
-    <div id="<?php echo $this->view->page_slug ?>">
-      <?php echo $this->getContent(); ?>
+    <div class="wrapper">
+      <div id="<?php echo $this->view->page_slug ?>">
+        <?php echo $this->getContent(); ?>
+      </div>
     <div>
   </body>
 
-  <?php $this->assets->outputJs('view_script'); ?>
+  <script type="application/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <?php echo $this->assets->outputJs('view_script'); ?>
 </html>
