@@ -4,7 +4,7 @@
     <div class="row" style="min-height: calc(100vh - 40px)">
         <?php echo $this->view->getPartial('partials/sidebar'); ?>
 
-        <main class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4" role="main">
+        <main class="pt-3 px-4 <?php echo !$this->view->hide_sidebar ? 'col-md-9 col-lg-10 ml-sm-auto' : 'col-12' ?>"  role="main">
             <?php echo $this->getContent(); ?>
         </main>
     </div>

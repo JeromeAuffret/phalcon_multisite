@@ -24,6 +24,8 @@ class ApplicationController extends ControllerBase
      */
     public function indexAction()
     {
+        $this->view->hide_sidebar = true;
+
         // Remove application already registered in session
         if ($this->request->isGet() && $this->di->has('session') && $this->session->exists()) {
             $this->session->remove('application');

@@ -3,10 +3,9 @@
 module.exports = {
     publicPath: 'src/base/public',
 
-    pages: {
-        auth_index: 'src/base/modules/auth/pages/index/index.js',
-        auth_application: 'src/base/modules/auth/pages/application/index.js',
-    },
+    // pages: {
+    //     index: 'src/apps/demo1/modules/dashboard/pages/index/index.js'
+    // },
 
     configureWebpack: {
         resolve: {

@@ -274,7 +274,11 @@ class Controller extends Injectable
         $view_style = $this->assets->collection('view_style');
         $view_script = $this->assets->collection('view_script');
 
-        $pageFile = $this->dispatcher->getModuleName().'_'.$this->dispatcher->getControllerName();
+        if ($this->dispatcher->getModuleName()) {
+            $pageFile = $this->dispatcher->getModuleName().'_'.$this->dispatcher->getControllerName();
+        } else {
+            $pageFile = $this->dispatcher->getControllerName();
+        }
 
         $tenantPath = $this->application->getTenantPath();
         $basePath = $this->application->getBasePath();
@@ -282,33 +286,35 @@ class Controller extends Injectable
         $assetsJs = [];
         $assetsCss = [];
 
+        //
         if ($tenantPath) {
             foreach (glob($tenantPath.'/dist/js/*.js') as $file) {
                 $filename = explode('.', basename($file))[0];
-                if ($filename === $pageFile || $filename === $pageFile.'-chunk-vendors' || $filename === 'chunk-vendors') {
+                if ($filename === $pageFile || $filename === $pageFile.'-chunk-vendors' || $filename === 'chunk-common') {
                     if (empty($assetsJs[$filename])) $assetsJs[$filename] = $file;
                 }
             }
 
             foreach (glob($tenantPath.'/dist/css/*.css') as $file) {
                 $filename = explode('.', basename($file))[0];
-                if ($filename === $pageFile || $filename === $pageFile.'-chunk-vendors' || $filename === 'chunk-vendors') {
+                if ($filename === $pageFile || $filename === $pageFile.'-chunk-vendors' || $filename === 'chunk-common') {
                     if (empty($assetsCss[$filename])) $assetsCss[$filename] = $file;
                 }
             }
         }
 
+        //
         if ($basePath) {
             foreach (glob($basePath.'/dist/js/*.js') as $file) {
                 $filename = explode('.', basename($file))[0];
-                if ($filename === $pageFile || $filename === $pageFile.'-chunk-vendors' || $filename === 'chunk-vendors') {
+                if ($filename === $pageFile || $filename === $pageFile.'-chunk-vendors' || $filename === 'chunk-common') {
                     if (empty($assetsJs[$filename])) $assetsJs[$filename] = $file;
                 }
             }
 
             foreach (glob($basePath.'/dist/css/*.css') as $file) {
                 $filename = explode('.', basename($file))[0];
-                if ($filename === $pageFile || $filename === $pageFile.'-chunk-vendors' || $filename === 'chunk-vendors') {
+                if ($filename === $pageFile || $filename === $pageFile.'-chunk-vendors' || $filename === 'chunk-common') {
                     if (empty($assetsCss[$filename])) $assetsCss[$filename] = $file;
                 }
             }

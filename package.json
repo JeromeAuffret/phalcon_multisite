@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --dest $DEST --watch",
+    "build": "vue-cli-service build --dest $DEST",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "bootstrap-vue": "^2.17.3",
     "core-js": "^3.6.5",
     "glob": "^7.1.6",
     "jquery": "^3.5.1",
@@ -16,13 +17,23 @@
     "vuex-shared-mutations": "^1.0.2"
   },
   "devDependencies": {
+    "@babel/polyfill": "^7.11.5",
     "@vue/cli-plugin-babel": "~4.5.9",
     "@vue/cli-plugin-eslint": "~4.5.9",
     "@vue/cli-service": "~4.5.9",
+    "babel-core": "^6.26.3",
     "babel-eslint": "^10.1.0",
-    "copy-webpack-plugin": "^7.0.0",
+    "babel-loader": "^8.2.2",
+    "babel-preset-env": "^1.7.0",
+    "bootstrap": "^4.5.2",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "mutationobserver-shim": "^0.3.7",
+    "popper.js": "^1.16.1",
+    "portal-vue": "^2.1.7",
+    "sass": "^1.26.11",
+    "sass-loader": "^10.0.2",
+    "vue-cli-plugin-bootstrap-vue": "~0.7.0",
     "vue-loader": "^15.9.6",
     "vue-template-compiler": "^2.6.12"
   },

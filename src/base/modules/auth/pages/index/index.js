@@ -1,14 +1,14 @@
-import Vue from 'vue';
+import Vue from 'vue'
 
-import index from './Index.vue';
-import Login from "@/base/modules/auth/components/Login";
+import LoginForm from "@/base/modules/auth/components/LoginForm"
+import HelloWorld from "@/base/modules/auth/components/HelloWorld"
 
-const vm = new Vue({
+import './index.css'
+
+new Vue({
   el: '#auth_index',
   components: {
-    'welcome': index,
-    Login
+    HelloWorld,
+    LoginForm
   }
 })
-
-vm.$mount();

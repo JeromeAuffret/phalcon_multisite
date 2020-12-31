@@ -1,0 +1,6 @@
+main > .row {
+    justify-content: space-evenly;
+}
+main > .row > .card {
+    margin: 0 15px;
+}

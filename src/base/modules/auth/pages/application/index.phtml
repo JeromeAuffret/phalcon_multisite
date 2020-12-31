@@ -1,13 +1,24 @@
 <div class="row">
     <?php if($this->view->application_list->count()) { ?>
+
         <?php foreach ($this->view->application_list as $application) { ?>
-            <div class="application-item col-3">
+            <b-card title="<?php echo $application->getName(); ?>"
+                    sub-title="Card subtitle"
+                    img-src="https://picsum.photos/600/300/?image=25"
+                    img-alt="Image"
+                    img-top
+                    tag="article"
+                    style="max-width: 20rem; min-width: 5rem;"
+                    class="mb-2 text-center">
+
+                <b-card-text><?php echo $application->getDescription(); ?></p></b-card-text>
+
                 <a href="<?php echo $this->url->get('auth/application/switchApplication/'.$application->getId()) ?>">
-                    <?php echo $application->getName(); ?>
+                    Connexion
                 </a>
-                <p><?php echo $application->getDescription(); ?></p>
-            </div>
+            </b-card>
         <?php } ?>
+
     <?php } else { ?>
         <h3>Applications not found</h3>
     <?php } ?>
