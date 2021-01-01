@@ -43,7 +43,7 @@ final class Database extends Injectable
 
         $container->setShared('db', function() use ($container)
         {
-            $database = $container->get('database');
+            $database = $container->get('config')->get('database');
 
             $class = Database::parseDbAdapter($database);
             $params = Database::parseDbParameters($database);
