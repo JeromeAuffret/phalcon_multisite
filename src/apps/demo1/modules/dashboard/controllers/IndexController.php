@@ -3,6 +3,7 @@
 namespace Demo1\Modules\Dashboard\Controllers;
 
 use Base\Controllers\BaseController;
+use Demo1\Models\Lot;
 
 /**
  * Class IndexController
@@ -24,7 +25,11 @@ class IndexController extends BaseController
     {
         $data = file_get_contents('https://raw.githubusercontent.com/ag-grid/ag-grid/master/grid-packages/ag-grid-docs/src/olympicWinnersSmall.json');
 
-        $this->response->setContent($data);
+        $result = Lot::find([
+            'limit' => 100
+        ]);
+
+        $this->response->setJsonContent($result->toArray());
         return $this->response;
     }
 

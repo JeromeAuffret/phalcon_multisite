@@ -4,7 +4,7 @@ var AG_GRID_LOCALE_FR = {
     // Set Filter
     selectAll: '(Tout selectionner)',
     selectAllSearchResults: '(Select All Search Results)',
-    searchOoo: 'Search...',
+    searchOoo: 'Recherche...',
     blanks: '(Vide)',
     noMatches: 'Aucun résultat',
 
@@ -15,10 +15,10 @@ var AG_GRID_LOCALE_FR = {
     empty: 'Selectionner un',
 
     // Number Filter
-    lessThan: 'Inférieur',
-    greaterThan: 'Supérieur',
-    lessThanOrEqual: 'Inférieur ou égal',
-    greaterThanOrEqual: 'Supérieur ou égal',
+    lessThan: '<',
+    greaterThan: '>',
+    lessThanOrEqual: '<=',
+    greaterThanOrEqual: '>=',
     inRange: 'Compris entre',
     inRangeStart: 'De',
     inRangeEnd: 'à',
@@ -37,10 +37,10 @@ var AG_GRID_LOCALE_FR = {
     orCondition: 'OU',
 
     // Filter Buttons
-    applyFilter: 'Apply',
+    applyFilter: 'Filtrer',
     resetFilter: 'Reset',
     clearFilter: 'Clear',
-    cancelFilter: 'Cancel',
+    cancelFilter: 'Annuler',
 
     // Filter Titles
     textFilter: 'Text Filter',
@@ -65,21 +65,21 @@ var AG_GRID_LOCALE_FR = {
     group: 'Group',
 
     // Other
-    loadingOoo: 'Loading...',
-    noRowsToShow: 'No Rows To Show',
+    loadingOoo: 'Chargement...',
+    noRowsToShow: 'Aucune donnée',
     enabled: 'Enabled',
 
     // Menu
-    pinColumn: 'Pin Column',
-    pinLeft: 'Pin Left',
-    pinRight: 'Pin Right',
-    noPin: 'No Pin',
-    valueAggregation: 'Value Aggregation',
-    autosizeThiscolumn: 'Autosize This Column',
-    autosizeAllColumns: 'Autosize All Columns',
+    pinColumn: 'Epingler',
+    pinLeft: 'Epingler à gauche',
+    pinRight: 'Epingler à droite',
+    noPin: 'Dégrapher',
+    valueAggregation: 'Valeur d\'Aggregation',
+    autosizeThiscolumn: 'Redimensionner la colonne',
+    autosizeAllColumns: 'Redimensionner toutes les colonne',
     groupBy: 'Group by',
     ungroupBy: 'Un-Group by',
-    resetColumns: 'Reset Columns',
+    resetColumns: 'Annuler changements',
     expandAll: 'Expand All',
     collapseAll: 'Close All',
     copy: 'Copier',

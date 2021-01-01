@@ -65,7 +65,6 @@ export default {
   },
   beforeMount() {
     this.localeText = AG_GRID_LOCALE_FR;
-    this.multiSortKey = 'shift';
     this.rowModelType = 'serverSide';
     this.gridOptions = {};
 
@@ -79,16 +78,16 @@ export default {
     this.maxBlocksInCache = 10;
 
     this.columnDefs = [
-      { field: 'athlete', minWidth: 160, resizable: true },
-      { field: 'age', resizable: true, filter: 'agNumberColumnFilter', enablePivot: true},
-      { field: 'country', minWidth: 140, resizable: true, enablePivot: true },
-      { field: 'year', resizable: true, filter: 'agMultiColumnFilter' },
-      { field: 'date', minWidth: 140, resizable: true },
-      { field: 'sport', minWidth: 160, resizable: true, enablePivot: true },
-      { field: 'gold', resizable: true, enableValue: true },
-      { field: 'silver', resizable: true, enableValue: true },
-      { field: 'bronze', resizable: true, enableValue: true },
-      { field: 'total', resizable: true, enableValue: true },
+      { headerName: 'Athlete', field: 'athlete', minWidth: 160, resizable: true },
+      { headerName: 'Age', field: 'age', resizable: true, filter: 'agNumberColumnFilter', enablePivot: true},
+      { headerName: 'Pays', field: 'country', minWidth: 140, resizable: true, enablePivot: true },
+      { headerName: 'Année', field: 'year', resizable: true, filter: 'agMultiColumnFilter' },
+      { headerName: 'Date', field: 'date', minWidth: 140, resizable: true },
+      { headerName: 'Sport', field: 'sport', minWidth: 160, resizable: true, enablePivot: true },
+      { headerName: 'Or', field: 'gold', resizable: true, enableValue: true },
+      { headerName: 'Argent', field: 'silver', resizable: true, enableValue: true },
+      { headerName: 'Bronze', field: 'bronze', resizable: true, enableValue: true },
+      { headerName: 'Total', field: 'total', resizable: true, enableValue: true },
     ];
 
     this.defaultColDef = {
@@ -97,9 +96,7 @@ export default {
       editable: true,
       filter: true,
       filterParams: {
-        buttons: ['apply', 'reset'],
-        // debounceMs: 200,
-        closeOnApply: true,
+        buttons: ['reset']
       },
       sortable: true
     };
