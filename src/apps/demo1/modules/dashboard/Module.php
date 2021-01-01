@@ -56,7 +56,7 @@ class Module extends ModuleProvider
         $acl->addRole('user');
 
         // Components
-        $acl->addComponent('dashboard_index', ['index']);
+        $acl->addComponent('dashboard_index', ['index', 'tableData']);
 
         // Rules
         $acl->allow('admin', 'dashboard_index', '*');

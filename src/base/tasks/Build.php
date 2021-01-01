@@ -25,6 +25,8 @@ class Build extends Task
         $build_path = $tenant_path.'/'.$this->buildDir;
 
         $build_cmd = 'npm run build';
+        if ($this->console->hasOptions('watch'))
+            $build_cmd = 'npm run build-dev';
 
         echo shell_exec("VUE_CLI_SERVICE_CONFIG_PATH=$config_path DEST=$build_path $build_cmd");
     }

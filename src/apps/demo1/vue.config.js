@@ -3,9 +3,9 @@
 module.exports = {
     publicPath: 'src/base/public',
 
-    // pages: {
-    //     index: 'src/apps/demo1/modules/dashboard/pages/index/index.js'
-    // },
+    pages: {
+        dashboard_index: 'src/apps/demo1/modules/dashboard/pages/index/index.js'
+    },
 
     configureWebpack: {
         resolve: {

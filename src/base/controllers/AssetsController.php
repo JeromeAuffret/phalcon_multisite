@@ -31,7 +31,7 @@ class AssetsController extends Controller
         $basePath = $this->application->getBasePath();
         $tenantPath = $this->application->getTenantPath() ?: $basePath;
 
-        $this->response->setHeader('Cache-Control', 'max-age=43200');
+//        $this->response->setHeader('Cache-Control', 'max-age=43200');
         $this->response->setContentType('application/javascript', 'UTF-8');
 
         if (file_exists($tenantPath.'/dist/js/'.$fileName)) {
@@ -57,7 +57,7 @@ class AssetsController extends Controller
         $basePath = $this->application->getBasePath();
         $tenantPath = $this->application->getTenantPath() ?: $basePath;
 
-        $this->response->setHeader('Cache-Control', 'max-age=43200');
+//        $this->response->setHeader('Cache-Control', 'max-age=43200');
         $this->response->setContentType('text/css', 'UTF-8');
 
         if (file_exists($tenantPath.'/dist/css/'.$fileName)) {
