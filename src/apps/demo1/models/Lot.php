@@ -2,12 +2,15 @@
 
 namespace Demo1\Models;
 
-
 use Base\Models\Application;
 use Phalcon\Mvc\Model\ResultInterface;
 use Phalcon\Mvc\Model\ResultsetInterface;
 use Phalcon\Mvc\ModelInterface;
 
+/**
+ * Class Lot
+ * @package Demo1\Models
+ */
 class Lot extends \Base\Models\BaseModel
 {
     protected $IdLot;

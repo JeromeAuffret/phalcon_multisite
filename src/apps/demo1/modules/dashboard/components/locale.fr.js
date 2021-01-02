@@ -3,15 +3,15 @@
 var AG_GRID_LOCALE_FR = {
     // Set Filter
     selectAll: '(Tout selectionner)',
-    selectAllSearchResults: '(Select All Search Results)',
+    selectAllSearchResults: '(Selectionner tous les résultats))',
     searchOoo: 'Recherche...',
     blanks: '(Vide)',
     noMatches: 'Aucun résultat',
 
     // Number Filter & Text Filter
     filterOoo: 'Filter...',
-    equals: 'Égal',
-    notEqual: 'Différent',
+    equals: '=',
+    notEqual: '!=',
     empty: 'Selectionner un',
 
     // Number Filter

@@ -26,7 +26,17 @@ class IndexController extends BaseController
         $data = file_get_contents('https://raw.githubusercontent.com/ag-grid/ag-grid/master/grid-packages/ag-grid-docs/src/olympicWinnersSmall.json');
 
         $result = Lot::find([
-            'limit' => 100
+            'columns' => [
+                'NomFlux',
+                'Statut',
+                'TypeFlux',
+                'DateLot',
+                'ClefNumLot',
+                'NbPlisIdx',
+                'NbPlisCons',
+                'NbPlisDest'
+            ],
+            'conditions' => 'NomFlux = "ACTEL-OPT"'
         ]);
 
         $this->response->setJsonContent($result->toArray());

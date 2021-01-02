@@ -8,7 +8,6 @@
         :columnDefs="columnDefs"
         :defaultColDef="defaultColDef"
         :localeText="localeText"
-        :components="components"
         :rowData="rowData"
         :rowBuffer="rowBuffer"
         :rowSelection="rowSelection"
@@ -46,7 +45,6 @@ export default {
       columnApi: null,
       columnDefs: null,
       defaultColDef: null,
-      components: null,
       rowBuffer: null,
       rowSelection: null,
       localeText: null,
@@ -78,40 +76,72 @@ export default {
     this.maxBlocksInCache = 10;
 
     this.columnDefs = [
-      { headerName: 'Athlete', field: 'athlete', minWidth: 160, resizable: true },
-      { headerName: 'Age', field: 'age', resizable: true, filter: 'agNumberColumnFilter', enablePivot: true},
-      { headerName: 'Pays', field: 'country', minWidth: 140, resizable: true, enablePivot: true },
-      { headerName: 'Année', field: 'year', resizable: true, filter: 'agMultiColumnFilter' },
-      { headerName: 'Date', field: 'date', minWidth: 140, resizable: true },
-      { headerName: 'Sport', field: 'sport', minWidth: 160, resizable: true, enablePivot: true },
-      { headerName: 'Or', field: 'gold', resizable: true, enableValue: true },
-      { headerName: 'Argent', field: 'silver', resizable: true, enableValue: true },
-      { headerName: 'Bronze', field: 'bronze', resizable: true, enableValue: true },
-      { headerName: 'Total', field: 'total', resizable: true, enableValue: true },
+      {
+        headerName: 'NomFlux',
+        field: 'NomFlux',
+        enableValue: true,
+        hide: true
+      },
+      {
+        headerName: 'TypeFlux',
+        field: 'TypeFlux'
+      },
+      {
+        headerName: 'DateLot',
+        field: 'DateLot',
+        rowGroup: true,
+        enablePivot: true
+      },
+      {
+        headerName: 'ClefNumLot',
+        field: 'ClefNumLot'
+      },
+      {
+        headerName: 'Statut',
+        field: 'Statut',
+        enablePivot: true
+      },
+      {
+        headerName: 'NbPlisIdx',
+        field: 'NbPlisIdx',
+        enableValue: true,
+        type: 'numericColumn',
+        valueFormatter: function(params) {
+          return params.value ? parseInt(params.value) : 0;
+        },
+        comparator: function(valueA, valueB, nodeA, nodeB, isInverted) {
+          return parseInt(valueA) - parseInt(valueB);
+        }
+      },
+      {
+        headerName: 'NbPlisCons',
+        field: 'NbPlisCons',
+        enableValue: true,
+        valueFormatter: function(params) {
+          return params.value ? parseInt(params.value) : 0;
+        },
+      },
+      {
+        headerName: 'NbPlisDest',
+        field: 'NbPlisDest',
+        enableValue: true,
+        valueFormatter: function(params) {
+          return params.value ? parseInt(params.value) : 0;
+        },
+      },
     ];
 
     this.defaultColDef = {
       flex: 1,
       minWidth: 100,
       editable: true,
-      filter: true,
+      resizable: true,
+      filter: 'agMultiColumnFilter',
       filterParams: {
         buttons: ['reset']
       },
       sortable: true
     };
-
-    this.components = {
-      loadingRenderer: (params) => {
-        if (params.value !== undefined) {
-          return params.value;
-        } else {
-          return '<img src="https://raw.githubusercontent.com/ag-grid/ag-grid/master/grid-packages/ag-grid-docs/src/images/loading.gif">';
-        }
-      },
-    };
-
-
   },
   mounted() {
     this.gridApi = this.gridOptions.api;
@@ -130,41 +160,29 @@ export default {
           .then(function (response) {
             updateData(response.data, params);
           })
-
-      // const httpRequest = new XMLHttpRequest();
-      // httpRequest.open(
-      //     'GET',
-      //     '/phalcon_multisite/dashboard/index/tableData'
-      // );
-      // httpRequest.send();
-      // httpRequest.onreadystatechange = () => {
-      //   if (httpRequest.readyState === 4 && httpRequest.status === 200) {
-      //     updateData(JSON.parse(httpRequest.responseText));
-      //   }
-      // };
     },
 
-    onCellClicked(event) {
-      console.log(event.node.data.age);
+    onCellClicked() {
+      // console.log(event.node.data.age);
     },
 
-    onFilterChanged(event) {
-
-      console.log(event.api.getFilterModel())
-
-      var countryFilterModel = this.gridApi.getFilterModel()['age'];
-      var selected = countryFilterModel && countryFilterModel.values;
-
-      console.log(countryFilterModel);
-      console.log(selected);
+    onFilterChanged() {
+      //
+      // var countryFilterModel = this.gridApi.getFilterModel()['age'];
+      // var selected = countryFilterModel && countryFilterModel.values;
+      //
+      // console.log(countryFilterModel);
+      // console.log(selected);
     },
 
-    onSortChanged(event) {
-      console.log(event.columnApi.getColumnState())
+    onSortChanged() {
+      // console.log(event.columnApi.getColumnState())
     },
 
   }
 };
+
+
 </script>
 
 <style scoped>
