@@ -36,6 +36,7 @@ module.exports = {
                         name: `${key}-chunk-vendors`,
                         priority: -11,
                         chunks: chunk => chunk.name === key,
+                        test: /[\\/]node_modules[\\/]/,
                         enforce: true
                     })),
                     common: {

@@ -23,10 +23,9 @@ class IndexController extends BaseController
      */
     public function tableDataAction()
     {
-        $data = file_get_contents('https://raw.githubusercontent.com/ag-grid/ag-grid/master/grid-packages/ag-grid-docs/src/olympicWinnersSmall.json');
-
-        $result = Lot::find([
+        $results = Lot::find([
             'columns' => [
+                'IdLot',
                 'NomFlux',
                 'Statut',
                 'TypeFlux',
@@ -39,7 +38,8 @@ class IndexController extends BaseController
             'conditions' => 'NomFlux = "ACTEL-OPT"'
         ]);
 
-        $this->response->setJsonContent($result->toArray());
+        $this->response->setHeader('Cache-Control', 'max-age=60');
+        $this->response->setJsonContent($results->jsonSerialize());
         return $this->response;
     }
 

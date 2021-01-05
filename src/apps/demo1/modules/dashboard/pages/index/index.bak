@@ -1,5 +1,9 @@
+//
+//       AgGrid using JQUERY
+//
+
 import 'ag-grid-community/dist/styles/ag-grid.css'
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 
 import { Grid } from 'ag-grid-community';
 
@@ -32,6 +36,4 @@ var gridOptions = {
 };
 
 var eGridDiv = document.querySelector('#myGrid');
-
 new Grid(eGridDiv, gridOptions);
-

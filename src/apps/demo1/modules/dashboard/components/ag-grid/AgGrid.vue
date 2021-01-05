@@ -19,10 +19,9 @@
         :maxBlocksInCache="maxBlocksInCache"
         :animateRows="true"
         :sideBar="true"
+        :enableRangeSelection="true"
         @grid-ready="onGridReady"
-        @cell-clicked="onCellClicked"
-        @sort-changed="onSortChanged"
-        @filter-modified="onFilterChanged">
+        @row-clicked="onRowClicked">
     </ag-grid-vue>
   </div>
 </template>
@@ -40,6 +39,7 @@ export default {
   name: 'AgGrid',
   data() {
     return {
+      localeText: null,
       gridOptions: null,
       gridApi: null,
       columnApi: null,
@@ -47,7 +47,6 @@ export default {
       defaultColDef: null,
       rowBuffer: null,
       rowSelection: null,
-      localeText: null,
       rowData: null,
       rowModelType: null,
       paginationPageSize: null,
@@ -77,9 +76,13 @@ export default {
 
     this.columnDefs = [
       {
+        headerName: 'UID',
+        field: 'IdLot',
+        hide: true
+      },
+      {
         headerName: 'NomFlux',
         field: 'NomFlux',
-        enableValue: true,
         hide: true
       },
       {
@@ -88,9 +91,7 @@ export default {
       },
       {
         headerName: 'DateLot',
-        field: 'DateLot',
-        rowGroup: true,
-        enablePivot: true
+        field: 'DateLot'
       },
       {
         headerName: 'ClefNumLot',
@@ -105,29 +106,18 @@ export default {
         headerName: 'NbPlisIdx',
         field: 'NbPlisIdx',
         enableValue: true,
-        type: 'numericColumn',
-        valueFormatter: function(params) {
-          return params.value ? parseInt(params.value) : 0;
-        },
-        comparator: function(valueA, valueB, nodeA, nodeB, isInverted) {
+        filter: 'agNumberColumnFilter',
+        comparator: function(valueA, valueB) {
           return parseInt(valueA) - parseInt(valueB);
         }
       },
       {
         headerName: 'NbPlisCons',
-        field: 'NbPlisCons',
-        enableValue: true,
-        valueFormatter: function(params) {
-          return params.value ? parseInt(params.value) : 0;
-        },
+        field: 'NbPlisCons'
       },
       {
         headerName: 'NbPlisDest',
-        field: 'NbPlisDest',
-        enableValue: true,
-        valueFormatter: function(params) {
-          return params.value ? parseInt(params.value) : 0;
-        },
+        field: 'NbPlisDest'
       },
     ];
 
@@ -136,11 +126,16 @@ export default {
       minWidth: 100,
       editable: true,
       resizable: true,
+      sortable: true,
+
+      enableValue: true,
+      enableRowGroup: true,
+      enablePivot: true,
+
       filter: 'agMultiColumnFilter',
       filterParams: {
         buttons: ['reset']
-      },
-      sortable: true
+      }
     };
   },
   mounted() {
@@ -162,25 +157,15 @@ export default {
           })
     },
 
-    onCellClicked() {
-      // console.log(event.node.data.age);
+    onRowClicked(event) {
+      console.log(event.node.data);
     },
-
-    onFilterChanged() {
-      //
-      // var countryFilterModel = this.gridApi.getFilterModel()['age'];
-      // var selected = countryFilterModel && countryFilterModel.values;
-      //
-      // console.log(countryFilterModel);
-      // console.log(selected);
-    },
-
-    onSortChanged() {
-      // console.log(event.columnApi.getColumnState())
-    },
-
   }
 };
+
+window.formatNumber = function (params) {
+  return params.value ? parseInt(params.value) : 0;
+}
 
 
 </script>

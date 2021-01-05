@@ -2,10 +2,6 @@
 
 namespace Handlers;
 
-use Exception;
-use Phalcon\Di\FactoryDefault;
-use Phalcon\Mvc\Application;
-
 use Core\Middlewares\Mvc as MvcMiddleware;
 use Core\Services\Acl as AclService;
 use Core\Services\Application as ApplicationService;
@@ -17,6 +13,11 @@ use Core\Services\Router as RouterService;
 use Core\Services\Session as SessionService;
 use Core\Services\Url as UrlService;
 use Core\Services\View as ViewService;
+
+use Exception;
+use Phalcon\Di\FactoryDefault;
+use Phalcon\Mvc\Application;
+
 
 /**
  * Class ApplicationHandler

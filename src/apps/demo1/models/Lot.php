@@ -13,17 +13,66 @@ use Phalcon\Mvc\ModelInterface;
  */
 class Lot extends \Base\Models\BaseModel
 {
+    /**
+     * @Primary
+     * @Identity
+     * @Column(type='integer', nullable=false)
+     */
     protected $IdLot;
+
+    /**
+     * @Column(type='integer')
+     */
     protected $IdTransaction;
+
+    /**
+     * @Column(type='integer')
+     */
     protected $IdTraitement;
+
+    /**
+     * @Column(type='string')
+     */
     protected $NomFlux;
+
+    /**
+     * @Column(type='string')
+     */
     protected $DateLot;
+
+    /**
+     * @Column(type='string')
+     */
     protected $TypeFlux;
+
+    /**
+     * @Column(type='string')
+     */
     protected $ClefNumLot;
+
+    /**
+     * @Column(type='string')
+     */
     protected $NomLot;
+
+    /**
+     * @Column(type='string')
+     */
     protected $Statut;
+
+    /**
+     * @Column(type='integer')
+     */
     protected $NbPlisIdx;
+
+    /**
+     * @Column(type='integer')
+     */
     protected $NbPlisCons;
+
+    /**
+     * @Column(type='integer')
+     */
     protected $NbPlisDest;
 
     /**
@@ -173,7 +222,7 @@ class Lot extends \Base\Models\BaseModel
     /**
      * @return mixed
      */
-    public function getNbPlisIdx()
+    public function getNbPlisIdx(): ?int
     {
         return $this->NbPlisIdx;
     }
@@ -232,7 +281,7 @@ class Lot extends \Base\Models\BaseModel
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Application[]|Application|ResultSetInterface
+     * @return Lot[]|Lot|ResultSetInterface
      */
     public static function find($parameters = null): ResultsetInterface
     {
@@ -243,7 +292,7 @@ class Lot extends \Base\Models\BaseModel
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Application|ResultInterface|ModelInterface
+     * @return Lot|ResultInterface|ModelInterface
      */
     public static function findFirst($parameters = null): ?ModelInterface
     {
